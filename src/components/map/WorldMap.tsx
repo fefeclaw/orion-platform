@@ -66,7 +66,7 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
   const routes = selectedPillar ? TRAFFIC_ROUTES[selectedPillar] : [];
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden">
+    <div className="satellite-wrapper fixed inset-0 z-0 overflow-hidden">
       {/* ── Satellite iframe ────────────────────────────── */}
       <iframe
         src="https://maps.google.com/maps?q=8,10&z=2&t=k&output=embed"
@@ -85,7 +85,7 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
 
       {/* ── Gradient vignette overlay ────────────────────── */}
       <div
-        className="absolute inset-0"
+        className="satellite-overlay absolute inset-0"
         style={{
           background: [
             "radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(5,8,15,0.65) 100%)",
@@ -96,7 +96,7 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
 
       {/* ── Noise texture for depth ──────────────────────── */}
       <div
-        className="absolute inset-0 opacity-[0.025]"
+        className="satellite-noise absolute inset-0 opacity-[0.025]"
         style={{
           backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
           backgroundSize: "256px",
