@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+:root {
+  --orion-blue: #0a1628;
+  --orion-gold: #D4AF37;
+  --orion-teal: #00c9a7;
+  --orion-dark: #060d1a;
+  --orion-light: #e8ecf1;
+  /* Pastel-neon palette */
+  --maritime-color: #38bdf8;
+  --rail-color: #f87171;
+  --road-color: #34d399;
+  --air-color: #a78bfa;
+}
+
+body {
+  background: var(--orion-dark);
+  color: var(--orion-light);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ─── Glassmorphism — Deep-Sea Elite ───────────────────────────── */
+.glass {
+  background:
+    linear-gradient(135deg, rgba(10, 22, 40, 0.72), rgba(6, 13, 26, 0.82)) padding-box,
+    linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ─── Pillar glows — neon intensity ───────────────────────────── */
+.glow-maritime {
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), 0 0 60px rgba(56, 189, 248, 0.10);
+}
+.glow-rail {
+  box-shadow: 0 0 20px rgba(248, 113, 113, 0.25), 0 0 60px rgba(248, 113, 113, 0.10);
+}
+.glow-road {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.25), 0 0 60px rgba(52, 211, 153, 0.10);
+}
+.glow-air {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.25), 0 0 60px rgba(167, 139, 250, 0.10);
+}
+
+/* ─── Icon glow filters ────────────────────────────────────────── */
+.icon-glow-maritime { filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)); }
+.icon-glow-rail     { filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.6)); }
+.icon-glow-road     { filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.6)); }
+.icon-glow-air      { filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.6)); }
+
+/* ─── Shimmer keyframe ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #c8cdd4 0%,
+    #c8cdd4 40%,
+    #ffffff 50%,
+    #c8cdd4 60%,
+    #c8cdd4 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+/* ─── Map pulse / breathing ────────────────────────────────────── */
+@keyframes breathe {
+  0%, 100% { opacity: 0.06; }
+  50%       { opacity: 0.13; }
+}
+
+.map-grid { animation: breathe 4s ease-in-out infinite; }
+
+/* ─── Light mode ───────────────────────────────────────────────── */
+[data-theme="light"] {
+  --orion-dark: #eef1f6;
+  --orion-light: #0d1b2e;
+}
+
+[data-theme="light"] body {
+  background: #eef1f6;
+  color: #0d1b2e;
+}
+
+[data-theme="light"] main {
+  background: #eef1f6 !important;
+}
+
+[data-theme="light"] .glass {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.82), rgba(240,244,250,0.70)) padding-box,
+    linear-gradient(135deg, rgba(212,175,55,0.30), rgba(212,175,55,0.08)) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="light"] .text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #1a2e4a 0%,
+    #1a2e4a 40%,
+    #4a6fa5 50%,
+    #1a2e4a 60%,
+    #1a2e4a 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+[data-theme="light"] .glow-maritime { box-shadow: 0 4px 24px rgba(56,189,248,0.18); }
+[data-theme="light"] .glow-rail     { box-shadow: 0 4px 24px rgba(248,113,113,0.18); }
+[data-theme="light"] .glow-road     { box-shadow: 0 4px 24px rgba(52,211,153,0.18); }
+[data-theme="light"] .glow-air      { box-shadow: 0 4px 24px rgba(167,139,250,0.18); }
+
+[data-theme="light"] footer {
+  color: rgba(13, 27, 46, 0.3) !important;
+}
