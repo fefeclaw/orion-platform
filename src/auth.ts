@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { authConfig } from "@/auth.config";
 
 // Mock user database (to be replaced with real DB in Sprint 3)
 const MOCK_PROFESSIONALS = [
@@ -15,6 +16,7 @@ const MOCK_USERS = [
 ];
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -52,7 +54,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  pages: { signIn: "/" },
   session: { strategy: "jwt" },
   callbacks: {
     jwt({ token, user }) {
@@ -63,8 +64,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     session({ session, token }) {
-      (session.user as Record<string, unknown>).role = token.role;
-      (session.user as Record<string, unknown>).pillar = token.pillar;
+      (session.user as unknown as Record<string, unknown>).role = token.role;
+      (session.user as unknown as Record<string, unknown>).pillar = token.pillar;
       return session;
     },
   },
