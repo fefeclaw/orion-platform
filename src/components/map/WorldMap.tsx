@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Pillar } from "@/types";
 
 interface WorldMapProps {
@@ -9,225 +9,205 @@ interface WorldMapProps {
 }
 
 const PILLAR_COLORS: Record<Pillar, string> = {
-  maritime: "#1e88e5",
-  rail: "#e53935",
-  road: "#43a047",
-  air: "#8e24aa",
+  maritime: "#38bdf8",
+  rail:     "#f87171",
+  road:     "#34d399",
+  air:      "#a78bfa",
 };
 
-// Simulated traffic dots for each pillar
-const TRAFFIC_ROUTES: Record<Pillar, { lat: number; lng: number }[]> = {
-  maritime: [
-    { lat: 5.3, lng: -4.0 }, // Abidjan
-    { lat: 6.4, lng: 3.4 },  // Lagos
-    { lat: 33.9, lng: -6.8 }, // Casablanca
-    { lat: 51.9, lng: 4.5 },  // Rotterdam
-    { lat: 31.2, lng: 121.5 }, // Shanghai
-    { lat: 1.3, lng: 103.8 }, // Singapore
-    { lat: 22.3, lng: 114.2 }, // Hong Kong
-    { lat: -33.9, lng: 18.4 }, // Cape Town
-  ],
-  rail: [
-    { lat: 5.3, lng: -4.0 },  // Abidjan
-    { lat: 6.8, lng: -5.3 },  // Bouake
-    { lat: 9.3, lng: -5.6 },  // Ferkessedougou
-    { lat: 12.4, lng: -1.5 }, // Ouagadougou
-    { lat: 12.6, lng: -8.0 }, // Bamako
-    { lat: 14.7, lng: -17.4 }, // Dakar
-  ],
-  road: [
-    { lat: 5.3, lng: -4.0 },   // Abidjan
-    { lat: 7.7, lng: -5.0 },   // Yamoussoukro
-    { lat: 9.5, lng: -5.6 },   // Korhogo
-    { lat: 12.4, lng: -1.5 },  // Ouagadougou
-    { lat: 12.6, lng: -8.0 },  // Bamako
-    { lat: 6.4, lng: 3.4 },    // Lagos
-    { lat: 9.1, lng: 7.5 },    // Abuja
-    { lat: 5.6, lng: -0.2 },   // Accra
-  ],
-  air: [
-    { lat: 5.3, lng: -4.0 },   // Abidjan FHB
-    { lat: 48.9, lng: 2.4 },   // CDG Paris
-    { lat: 6.6, lng: 3.3 },    // Lagos
-    { lat: 25.3, lng: 55.4 },  // Dubai
-    { lat: 40.6, lng: -73.8 }, // JFK
-    { lat: 0.0, lng: 32.4 },   // Entebbe
-    { lat: -1.3, lng: 36.9 },  // Nairobi
-    { lat: 14.7, lng: -17.4 }, // Dakar
-  ],
-};
-
-// Convert lat/lng to SVG viewBox coordinates (simple Mercator-like)
-function toSvg(lat: number, lng: number): { x: number; y: number } {
-  const x = ((lng + 180) / 360) * 1000;
-  const y = ((90 - lat) / 180) * 500;
-  return { x, y };
+// Normalized 0-1 coordinates for a world equirectangular projection
+function toPercent(lat: number, lng: number) {
+  return {
+    left: `${((lng + 180) / 360) * 100}%`,
+    top:  `${((90 - lat) / 180) * 100}%`,
+  };
 }
 
-export default function WorldMap({ selectedPillar }: WorldMapProps) {
-  const [dots, setDots] = useState<{ x: number; y: number }[]>([]);
+const TRAFFIC_ROUTES: Record<Pillar, { lat: number; lng: number; label: string }[]> = {
+  maritime: [
+    { lat: 5.3,   lng: -4.0,   label: "Abidjan" },
+    { lat: 6.4,   lng: 3.4,    label: "Lagos" },
+    { lat: 14.7,  lng: -17.4,  label: "Dakar" },
+    { lat: 33.9,  lng: -6.8,   label: "Casablanca" },
+    { lat: 51.9,  lng: 4.5,    label: "Rotterdam" },
+    { lat: 31.2,  lng: 121.5,  label: "Shanghai" },
+    { lat: 1.3,   lng: 103.8,  label: "Singapore" },
+    { lat: -33.9, lng: 18.4,   label: "Cape Town" },
+  ],
+  rail: [
+    { lat: 5.3,  lng: -4.0,   label: "Abidjan" },
+    { lat: 6.8,  lng: -5.3,   label: "Bouaké" },
+    { lat: 12.4, lng: -1.5,   label: "Ouagadougou" },
+    { lat: 12.6, lng: -8.0,   label: "Bamako" },
+    { lat: 14.7, lng: -17.4,  label: "Dakar" },
+  ],
+  road: [
+    { lat: 5.3,  lng: -4.0,   label: "Abidjan" },
+    { lat: 7.7,  lng: -5.0,   label: "Yamoussoukro" },
+    { lat: 12.4, lng: -1.5,   label: "Ouagadougou" },
+    { lat: 12.6, lng: -8.0,   label: "Bamako" },
+    { lat: 6.4,  lng: 3.4,    label: "Lagos" },
+    { lat: 5.6,  lng: -0.2,   label: "Accra" },
+  ],
+  air: [
+    { lat: 5.3,  lng: -4.0,   label: "Abidjan" },
+    { lat: 48.9, lng: 2.4,    label: "Paris CDG" },
+    { lat: 6.6,  lng: 3.3,    label: "Lagos" },
+    { lat: 25.3, lng: 55.4,   label: "Dubai" },
+    { lat: 40.6, lng: -73.8,  label: "New York JFK" },
+    { lat: 14.7, lng: -17.4,  label: "Dakar" },
+  ],
+};
 
-  useEffect(() => {
-    if (!selectedPillar) {
-      setDots([]);
-      return;
-    }
-    const routes = TRAFFIC_ROUTES[selectedPillar];
-    setDots(routes.map((r) => toSvg(r.lat, r.lng)));
-  }, [selectedPillar]);
+export default function WorldMap({ selectedPillar }: WorldMapProps) {
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const color = selectedPillar ? PILLAR_COLORS[selectedPillar] : "#d4a843";
+  const routes = selectedPillar ? TRAFFIC_ROUTES[selectedPillar] : [];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1, delay: 0.5 }}
-      className="w-full max-w-5xl mx-auto relative"
-    >
-      <svg
-        viewBox="0 0 1000 500"
-        className="w-full h-auto"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Globe ellipse */}
-        <ellipse
-          cx="500"
-          cy="250"
-          rx="480"
-          ry="230"
-          fill="none"
-          stroke="#1e3a5f"
-          strokeWidth="0.5"
-          opacity="0.4"
-        />
-        {/* Grid lines — breathing */}
-        <g className="map-grid">
-          {Array.from({ length: 18 }).map((_, i) => (
-            <line
-              key={`v${i}`}
-              x1={i * (1000 / 18)}
-              y1="0"
-              x2={i * (1000 / 18)}
-              y2="500"
-              stroke="#3a6fa8"
-              strokeWidth="0.3"
-            />
-          ))}
-          {Array.from({ length: 9 }).map((_, i) => (
-            <line
-              key={`h${i}`}
-              x1="0"
-              y1={i * (500 / 9)}
-              x2="1000"
-              y2={i * (500 / 9)}
-              stroke="#3a6fa8"
-              strokeWidth="0.3"
-            />
-          ))}
-        </g>
-        {/* Continental masses — simplified */}
-        {/* Africa */}
-        <path
-          d="M480 180 Q510 170 520 200 Q530 250 520 300 Q510 340 490 350 Q470 340 460 300 Q450 260 460 220 Q465 190 480 180Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-        {/* Europe */}
-        <path
-          d="M470 120 Q500 100 530 110 Q540 130 520 150 Q500 160 480 155 Q465 140 470 120Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-        {/* Asia */}
-        <path
-          d="M540 100 Q620 80 700 100 Q750 130 740 180 Q720 220 680 230 Q640 220 600 200 Q560 170 540 140 Q535 120 540 100Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-        {/* Americas */}
-        <path
-          d="M200 100 Q230 80 260 100 Q270 140 260 180 Q250 220 240 260 Q230 300 220 340 Q210 360 200 340 Q190 300 185 260 Q180 200 190 140 Q195 110 200 100Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-        <path
-          d="M260 280 Q280 260 300 280 Q310 320 300 360 Q280 390 260 370 Q250 340 255 310 Q258 290 260 280Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-        {/* Australia */}
-        <path
-          d="M750 300 Q780 285 810 295 Q825 315 820 340 Q800 360 775 355 Q755 340 750 320 Q748 310 750 300Z"
-          fill="#0d1e35"
-          stroke="#1e4878"
-          strokeWidth="1"
-        />
-      </svg>
+    <div className="fixed inset-0 z-0 overflow-hidden">
+      {/* ── Satellite iframe ────────────────────────────── */}
+      <iframe
+        src="https://maps.google.com/maps?q=8,10&z=2&t=k&output=embed"
+        className="absolute border-0 pointer-events-none"
+        style={{
+          inset: "-5%",
+          width: "110%",
+          height: "110%",
+          filter: "blur(4px) brightness(0.55) saturate(1.4)",
+          willChange: "transform",
+        }}
+        title="Vue satellite mondiale"
+        onLoad={() => setIframeLoaded(true)}
+        loading="eager"
+      />
 
-      {/* Traffic dots overlay */}
-      <svg
-        viewBox="0 0 1000 500"
-        className="absolute inset-0 w-full h-auto"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Routes connecting dots */}
-        {dots.length > 1 &&
-          dots.map((dot, i) => {
-            if (i === 0) return null;
-            const prev = dots[i - 1];
-            return (
-              <motion.line
-                key={`route-${i}`}
-                x1={prev.x}
-                y1={prev.y}
-                x2={dot.x}
-                y2={dot.y}
-                stroke={color}
-                strokeWidth="1"
-                strokeOpacity="0.3"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, delay: i * 0.2 }}
-              />
-            );
-          })}
-        {/* Animated dots */}
-        {dots.map((dot, i) => (
-          <g key={`dot-${i}`}>
-            <motion.circle
-              cx={dot.x}
-              cy={dot.y}
-              r="4"
-              fill={color}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-            />
-            <motion.circle
-              cx={dot.x}
-              cy={dot.y}
-              r="4"
-              fill="none"
-              stroke={color}
-              strokeWidth="1"
-              initial={{ scale: 1, opacity: 0.8 }}
-              animate={{ scale: 3, opacity: 0 }}
-              transition={{
-                duration: 2,
-                delay: i * 0.15,
-                repeat: Infinity,
-                ease: "easeOut",
-              }}
-            />
-          </g>
-        ))}
-      </svg>
-    </motion.div>
+      {/* ── Gradient vignette overlay ────────────────────── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: [
+            "radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(5,8,15,0.65) 100%)",
+            "linear-gradient(to bottom, rgba(5,8,15,0.72) 0%, rgba(5,8,15,0.15) 40%, rgba(5,8,15,0.15) 60%, rgba(5,8,15,0.80) 100%)",
+          ].join(", "),
+        }}
+      />
+
+      {/* ── Noise texture for depth ──────────────────────── */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: "256px",
+        }}
+      />
+
+      {/* ── Loading shimmer ──────────────────────────────── */}
+      <AnimatePresence>
+        {!iframeLoaded && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0 bg-[#05080f]"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Animated route dots + lines ─────────────────── */}
+      <AnimatePresence>
+        {selectedPillar && routes.length > 0 && (
+          <motion.div
+            key={selectedPillar}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="absolute inset-0 pointer-events-none"
+          >
+            {/* SVG route lines */}
+            <svg className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }}>
+              <defs>
+                <filter id="glow-route">
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              {routes.map((pt, i) => {
+                if (i === 0) return null;
+                const prev = routes[i - 1];
+                const x1 = ((prev.lng + 180) / 360) * 100;
+                const y1 = ((90 - prev.lat) / 180) * 100;
+                const x2 = ((pt.lng + 180) / 360) * 100;
+                const y2 = ((90 - pt.lat) / 180) * 100;
+                const mx = (x1 + x2) / 2;
+                const my = Math.min(y1, y2) - 8;
+                return (
+                  <motion.path
+                    key={`line-${i}`}
+                    d={`M ${x1}% ${y1}% Q ${mx}% ${my}% ${x2}% ${y2}%`}
+                    fill="none"
+                    stroke={color}
+                    strokeWidth="0.15%"
+                    strokeOpacity="0.5"
+                    filter="url(#glow-route)"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.5 }}
+                    transition={{ duration: 1.5, delay: i * 0.15, ease: "easeOut" }}
+                  />
+                );
+              })}
+            </svg>
+
+            {/* Dot pulses */}
+            {routes.map((pt, i) => {
+              const pos = toPercent(pt.lat, pt.lng);
+              return (
+                <motion.div
+                  key={`dot-${i}`}
+                  className="absolute"
+                  style={{ left: pos.left, top: pos.top, transform: "translate(-50%, -50%)" }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.3 + i * 0.12 }}
+                >
+                  {/* Pulse ring */}
+                  <motion.div
+                    className="absolute rounded-full border"
+                    style={{
+                      width: 20, height: 20,
+                      left: -10, top: -10,
+                      borderColor: color,
+                      boxShadow: `0 0 8px ${color}60`,
+                    }}
+                    animate={{ scale: [1, 2.2, 1], opacity: [0.7, 0, 0.7] }}
+                    transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}
+                  />
+                  {/* Core dot */}
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{
+                      background: color,
+                      boxShadow: `0 0 6px ${color}, 0 0 14px ${color}80`,
+                    }}
+                  />
+                  {/* Label */}
+                  <motion.span
+                    className="absolute left-3 top-0 text-[8px] font-medium whitespace-nowrap tracking-wide"
+                    style={{ color, textShadow: `0 0 8px ${color}` }}
+                    initial={{ opacity: 0, x: -4 }}
+                    animate={{ opacity: 0.8, x: 0 }}
+                    transition={{ delay: 0.6 + i * 0.12 }}
+                  >
+                    {pt.label}
+                  </motion.span>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

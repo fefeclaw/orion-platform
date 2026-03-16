@@ -15,7 +15,6 @@ export default function HomePage() {
   const [selectedPillar, setSelectedPillar] = useState<Pillar | null>(null);
   const [showAuth, setShowAuth] = useState(false);
 
-  // Clic sur un pilier → disparition des autres + modal connexion
   const handlePillarSelect = (pillar: Pillar) => {
     if (selectedPillar === pillar) {
       setSelectedPillar(null);
@@ -29,13 +28,16 @@ export default function HomePage() {
     <SessionProvider>
     <main className="min-h-screen flex flex-col relative overflow-x-hidden bg-[#05080f]">
 
-      {/* Ambient glow */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#d4a843]/5 blur-[120px]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-[#00c9a7]/4 blur-[100px]" />
+      {/* ── Satellite world map — fixed full-page background ── */}
+      <WorldMap selectedPillar={selectedPillar} />
+
+      {/* ── Ambient color glows layered over satellite ──────── */}
+      <div className="fixed inset-0 pointer-events-none z-[2]">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#d4a843]/10 blur-[140px]" />
+        <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full bg-[#38bdf8]/8 blur-[120px]" />
       </div>
 
-      {/* Header */}
+      {/* ── Header ──────────────────────────────────────────── */}
       <header className="relative z-10 flex items-center justify-between px-8 md:px-16 py-6">
         <motion.div
           initial={{ opacity: 0 }}
@@ -50,12 +52,11 @@ export default function HomePage() {
               <div className="w-1.5 h-1.5 rounded-full bg-[#d4a843]" />
             </div>
           </div>
-          <span className="text-sm font-light tracking-[0.2em] text-white/50 uppercase">
+          <span className="text-sm font-light tracking-[0.2em] text-white/60 uppercase">
             Orion Logistics
           </span>
         </motion.div>
 
-        {/* Header controls */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -67,8 +68,8 @@ export default function HomePage() {
         </motion.div>
       </header>
 
-      {/* Hero */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-4">
+      {/* ── Hero content — floats over satellite ────────────── */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -82,7 +83,7 @@ export default function HomePage() {
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-px h-8 bg-gradient-to-b from-transparent via-[#d4a843]/30 to-transparent my-6"
+          className="w-px h-8 bg-gradient-to-b from-transparent via-[#d4a843]/40 to-transparent my-8"
         />
 
         <motion.div
@@ -98,23 +99,15 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => setSelectedPillar(null)}
-            className="mt-6 text-xs text-white/20 hover:text-white/50 transition-colors tracking-widest uppercase"
+            className="mt-6 text-xs text-white/25 hover:text-white/55 transition-colors tracking-widest uppercase"
           >
             ← Retour
           </motion.button>
         )}
-
-        <motion.div
-          className="w-full mt-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 1.2 }}
-        >
-          <WorldMap selectedPillar={selectedPillar} />
-        </motion.div>
       </div>
 
-      <footer className="relative z-10 text-center py-5 text-[10px] tracking-widest uppercase text-white/10">
+      {/* ── Footer ──────────────────────────────────────────── */}
+      <footer className="relative z-10 text-center py-5 text-[10px] tracking-widest uppercase text-white/15">
         Orion Logistics &mdash; Afrique de l&apos;Ouest
       </footer>
 
