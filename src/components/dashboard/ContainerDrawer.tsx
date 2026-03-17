@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Search, Package, AlertTriangle, CheckCircle, Leaf } from "lucide-react";
+import { X, Search, Package, AlertTriangle, Leaf } from "lucide-react";
 import ShipTimeline from "./ShipTimeline";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ContainerDrawerProps {
   isOpen: boolean;
@@ -78,37 +79,28 @@ function RadarMap({ progress, status }: { progress: number; status: string }) {
   return (
     <div className="relative w-full rounded-xl overflow-hidden" style={{ background: "#020a14", height: 120 }}>
       <svg viewBox="0 0 200 120" className="w-full h-full">
-        {/* Grid */}
         {[30, 60, 90, 120, 150, 180].map((x) => (
           <line key={x} x1={x} y1="0" x2={x} y2="120" stroke="#0a1f35" strokeWidth="0.5" />
         ))}
         {[20, 40, 60, 80, 100].map((y) => (
           <line key={y} x1="0" y1={y} x2="200" y2={y} stroke="#0a1f35" strokeWidth="0.5" />
         ))}
-        {/* Route arc */}
-        <path
-          d="M 20 80 Q 100 20 180 80"
-          fill="none" stroke={`${color}25`} strokeWidth="1" strokeDasharray="3 3"
-        />
+        <path d="M 20 80 Q 100 20 180 80" fill="none" stroke={`${color}25`} strokeWidth="1" strokeDasharray="3 3" />
         <motion.path
           d="M 20 80 Q 100 20 180 80"
           fill="none" stroke={color} strokeWidth="1.5" strokeOpacity="0.7"
           initial={{ pathLength: 0 }} animate={{ pathLength: progress / 100 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         />
-        {/* Departure */}
         <circle cx="20" cy="80" r="3" fill={color} opacity="0.8" />
         <text x="20" y="95" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="6">Origine</text>
-        {/* Arrival */}
         <circle cx="180" cy="80" r="3" fill={progress >= 90 ? color : "rgba(255,255,255,0.15)"} />
         <text x="180" y="95" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="6">Abidjan</text>
-        {/* Ship pulse */}
         <circle cx={shipX} cy={shipY} r="4" fill={color} filter="url(#rglow)" />
         <circle cx={shipX} cy={shipY} r="4" fill="none" stroke={color} strokeWidth="1">
           <animate attributeName="r" values="4;10;4" dur="2s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" />
         </circle>
-        {/* Delay indicator */}
         {status === "delayed" && (
           <g>
             <text x={shipX} y={shipY - 10} textAnchor="middle" fill="#f59e0b" fontSize="7" fontWeight="700">⚠</text>
@@ -137,8 +129,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
   const [result, setResult] = useState<ContainerData | null>(null);
   const [notFound, setNotFound] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslation();
 
-  // Build delay notification (Delay Protocol)
   const buildDelayNotification = (data: ContainerData): string => {
     if (data.delay === 0) return "";
     const isCacao = data.cargo.toLowerCase().includes("cacao");
@@ -171,6 +163,16 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
   const statusColor = (s: string) =>
     ({ at_sea: "#38bdf8", approaching: "#D4AF37", arrived: "#34d399", delayed: "#f59e0b", loading: "#f87171" }[s] ?? "#38bdf8");
 
+  const statusLabel = (s: string) => {
+    const map: Record<string, ReturnType<typeof t>> = {
+      at_sea: t("container_status_sea"),
+      approaching: t("container_status_approach"),
+      arrived: t("container_status_arrived"),
+      delayed: t("container_status_delayed"),
+    };
+    return map[s] ?? s;
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -200,9 +202,9 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                   <Package size={15} className="text-[#38bdf8]" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">Suivre un conteneur</p>
+                  <p className="text-sm font-semibold text-white">{t("container_title")}</p>
                   <p className="text-[10px] text-white/30 uppercase tracking-widest mt-0.5">
-                    Transparence prédictive — Orion Logistics
+                    {t("container_subtitle")}
                   </p>
                 </div>
               </div>
@@ -214,7 +216,6 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
             {/* Search */}
             <div className="px-6 py-5 border-b border-white/5">
               <div className="relative">
-                {/* Scanning laser line */}
                 {isScanning && (
                   <motion.div
                     className="absolute left-0 right-0 h-[1.5px] z-10 rounded-full"
@@ -230,7 +231,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                   onChange={(e) => setQuery(e.target.value.toUpperCase())}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="w-full bg-[#060d1a]/80 border border-white/8 rounded-xl px-4 py-3 pr-12 text-sm text-white font-mono focus:outline-none focus:border-[#38bdf8]/50 transition-colors placeholder:text-white/20"
-                  placeholder="N° conteneur — ex: ORION-4821"
+                  placeholder={t("container_placeholder")}
                   disabled={isScanning}
                 />
                 <button
@@ -241,7 +242,6 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                   <Search size={16} aria-hidden="true" />
                 </button>
               </div>
-              {/* Demo hints */}
               <div className="flex gap-2 mt-2.5">
                 {CARGO_HINTS.map((hint) => (
                   <button
@@ -265,8 +265,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     className="flex flex-col items-center gap-4 py-12"
                   >
                     <div className="w-10 h-10 border-2 border-[#38bdf8]/20 border-t-[#38bdf8] rounded-full animate-spin" />
-                    <p className="text-xs text-white/30 uppercase tracking-widest">Synchronisation flux AIS…</p>
-                    <p className="text-[10px] text-white/15">Interrogation base de données DGD · Port Autonome d'Abidjan</p>
+                    <p className="text-xs text-white/30 uppercase tracking-widest">{t("container_scanning")}</p>
+                    <p className="text-[10px] text-white/15">Interrogation base de données DGD · Port Autonome d&apos;Abidjan</p>
                   </motion.div>
                 )}
 
@@ -279,8 +279,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     <div className="w-12 h-12 rounded-full bg-red-900/20 border border-red-500/20 flex items-center justify-center">
                       <X size={20} className="text-red-400" aria-hidden="true" />
                     </div>
-                    <p className="text-sm text-white/60">Conteneur introuvable</p>
-                    <p className="text-xs text-white/25">Vérifiez le numéro ou consultez la DGD</p>
+                    <p className="text-sm text-white/60">{t("container_not_found")}</p>
+                    <p className="text-xs text-white/25">{t("container_not_found_sub")}</p>
                   </motion.div>
                 )}
 
@@ -301,7 +301,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                           className="text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider"
                           style={{ color: statusColor(result.status), background: `${statusColor(result.status)}18`, border: `1px solid ${statusColor(result.status)}30` }}
                         >
-                          {result.status === "delayed" ? "⚠ Déviation" : result.status === "at_sea" ? "En mer" : result.status === "approaching" ? "Approche" : "Arrivé"}
+                          {statusLabel(result.status)}
                         </span>
                         {result.nadiaBadge && (
                           <motion.span
@@ -310,7 +310,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                             style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}
                           >
                             <Leaf size={9} aria-hidden="true" />
-                            Qualité surveillée par Nadia
+                            {t("container_nadia")}
                           </motion.span>
                         )}
                       </div>
@@ -335,7 +335,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     {/* Radar map */}
                     <RadarMap progress={result.progress} status={result.status} />
 
-                    {/* Aeronautical Pulse */}
+                    {/* Ship pulse */}
                     <div className="glass rounded-xl p-4">
                       <ShipTimeline
                         departurePort={result.origin}
@@ -347,12 +347,12 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     {/* Info grid */}
                     <div className="grid grid-cols-2 gap-3">
                       {[
-                        { label: "Navire", value: result.ship },
-                        { label: "ETA Abidjan", value: result.eta },
-                        { label: "Cargaison", value: result.cargo },
-                        { label: "Poids / TEU", value: `${result.weight} · ${result.teu} TEU` },
-                        { label: "Dernier signal", value: result.lastSignal },
-                        { label: "Progression", value: `${result.progress}%` },
+                        { label: t("container_vessel"), value: result.ship },
+                        { label: t("container_eta"), value: result.eta },
+                        { label: t("container_cargo"), value: result.cargo },
+                        { label: t("container_weight_teu"), value: `${result.weight} · ${result.teu} TEU` },
+                        { label: t("container_signal"), value: result.lastSignal },
+                        { label: t("container_progress"), value: `${result.progress}%` },
                       ].map((item) => (
                         <div key={item.label} className="glass rounded-lg p-3">
                           <p className="text-[9px] uppercase tracking-widest text-white/25 mb-1">{item.label}</p>
@@ -363,7 +363,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
 
                     {/* Event timeline */}
                     <div className="glass rounded-xl p-4">
-                      <p className="text-[10px] uppercase tracking-widest text-white/25 mb-3">Historique flux</p>
+                      <p className="text-[10px] uppercase tracking-widest text-white/25 mb-3">{t("container_history")}</p>
                       <div className="space-y-2.5">
                         {result.events.map((ev, i) => (
                           <div key={i} className="flex items-start gap-3">
@@ -388,8 +388,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     className="flex flex-col items-center gap-4 py-12 text-center"
                   >
                     <Package size={32} className="text-white/10" aria-hidden="true" />
-                    <p className="text-xs text-white/25">Entrez un numéro de conteneur pour initialiser le suivi</p>
-                    <p className="text-[10px] text-white/15">Flux synchronisé avec DGD · AIS · Port Autonome d'Abidjan</p>
+                    <p className="text-xs text-white/25">{t("container_empty")}</p>
+                    <p className="text-[10px] text-white/15">{t("container_empty_sub")}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

@@ -5,16 +5,18 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Anchor, Train, Truck, Plane, LayoutDashboard, Settings, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-
-const PILLARS = [
-  { id: "maritime", label: "Maritime", icon: Anchor, color: "#38bdf8" },
-  { id: "rail",     label: "Ferroviaire", icon: Train, color: "#f87171" },
-  { id: "road",     label: "Routier", icon: Truck, color: "#34d399" },
-  { id: "air",      label: "Aérien", icon: Plane, color: "#a78bfa" },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const t = useTranslation();
+
+  const PILLARS = [
+    { id: "maritime", label: t("nav_maritime"), icon: Anchor, color: "#38bdf8" },
+    { id: "rail",     label: t("nav_rail"),     icon: Train,  color: "#f87171" },
+    { id: "road",     label: t("nav_road"),     icon: Truck,  color: "#34d399" },
+    { id: "air",      label: t("nav_air"),      icon: Plane,  color: "#a78bfa" },
+  ];
 
   return (
     <aside className="w-64 min-h-screen flex flex-col bg-[#060d1a] border-r border-white/5">
@@ -83,7 +85,7 @@ export default function Sidebar() {
           <Link href="/dashboard">
             <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/3 transition-all cursor-pointer border border-transparent">
               <LayoutDashboard size={16} className="text-white/20" aria-hidden="true" />
-              <span className="text-sm text-white/30">Vue globale</span>
+              <span className="text-sm text-white/30">{t("nav_dashboard")}</span>
             </div>
           </Link>
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/3 transition-all cursor-pointer border border-transparent">
@@ -100,7 +102,7 @@ export default function Sidebar() {
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-900/20 transition-all group"
         >
           <LogOut size={16} className="text-white/20 group-hover:text-red-400 transition-colors" aria-hidden="true" />
-          <span className="text-sm text-white/30 group-hover:text-red-400 transition-colors">Déconnexion</span>
+          <span className="text-sm text-white/30 group-hover:text-red-400 transition-colors">{t("nav_logout")}</span>
         </button>
       </div>
     </aside>

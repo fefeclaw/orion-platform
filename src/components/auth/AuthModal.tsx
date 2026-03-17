@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { AuthMode } from "@/types";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const t = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
       onClose();
       router.push(`/dashboard/${selectedPillar ?? "maritime"}`);
     } else {
-      setError("Identifiants incorrects. Vérifiez vos informations.");
+      setError(t("auth_error"));
       setIsLoading(false);
     }
   };
@@ -65,7 +67,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
           >
             {/* Title */}
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-white tracking-wide">Connexion</h2>
+              <h2 className="text-lg font-semibold text-white tracking-wide">{t("auth_title")}</h2>
               <p className="text-xs text-white/30 mt-1 uppercase tracking-widest">
                 Accès sécurisé — Orion Logistics
               </p>
@@ -82,7 +84,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                     : "text-white/30 hover:text-white/60"
                 }`}
               >
-                Professionnel
+                {t("auth_mode_pro")}
               </button>
               <button
                 type="button"
@@ -93,7 +95,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                     : "text-white/30 hover:text-white/60"
                 }`}
               >
-                Utilisateur
+                {t("auth_mode_user")}
               </button>
             </div>
 
@@ -102,7 +104,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 {mode === "professional" ? (
                   <motion.div key="pro" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} className="space-y-4">
                     <div>
-                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">Compagnie</label>
+                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_company")}</label>
                       <input
                         type="text"
                         value={formData.company}
@@ -113,7 +115,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">Matricule</label>
+                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_matricule")}</label>
                       <input
                         type="text"
                         value={formData.matricule}
@@ -126,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                   </motion.div>
                 ) : (
                   <motion.div key="user" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}>
-                    <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">Email</label>
+                    <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_email")}</label>
                     <input
                       type="email"
                       value={formData.email}
@@ -140,7 +142,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
               </AnimatePresence>
 
               <div>
-                <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">Mot de passe</label>
+                <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_password")}</label>
                 <input
                   type="password"
                   value={formData.password}
@@ -180,7 +182,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 {isLoading ? (
                   <span className="inline-block w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                 ) : (
-                  "Accéder au tableau de bord"
+                  t("auth_submit")
                 )}
               </button>
             </form>
@@ -188,7 +190,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
             <button
               onClick={onClose}
               className="absolute top-5 right-5 text-white/20 hover:text-white/60 transition-colors text-lg leading-none"
-              aria-label="Fermer"
+              aria-label={t("close")}
             >
               ×
             </button>

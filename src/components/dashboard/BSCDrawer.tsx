@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { X, Sparkles, FileText, Send, CheckCircle } from "lucide-react";
 import ShipTimeline from "./ShipTimeline";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface BSCDrawerProps {
   isOpen: boolean;
@@ -46,6 +47,7 @@ const labelCls = "block text-[10px] text-white/30 mb-1.5 uppercase tracking-wide
 export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
   const { data: session } = useSession();
   const [step, setStep] = useState<"form" | "timeline" | "success">("form");
+  const t = useTranslation();
   const [isMagicFilling, setIsMagicFilling] = useState(false);
   const [dossierNum] = useState(`BSC-${new Date().getFullYear()}-${Math.floor(Math.random() * 90000 + 10000)}`);
 
@@ -137,9 +139,9 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                   <FileText size={15} className="text-[#38bdf8]" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">Déclaration BSC</p>
+                  <p className="text-sm font-semibold text-white">{t("bsc_title")}</p>
                   <p className="text-[10px] text-white/30 uppercase tracking-widest mt-0.5">
-                    Bordereau de Suivi des Cargaisons — DGD
+                    {t("bsc_subtitle")}
                   </p>
                 </div>
               </div>
@@ -348,7 +350,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                       onClick={handleClose}
                       className="px-6 py-2.5 rounded-xl border border-white/10 text-sm text-white/50 hover:text-white/80 hover:border-white/20 transition-all"
                     >
-                      Fermer
+                      {t("close")}
                     </button>
                   </motion.div>
                 )}

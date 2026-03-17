@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PILLARS } from "@/types";
 import type { Pillar } from "@/types";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface PillarSelectorProps {
   onSelect: (pillar: Pillar) => void;
@@ -19,15 +20,9 @@ const PILLAR_IMAGES: Record<Pillar, string> = {
   air:      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=80",
 };
 
-const PILLAR_LABELS: Record<Pillar, string> = {
-  maritime: "Maritime",
-  rail:     "Ferroviaire",
-  road:     "Routier",
-  air:      "Aérien",
-};
-
 export default function PillarSelector({ onSelect, selectedPillar }: PillarSelectorProps) {
   const [hoveredPillar, setHoveredPillar] = useState<Pillar | null>(null);
+  const t = useTranslation();
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-5 md:gap-6 py-4">
@@ -107,17 +102,17 @@ export default function PillarSelector({ onSelect, selectedPillar }: PillarSelec
                   className="text-[9px] font-semibold uppercase tracking-widest"
                   style={{ color: pillar.color }}
                 >
-                  Live
+                  {t("pillar_live")}
                 </span>
               </motion.div>
 
               {/* Bottom text block */}
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <p className="text-base font-bold text-white tracking-wide leading-tight">
-                  {PILLAR_LABELS[pillar.id as Pillar]}
+                  {t(`pillar_${pillar.id}` as Parameters<typeof t>[0])}
                 </p>
                 <p className="text-[10px] text-white/70 mt-1 leading-snug">
-                  {pillar.description}
+                  {t(`pillar_${pillar.id}_desc` as Parameters<typeof t>[0])}
                 </p>
 
                 {/* Animated enter line */}

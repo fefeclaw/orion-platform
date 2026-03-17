@@ -3,24 +3,23 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { Lang } from "@/i18n/translations";
 
 const LANGUAGES = [
-  { code: "fr", label: "Français",   flag: "🇫🇷" },
-  { code: "en", label: "English",    flag: "🇬🇧" },
-  { code: "pt", label: "Português",  flag: "🇵🇹" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
-  { code: "zh", label: "中文",        flag: "🇨🇳" },
-  { code: "ko", label: "한국어",       flag: "🇰🇷" },
-  { code: "ja", label: "日本語",       flag: "🇯🇵" },
+  { code: "fr" as Lang, label: "Français",   flag: "🇫🇷" },
+  { code: "en" as Lang, label: "English",    flag: "🇬🇧" },
+  { code: "pt" as Lang, label: "Português",  flag: "🇵🇹" },
+  { code: "nl" as Lang, label: "Nederlands", flag: "🇳🇱" },
+  { code: "zh" as Lang, label: "中文",        flag: "🇨🇳" },
+  { code: "ko" as Lang, label: "한국어",       flag: "🇰🇷" },
+  { code: "ja" as Lang, label: "日本語",       flag: "🇯🇵" },
 ];
 
-interface LanguageSelectorProps {
-  onSelect?: (code: string) => void;
-}
-
-export default function LanguageSelector({ onSelect }: LanguageSelectorProps) {
+export default function LanguageSelector() {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(LANGUAGES[0]);
+  const { lang, setLang } = useLanguage();
+  const selected = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0];
   const ref = useRef<HTMLDivElement>(null);
 
   // Close on outside click
@@ -32,10 +31,9 @@ export default function LanguageSelector({ onSelect }: LanguageSelectorProps) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleSelect = (lang: typeof LANGUAGES[0]) => {
-    setSelected(lang);
+  const handleSelect = (l: typeof LANGUAGES[0]) => {
+    setLang(l.code);
     setOpen(false);
-    onSelect?.(lang.code);
   };
 
   return (
@@ -76,12 +74,12 @@ export default function LanguageSelector({ onSelect }: LanguageSelectorProps) {
               WebkitBackdropFilter: "blur(20px)",
             }}
           >
-            {LANGUAGES.map((lang) => {
-              const isActive = selected.code === lang.code;
+            {LANGUAGES.map((l) => {
+              const isActive = selected.code === l.code;
               return (
                 <button
-                  key={lang.code}
-                  onClick={() => handleSelect(lang)}
+                  key={l.code}
+                  onClick={() => handleSelect(l)}
                   className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs transition-colors"
                   style={{
                     color: isActive ? "#d4a843" : "rgba(255,255,255,0.50)",
@@ -90,8 +88,8 @@ export default function LanguageSelector({ onSelect }: LanguageSelectorProps) {
                   onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)"; }}
                   onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
                 >
-                  <span className="text-base leading-none">{lang.flag}</span>
-                  <span className="font-medium">{lang.label}</span>
+                  <span className="text-base leading-none">{l.flag}</span>
+                  <span className="font-medium">{l.label}</span>
                   {isActive && (
                     <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#d4a843]" />
                   )}

@@ -3,28 +3,25 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WELCOME_LANGUAGES } from "@/types";
+import { useLanguage } from "@/i18n/LanguageContext";
 
-interface WelcomeTextProps {
-  lang?: string; // if provided, locks to this language (no cycling)
-}
-
-export default function WelcomeText({ lang }: WelcomeTextProps) {
+export default function WelcomeText() {
   const [index, setIndex] = useState(0);
+  const { lang } = useLanguage();
 
-  // Auto-cycle only when no language is forced
+  // When context lang changes, snap to that language
   useEffect(() => {
-    if (lang) return;
+    const idx = WELCOME_LANGUAGES.findIndex((l) => l.lang === lang);
+    if (idx !== -1) setIndex(idx);
+  }, [lang]);
+
+  // Auto-cycle only when lang is "fr" (default — no explicit selection yet)
+  useEffect(() => {
+    if (lang !== "fr") return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % WELCOME_LANGUAGES.length);
     }, 2800);
     return () => clearInterval(interval);
-  }, [lang]);
-
-  // When lang prop changes, snap to that language
-  useEffect(() => {
-    if (!lang) return;
-    const idx = WELCOME_LANGUAGES.findIndex((l) => l.lang === lang);
-    if (idx !== -1) setIndex(idx);
   }, [lang]);
 
   const current = WELCOME_LANGUAGES[index];
@@ -41,7 +38,7 @@ export default function WelcomeText({ lang }: WelcomeTextProps) {
         Orion Logistics
       </motion.p>
 
-      {/* Main welcome text — taille réduite */}
+      {/* Main welcome text */}
       <div
         className="relative flex items-center justify-center"
         style={{ height: "4.5rem", width: "100%", overflow: "hidden" }}

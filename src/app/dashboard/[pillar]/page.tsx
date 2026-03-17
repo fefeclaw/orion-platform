@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 import BSCDrawer from "@/components/dashboard/BSCDrawer";
 import ContainerDrawer from "@/components/dashboard/ContainerDrawer";
 import {
@@ -125,6 +126,7 @@ export default function PillarDashboard() {
   const Icon = cfg.icon;
   const [bscOpen, setBscOpen] = useState(false);
   const [containerOpen, setContainerOpen] = useState(false);
+  const t = useTranslation();
 
   return (
     <div className="p-6 md:p-8 max-w-6xl">
@@ -154,7 +156,7 @@ export default function PillarDashboard() {
             Module {cfg.label}
           </h1>
           <p className="text-xs text-white/30 tracking-widest uppercase">
-            Dashboard — temps réel
+            {t("nav_dashboard")} — {t("dash_realtime")}
           </p>
         </div>
         <div className="ml-auto flex items-center gap-3">
@@ -168,7 +170,7 @@ export default function PillarDashboard() {
                 style={{ background: "rgba(56,189,248,0.08)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.25)", boxShadow: "0 0 12px rgba(56,189,248,0.1)" }}
               >
                 <Search size={13} aria-hidden="true" />
-                Suivre un conteneur
+                {t("dash_container")}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.03 }}
@@ -178,12 +180,12 @@ export default function PillarDashboard() {
                 style={{ background: "linear-gradient(135deg, #38bdf8, #0ea5e9)", boxShadow: "0 0 20px rgba(56,189,248,0.25)" }}
               >
                 <FileText size={13} aria-hidden="true" />
-                Déposer BSC
+                {t("dash_bsc")}
               </motion.button>
             </>
           )}
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-xs text-white/30">Live</span>
+          <span className="text-xs text-white/30">{t("dash_live")}</span>
         </div>
       </motion.div>
 
@@ -215,7 +217,7 @@ export default function PillarDashboard() {
         className="glass rounded-2xl p-5"
       >
         <p className="text-xs tracking-widest uppercase text-white/30 mb-4">
-          Flux d'activité
+          {t("tracker_activity")}
         </p>
         <div className="space-y-3">
           {cfg.activity.map((item, i) => (
