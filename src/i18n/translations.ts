@@ -1,4 +1,4 @@
-export type Lang = "fr" | "en" | "pt" | "nl" | "zh" | "ko" | "ja";
+export type Lang = "fr" | "en" | "pt" | "nl" | "zh" | "ko" | "ja" | "de";
 
 export type TranslationKey = keyof typeof translations.fr;
 
@@ -592,6 +592,88 @@ const translations = {
     back: "← 戻る",
     close: "閉じる",
     loading: "読み込み中…",
+  },
+  de: {
+    brand: "Orion Logistics",
+    tagline: "Prädiktive Transparenz — Westafrika",
+    footer: "Orion Logistics — Westafrika",
+
+    pillar_maritime: "Seefrachtverkehr",
+    pillar_rail: "Schienenverkehr",
+    pillar_road: "Straßengüterverkehr",
+    pillar_air: "Luftfrachtverkehr",
+    pillar_maritime_desc: "Schiffsverfolgung, Häfen & Seefracht (Konnossement)",
+    pillar_rail_desc: "Schienennetz, Waggons & Frachtkorridore",
+    pillar_road_desc: "Fuhrpark, Landkorridore & GPS-Tracking",
+    pillar_air_desc: "Luftfracht, Frachtflüge & Hubs",
+    pillar_live: "Live",
+
+    auth_title: "Plattformzugang",
+    auth_mode_user: "Nutzer",
+    auth_mode_pro: "Profi",
+    auth_email: "E-Mail",
+    auth_password: "Passwort",
+    auth_company: "Unternehmen",
+    auth_matricule: "Mitarbeiternummer",
+    auth_submit: "Anmelden",
+    auth_loading: "Anmeldung…",
+    auth_error: "Ungültige Anmeldedaten",
+    auth_back: "← Zurück",
+
+    nav_dashboard: "Dashboard",
+    nav_maritime: "Seefrachtverkehr",
+    nav_rail: "Schienenverkehr",
+    nav_road: "Straßengüterverkehr",
+    nav_air: "Luftfracht",
+    nav_logout: "Abmelden",
+
+    dash_live: "Live",
+    dash_realtime: "Echtzeit",
+    dash_bsc: "BSC einreichen",
+    dash_container: "Container verfolgen",
+
+    view_plan: "Karte",
+    view_satellite: "Satellit",
+    view_kpi: "KPI",
+    view_split: "Geteilt",
+
+    tracker_syncing: "Synchronisierung…",
+    tracker_satellite_loading: "Satellitenbild…",
+    tracker_rail_loading: "Netzwerk laden…",
+    tracker_road_loading: "Verkehr verbinden…",
+    tracker_air_loading: "ADS-B Verbindung…",
+    tracker_activity: "Aktivitätsfeed",
+    tracker_satellite_badge: "Google Maps · Hybrid",
+    tracker_split_badge: "Satellit + KPI",
+
+    container_title: "Container verfolgen",
+    container_subtitle: "Prädiktive Transparenz — Orion Logistics",
+    container_placeholder: "Container-Nr. — z.B. ORION-4821",
+    container_search: "Suchen",
+    container_scanning: "AIS-Datenstrom synchronisieren…",
+    container_not_found: "Container nicht gefunden",
+    container_not_found_sub: "Nummer prüfen oder Zollabfertigung kontaktieren",
+    container_empty: "Containernummer eingeben, um Tracking zu starten",
+    container_empty_sub: "Synchronisiert mit Zoll · AIS · Hafen Abidjan",
+    container_history: "Ereignisverlauf",
+    container_nadia: "Qualitätskontrolle durch Nadia",
+    container_vessel: "Schiff",
+    container_eta: "ETA Abidjan",
+    container_cargo: "Frachtstück",
+    container_weight_teu: "Gewicht / TEU",
+    container_signal: "Letztes Signal",
+    container_progress: "Fortschritt",
+    container_status_sea: "Auf See",
+    container_status_approach: "Einlaufen",
+    container_status_arrived: "Angekommen",
+    container_status_delayed: "⚠ Abweichung",
+
+    bsc_title: "Frachtumschlag-Begleitschein",
+    bsc_subtitle: "Elektronische Einreichung — Zollabfertigung Côte d'Ivoire",
+
+    back: "← Zurück",
+    close: "Schließen",
+    loading: "Laden…",
   },
 } as const;
 

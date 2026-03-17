@@ -9,6 +9,7 @@ import type { Lang } from "@/i18n/translations";
 const LANGUAGES = [
   { code: "fr" as Lang, label: "Français",   flag: "🇫🇷" },
   { code: "en" as Lang, label: "English",    flag: "🇬🇧" },
+  { code: "de" as Lang, label: "Deutsch",    flag: "🇩🇪" },
   { code: "pt" as Lang, label: "Português",  flag: "🇵🇹" },
   { code: "nl" as Lang, label: "Nederlands", flag: "🇳🇱" },
   { code: "zh" as Lang, label: "中文",        flag: "🇨🇳" },

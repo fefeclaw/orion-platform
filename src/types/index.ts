@@ -60,4 +60,5 @@ export const WELCOME_LANGUAGES = [
   { lang: "zh", text: "欢迎" },
   { lang: "ko", text: "환영합니다" },
   { lang: "ja", text: "ようこそ" },
+  { lang: "de", text: "Willkommen" },
 ];

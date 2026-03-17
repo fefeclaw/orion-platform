@@ -4,9 +4,11 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useRole } from "@/hooks/useRole";
 import BSCDrawer from "@/components/dashboard/BSCDrawer";
 import ContainerDrawer from "@/components/dashboard/ContainerDrawer";
 import RoadTransitDrawer from "@/components/dashboard/RoadTransitDrawer";
+import ClientDashboard from "@/components/dashboard/ClientDashboard";
 import {
   Anchor, Train, Truck, Plane,
   Ship, PackageCheck, MapPin, TrendingUp,
@@ -129,6 +131,12 @@ export default function PillarDashboard() {
   const [containerOpen, setContainerOpen] = useState(false);
   const [transitOpen, setTransitOpen] = useState(false);
   const t = useTranslation();
+  const { isClient, loading: roleLoading } = useRole();
+
+  // Client role → simplified Concierge view
+  if (!roleLoading && isClient) {
+    return <ClientDashboard pillarId={pillarId} />;
+  }
 
   return (
     <div className="p-6 md:p-8 max-w-6xl">
