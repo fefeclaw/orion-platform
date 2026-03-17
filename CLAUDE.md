@@ -37,6 +37,40 @@ Construire la plateforme logistique la plus intelligente, prédictive et unifié
 
 ---
 
+## 🌦️ Module Météorologique — WeatherProvider
+
+### Config (`config/weather.ts`)
+```ts
+WeatherImpactConfig = {
+  THUNDERSTORM: { delayFactor: 1.4, riskLevel: 'CRITICAL' },
+  HEAVY_RAIN:   { delayFactor: 1.2, riskLevel: 'HIGH'     },
+  FOG:          { delayFactor: 1.1, riskLevel: 'MEDIUM'   },
+  ...
+}
+```
+
+### Règles par pilier
+| Pilier | Condition | Action |
+|---|---|---|
+| **Maritime** | Significant Wave Height > 3m | −15% vitesse navire + recalcul ETA Port Abidjan |
+| **Maritime** | Wave Height > 7m | Alerte arrêt recommandé |
+| **Routier** | HEAVY_RAIN / THUNDERSTORM | +20% délai (risque embourbement) + Victor notifié |
+| **Aérien** | Visibilité < 500m | Alerte risque déroutement (Diverted Flight) |
+| **Aérien** | Vent > 25m/s | Ground Hold alert |
+
+### Architecture
+- `src/lib/weather.ts` — WeatherProvider (OpenWeather API + fallback mock Afrique de l'Ouest)
+- `src/hooks/useWeather.ts` — React hook (refresh 10min)
+- `src/components/ui/RainParticles.tsx` — pluie CSS animée sur fond drawer
+- `src/components/ui/WeatherRadarOverlay.tsx` — overlay radar (bleu néon rain, ambre tempête)
+- Clé API : `NEXT_PUBLIC_OPENWEATHER_API_KEY` dans `.env.local`
+- Sans clé : mock data réaliste (profiles régionaux Afrique de l'Ouest)
+
+### Brand Voice Alert
+> «&nbsp;Ajustement prédictif du flux dû aux conditions climatiques. Intégrité de la cargaison priorisée.&nbsp;»
+
+---
+
 ## 💎 Standards Visuels & Opérationnels
 
 | Élément | Standard |

@@ -4,9 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Map, Satellite, BarChart3, Columns2,
-  Maximize2, ExternalLink, TrendingUp, TrendingDown,
+  Maximize2, ExternalLink, TrendingUp, TrendingDown, CloudRain,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useWeather } from "@/hooks/useWeather";
+import WeatherRadarOverlay from "@/components/ui/WeatherRadarOverlay";
 
 type ViewMode = "plan" | "satellite" | "kpi" | "split";
 
@@ -220,6 +222,8 @@ export default function TrackingView({
   const [activeZone, setActiveZone] = useState(zones[0]);
   const [viewMode, setViewMode] = useState<ViewMode>("plan");
   const [expanded, setExpanded] = useState(false);
+  const [radarVisible, setRadarVisible] = useState(false);
+  const { weather } = useWeather(activeZone.lat, activeZone.lon);
 
   const mapUrl = buildMapUrl(activeZone.lat, activeZone.lon, activeZone.zoom);
   const satUrl = buildSatUrl(activeZone.lat, activeZone.lon, activeZone.zoom);
@@ -257,6 +261,26 @@ export default function TrackingView({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Weather badge */}
+          {weather && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] cursor-pointer select-none"
+              style={{
+                background: radarVisible ? `${color}18` : "rgba(255,255,255,0.04)",
+                border: `1px solid ${radarVisible ? color + "40" : "rgba(255,255,255,0.08)"}`,
+                color: radarVisible ? color : "rgba(255,255,255,0.45)",
+                transition: "all 0.25s",
+              }}
+              onClick={() => setRadarVisible(!radarVisible)}
+              title="Activer / désactiver le radar météo"
+            >
+              <span>{weather.icon}</span>
+              <span className="font-medium">{weather.temp}°</span>
+              <CloudRain size={10} aria-hidden="true" />
+            </motion.div>
+          )}
           <a
             href={externalUrl}
             target="_blank"
@@ -341,6 +365,9 @@ export default function TrackingView({
 
       {/* Map/Content area */}
       <div className={`relative ${mapHeight}`}>
+        {/* Weather radar overlay — over all map views */}
+        {weather && <WeatherRadarOverlay weather={weather} visible={radarVisible} />}
+
         <AnimatePresence mode="wait">
           {/* Plan view */}
           {viewMode === "plan" && (

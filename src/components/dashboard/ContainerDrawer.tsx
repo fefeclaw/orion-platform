@@ -2,9 +2,12 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Search, Package, AlertTriangle, Leaf } from "lucide-react";
+import { X, Search, Package, AlertTriangle, Leaf, CloudRain } from "lucide-react";
 import ShipTimeline from "./ShipTimeline";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useWeather } from "@/hooks/useWeather";
+import { calcMaritimeImpact } from "@/lib/weather";
+import RainParticles from "@/components/ui/RainParticles";
 
 interface ContainerDrawerProps {
   isOpen: boolean;
@@ -131,6 +134,14 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
   const inputRef = useRef<HTMLInputElement>(null);
   const t = useTranslation();
 
+  // Weather — Atlantic route (approx. Golfe de Guinée)
+  const { weather: routeWeather } = useWeather(5.3, -8.2);
+  const weatherImpact = result && routeWeather
+    ? calcMaritimeImpact(routeWeather, (100 - result.progress) * 0.18)
+    : null;
+  const hasWeatherAlert = weatherImpact?.alert != null;
+  const isRaining = routeWeather && ["RAIN", "HEAVY_RAIN", "THUNDERSTORM"].includes(routeWeather.type);
+
   const buildDelayNotification = (data: ContainerData): string => {
     if (data.delay === 0) return "";
     const isCacao = data.cargo.toLowerCase().includes("cacao");
@@ -195,6 +206,11 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Rain particles — premium storm effect on drawer bg */}
+            {isRaining && routeWeather && (
+              <RainParticles type={routeWeather.type} intensity={routeWeather.type === "THUNDERSTORM" ? "heavy" : "light"} />
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/6">
               <div className="flex items-center gap-3">
@@ -328,6 +344,27 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                           <pre className="text-[11px] text-amber-300/80 whitespace-pre-wrap font-mono leading-relaxed">
                             {buildDelayNotification(result)}
                           </pre>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Weather alert */}
+                    {hasWeatherAlert && routeWeather && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                        className="rounded-xl p-4 border"
+                        style={{ background: "rgba(56,189,248,0.06)", borderColor: "rgba(56,189,248,0.25)" }}
+                      >
+                        <div className="flex items-start gap-2">
+                          <CloudRain size={14} className="text-[#38bdf8] mt-0.5 shrink-0" aria-hidden="true" />
+                          <div>
+                            <p className="text-xs font-semibold text-[#38bdf8]">
+                              {routeWeather.icon} {routeWeather.description} — Route Maritime
+                            </p>
+                            <pre className="text-[11px] text-[#38bdf8]/70 whitespace-pre-wrap font-mono leading-relaxed mt-1">
+                              {weatherImpact?.alert}
+                            </pre>
+                          </div>
                         </div>
                       </motion.div>
                     )}

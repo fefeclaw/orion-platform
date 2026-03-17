@@ -5,9 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import {
   X, Zap, Truck, FileText, CheckCircle, AlertTriangle,
-  Train, MapPin, Clock, Navigation, Send, Shield,
+  Train, MapPin, Clock, Navigation, Send, Shield, CloudRain,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useWeather } from "@/hooks/useWeather";
+import { calcRoadImpact } from "@/lib/weather";
+import RainParticles from "@/components/ui/RainParticles";
 
 interface RoadTransitDrawerProps {
   isOpen: boolean;
@@ -216,15 +219,31 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
 
   const selectedCorridor = CORRIDORS.find((c) => c.id === form.corridorId) ?? CORRIDORS[0];
 
+  // Weather — use corridor midpoint coords
+  const corridorCoords: Record<string, { lat: number; lon: number }> = {
+    "CI-BF": { lat: 9.0,  lon: -4.5  },
+    "CI-ML": { lat: 10.5, lon: -6.5  },
+    "CI-GH": { lat: 6.2,  lon: -2.5  },
+    "CI-NG": { lat: 6.5,  lon: 1.0   },
+  };
+  const coordsForCorridor = corridorCoords[form.corridorId] ?? { lat: 7.5, lon: -4.0 };
+  const { weather: corridorWeather } = useWeather(coordsForCorridor.lat, coordsForCorridor.lon);
+  const weatherImpact = corridorWeather ? calcRoadImpact(corridorWeather, selectedCorridor.duration) : null;
+  const hasWeatherAlert = weatherImpact?.alert != null;
+  const isRaining = corridorWeather && ["RAIN", "HEAVY_RAIN", "THUNDERSTORM"].includes(corridorWeather.type);
+  const weatherAdjustedDuration = corridorWeather
+    ? Math.round(selectedCorridor.duration * (weatherImpact?.delayFactor ?? 1) * 10) / 10
+    : selectedCorridor.duration;
+
   // Recompute border wait + intermodal when corridor changes
   useEffect(() => {
     if (form.corridorId) {
       const wait = simulateBorderWait(selectedCorridor.borderCode);
       setBorderWait(wait);
-      const totalHours = selectedCorridor.duration + wait;
+      const totalHours = weatherAdjustedDuration + wait;
       setShowIntermodal(selectedCorridor.railAvailable && totalHours > selectedCorridor.duration * 1.15);
     }
-  }, [form.corridorId, selectedCorridor]);
+  }, [form.corridorId, selectedCorridor, weatherAdjustedDuration]);
 
   // Magic Fill
   const handleMagicFill = async () => {
@@ -323,6 +342,11 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Rain particles — storm effect on corridor */}
+            {isRaining && corridorWeather && (
+              <RainParticles type={corridorWeather.type} intensity={corridorWeather.type === "THUNDERSTORM" ? "heavy" : "light"} />
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/6">
               <div className="flex items-center gap-3">
@@ -418,6 +442,46 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                             </p>
                           </div>
                         </div>
+                      </motion.div>
+                    )}
+
+                    {/* Victor — Weather alert */}
+                    {hasWeatherAlert && corridorWeather && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                        className="mb-4 rounded-xl p-3.5 border"
+                        style={{ background: "rgba(56,189,248,0.06)", borderColor: "rgba(56,189,248,0.25)" }}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          <CloudRain size={13} className="text-[#38bdf8] mt-0.5 shrink-0" aria-hidden="true" />
+                          <div>
+                            <p className="text-xs font-semibold text-[#38bdf8]">
+                              {corridorWeather.icon} Météo corridor — Victor notifié
+                            </p>
+                            <p className="text-[11px] text-[#38bdf8]/60 mt-0.5">
+                              {corridorWeather.description} · ETA ajusté{weatherImpact?.adjustedETA ? ` ${weatherImpact.adjustedETA}` : ""}
+                            </p>
+                            <p className="text-[10px] text-[#38bdf8]/40 mt-1 italic">
+                              «&nbsp;Ajustement prédictif du flux dû aux conditions climatiques. Intégrité de la cargaison priorisée.&nbsp;»
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Weather-adjusted ETA display */}
+                    {corridorWeather && weatherImpact && weatherImpact.delayFactor > 1 && (
+                      <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        className="mb-4 flex items-center justify-between rounded-xl px-4 py-2"
+                        style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}
+                      >
+                        <span className="text-[11px] text-amber-300/70">
+                          {corridorWeather.icon} Durée estimée avec météo
+                        </span>
+                        <span className="text-xs font-semibold font-mono text-amber-300">
+                          ~{weatherAdjustedDuration}h (+{(weatherAdjustedDuration - selectedCorridor.duration).toFixed(1)}h)
+                        </span>
                       </motion.div>
                     )}
 
