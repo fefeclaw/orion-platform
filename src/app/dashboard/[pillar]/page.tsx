@@ -6,10 +6,11 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import BSCDrawer from "@/components/dashboard/BSCDrawer";
 import ContainerDrawer from "@/components/dashboard/ContainerDrawer";
+import RoadTransitDrawer from "@/components/dashboard/RoadTransitDrawer";
 import {
   Anchor, Train, Truck, Plane,
   Ship, PackageCheck, MapPin, TrendingUp,
-  Activity, Clock, Route, Wind, FileText, Search,
+  Activity, Clock, Route, Wind, FileText, Search, Navigation,
 } from "lucide-react";
 import KPICard from "@/components/dashboard/KPICard";
 import MiniChart from "@/components/dashboard/MiniChart";
@@ -126,6 +127,7 @@ export default function PillarDashboard() {
   const Icon = cfg.icon;
   const [bscOpen, setBscOpen] = useState(false);
   const [containerOpen, setContainerOpen] = useState(false);
+  const [transitOpen, setTransitOpen] = useState(false);
   const t = useTranslation();
 
   return (
@@ -136,6 +138,11 @@ export default function PillarDashboard() {
           <BSCDrawer isOpen={bscOpen} onClose={() => setBscOpen(false)} />
           <ContainerDrawer isOpen={containerOpen} onClose={() => setContainerOpen(false)} />
         </>
+      )}
+
+      {/* Road Drawer */}
+      {pillarId === "road" && (
+        <RoadTransitDrawer isOpen={transitOpen} onClose={() => setTransitOpen(false)} />
       )}
 
       {/* Header */}
@@ -183,6 +190,18 @@ export default function PillarDashboard() {
                 {t("dash_bsc")}
               </motion.button>
             </>
+          )}
+          {pillarId === "road" && (
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setTransitOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-black transition-all"
+              style={{ background: "linear-gradient(135deg, #34d399, #10b981)", boxShadow: "0 0 20px rgba(52,211,153,0.25)" }}
+            >
+              <Navigation size={13} aria-hidden="true" />
+              Transit CEDEAO
+            </motion.button>
           )}
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           <span className="text-xs text-white/30">{t("dash_live")}</span>
