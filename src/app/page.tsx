@@ -14,6 +14,7 @@ import type { Pillar } from "@/types";
 export default function HomePage() {
   const [selectedPillar, setSelectedPillar] = useState<Pillar | null>(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [selectedLang, setSelectedLang] = useState<string | undefined>(undefined);
 
   const handlePillarSelect = (pillar: Pillar) => {
     if (selectedPillar === pillar) {
@@ -63,7 +64,7 @@ export default function HomePage() {
           transition={{ duration: 1, delay: 0.3 }}
           className="flex items-center gap-3"
         >
-          <LanguageSelector />
+          <LanguageSelector onSelect={setSelectedLang} />
           <ThemeToggle />
         </motion.div>
       </header>
@@ -76,7 +77,7 @@ export default function HomePage() {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="text-center w-full max-w-2xl"
         >
-          <WelcomeText />
+          <WelcomeText lang={selectedLang} />
         </motion.div>
 
         <motion.div
