@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Pillar } from "@/types";
+
+// SatelliteBackground loaded client-side only (Leaflet requires browser APIs)
+const SatelliteBackground = dynamic(() => import("./SatelliteBackground"), { ssr: false });
 
 interface WorldMapProps {
   selectedPillar: Pillar | null;
@@ -15,7 +18,6 @@ const PILLAR_COLORS: Record<Pillar, string> = {
   air:      "#a78bfa",
 };
 
-// Normalized 0-1 coordinates for a world equirectangular projection
 function toPercent(lat: number, lng: number) {
   return {
     left: `${((lng + 180) / 360) * 100}%`,
@@ -60,28 +62,24 @@ const TRAFFIC_ROUTES: Record<Pillar, { lat: number; lng: number; label: string }
 };
 
 export default function WorldMap({ selectedPillar }: WorldMapProps) {
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-
   const color = selectedPillar ? PILLAR_COLORS[selectedPillar] : "#d4a843";
   const routes = selectedPillar ? TRAFFIC_ROUTES[selectedPillar] : [];
 
   return (
     <div className="satellite-wrapper fixed inset-0 z-0 overflow-hidden">
-      {/* ── Satellite iframe ────────────────────────────── */}
-      <iframe
-        src="https://maps.google.com/maps?q=8,10&z=2&t=k&output=embed"
-        className="absolute border-0 pointer-events-none"
+
+      {/* ── Leaflet satellite map (ArcGIS World Imagery — gratuit, fiable) ── */}
+      <div
+        className="absolute pointer-events-none"
         style={{
           inset: "-5%",
           width: "110%",
           height: "110%",
           filter: "blur(4px) brightness(0.55) saturate(1.4)",
-          willChange: "transform",
         }}
-        title="Vue satellite mondiale"
-        onLoad={() => setIframeLoaded(true)}
-        loading="eager"
-      />
+      >
+        <SatelliteBackground />
+      </div>
 
       {/* ── Gradient vignette overlay ────────────────────── */}
       <div
@@ -102,18 +100,6 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
           backgroundSize: "256px",
         }}
       />
-
-      {/* ── Loading shimmer ──────────────────────────────── */}
-      <AnimatePresence>
-        {!iframeLoaded && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0 bg-[#05080f]"
-          />
-        )}
-      </AnimatePresence>
 
       {/* ── Animated route dots + lines ─────────────────── */}
       <AnimatePresence>
@@ -172,7 +158,6 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.3 + i * 0.12 }}
                 >
-                  {/* Pulse ring */}
                   <motion.div
                     className="absolute rounded-full border"
                     style={{
@@ -184,7 +169,6 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
                     animate={{ scale: [1, 2.2, 1], opacity: [0.7, 0, 0.7] }}
                     transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}
                   />
-                  {/* Core dot */}
                   <div
                     className="w-2 h-2 rounded-full"
                     style={{
@@ -192,7 +176,6 @@ export default function WorldMap({ selectedPillar }: WorldMapProps) {
                       boxShadow: `0 0 6px ${color}, 0 0 14px ${color}80`,
                     }}
                   />
-                  {/* Label */}
                   <motion.span
                     className="absolute left-3 top-0 text-[8px] font-medium whitespace-nowrap tracking-wide"
                     style={{ color, textShadow: `0 0 8px ${color}` }}
