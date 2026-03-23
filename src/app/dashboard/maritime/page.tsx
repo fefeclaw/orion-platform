@@ -11,6 +11,7 @@ import { AlertsPanel } from "@/components/maritime/AlertsPanel";
 import { AnalyticsPanel } from "@/components/maritime/AnalyticsPanel";
 import { ForecastCard } from "@/components/maritime/ForecastCard";
 import { WeatherWidget } from "@/components/maritime/WeatherWidget";
+import { CrisisPanel, useCrisisTrigger } from "@/components/maritime/CrisisPanel";
 import WeatherRadarOverlay from "@/components/ui/WeatherRadarOverlay";
 import RainParticles from "@/components/ui/RainParticles";
 import type { Vessel } from "@/hooks/useMaritimeData";
@@ -42,6 +43,8 @@ export default function MaritimeDashboard() {
   const [is3D, setIs3D]                 = useState(false);
   const [radarActive, setRadarActive]   = useState(false);
   const [rainActive,  setRainActive]    = useState(false);
+  const [showCrisis,  setShowCrisis]    = useState(false);
+  const crisis = useCrisisTrigger(kpi, alerts);
 
   const criticalAlerts = alerts.filter(a => a.type === "critical" || a.type === "warning");
 
@@ -78,8 +81,34 @@ export default function MaritimeDashboard() {
         {weather && radarActive && <WeatherRadarOverlay weather={weather} visible={radarActive} />}
         {weather && rainActive && <RainParticles type={weather.type} intensity="heavy" />}
 
+        {/* Crisis Panel */}
+        <CrisisPanel
+          kpi={kpi}
+          alerts={alerts}
+          isOpen={showCrisis}
+          onClose={() => setShowCrisis(false)}
+        />
+
         {/* ── Toolbar top-left ── */}
         <div className="absolute left-4 top-4 z-20 flex flex-col gap-2">
+          {/* Crisis Mode button — visible si trigger actif */}
+          {crisis.triggered && (
+            <button
+              onClick={() => setShowCrisis(v => !v)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all animate-pulse"
+              style={{
+                background: showCrisis
+                  ? (crisis.severity === "RED" ? "rgba(239,68,68,0.22)" : "rgba(245,158,11,0.18)")
+                  : (crisis.severity === "RED" ? "rgba(239,68,68,0.12)" : "rgba(245,158,11,0.10)"),
+                border: `1px solid ${crisis.severity === "RED" ? "rgba(239,68,68,0.5)" : "rgba(245,158,11,0.4)"}`,
+                color: crisis.severity === "RED" ? "#EF4444" : "#F59E0B",
+                boxShadow: crisis.severity === "RED" ? "0 0 12px rgba(239,68,68,0.25)" : "0 0 12px rgba(245,158,11,0.2)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              ⚡ Crisis Mode
+            </button>
+          )}
           {/* Analytiques */}
           <button
             onClick={() => setShowAnalytics(v => !v)}
