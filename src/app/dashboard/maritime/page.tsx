@@ -8,6 +8,7 @@ import { MaritimeMap } from "@/components/maritime/MaritimeMap";
 import { VesselsTable } from "@/components/maritime/VesselsTable";
 import { AlertsPanel } from "@/components/maritime/AlertsPanel";
 import { AnalyticsPanel } from "@/components/maritime/AnalyticsPanel";
+import { ForecastCard } from "@/components/maritime/ForecastCard";
 import type { Vessel } from "@/hooks/useMaritimeData";
 
 export default function MaritimeDashboard() {
@@ -24,12 +25,11 @@ export default function MaritimeDashboard() {
   }, []);
 
   return (
-    // Flex column — fills the <main> area provided by DashboardLayout
     <div
       className="flex flex-col h-screen overflow-hidden"
       style={{ background: "#030712" }}
     >
-      {/* Header bar */}
+      {/* ── Header ── */}
       <MaritimeHeader
         kpi={kpi}
         alertCount={criticalAlerts.length}
@@ -40,18 +40,17 @@ export default function MaritimeDashboard() {
         onRefresh={refetch}
       />
 
-      {/* Map + overlays — takes remaining space */}
+      {/* ── Map + overlays ── */}
       <div className="relative flex-1 overflow-hidden">
-        {/* Canvas map fills entire middle area */}
         <MaritimeMap vessels={vessels} onVesselClick={handleVesselClick} />
 
-        {/* Analytics toggle button */}
+        {/* Analytiques toggle — top-left */}
         <button
           onClick={() => setShowAnalytics(v => !v)}
-          className="absolute left-4 top-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all"
+          className="absolute left-4 top-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
           style={{
-            background: showAnalytics ? "rgba(14,165,233,0.15)" : "rgba(6,14,26,0.8)",
-            border: `1px solid ${showAnalytics ? "rgba(14,165,233,0.3)" : "rgba(14,165,233,0.12)"}`,
+            background: showAnalytics ? "rgba(14,165,233,0.15)" : "rgba(6,14,26,0.82)",
+            border: `1px solid ${showAnalytics ? "rgba(14,165,233,0.35)" : "rgba(14,165,233,0.12)"}`,
             color: showAnalytics ? "#38bdf8" : "rgba(255,255,255,0.4)",
             backdropFilter: "blur(8px)",
           }}
@@ -72,7 +71,10 @@ export default function MaritimeDashboard() {
           onClose={() => setShowAnalytics(false)}
         />
 
-        {/* Selected vessel detail card */}
+        {/* Forecast Model — bottom-right flottant */}
+        <ForecastCard kpi={kpi} alertCount={criticalAlerts.length} />
+
+        {/* Selected vessel detail */}
         {selectedVessel && (
           <div
             className="absolute left-1/2 -translate-x-1/2 top-4 z-30 px-5 py-3 rounded-xl shadow-2xl"
@@ -132,7 +134,7 @@ export default function MaritimeDashboard() {
         )}
       </div>
 
-      {/* Vessels table drawer — at bottom */}
+      {/* ── Vessels table drawer ── */}
       <VesselsTable
         vessels={vessels}
         isExpanded={tableExpanded}
