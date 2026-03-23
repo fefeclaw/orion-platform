@@ -161,33 +161,40 @@ export function useMaritimeData(refreshInterval = 30_000) {
   const [isLive, setIsLive] = useState(false);
 
   const fetchData = useCallback(async () => {
-    if (!API_URL) return; // no backend configured, keep mock data
+    if (!API_URL) return;
     setLoading(true);
     try {
-      const [dashRes, alertsRes] = await Promise.all([
-        fetch(`${API_URL}/api/vessels/dashboard`, { next: { revalidate: 0 } }),
-        fetch(`${API_URL}/api/alerts`, { next: { revalidate: 0 } }),
+      const [vesselsRes, kpiRes, alertsRes] = await Promise.all([
+        fetch(`${API_URL}/api/vessels`,     { cache: "no-store" }),
+        fetch(`${API_URL}/api/kpis/latest`, { cache: "no-store" }),
+        fetch(`${API_URL}/api/alerts`,      { cache: "no-store" }),
       ]);
 
-      if (dashRes.ok) {
-        const data = await dashRes.json();
+      if (vesselsRes.ok) {
+        const data = await vesselsRes.json();
         const rawVessels: Record<string, unknown>[] = data.vessels ?? [];
-        const summary = data.summary ?? {};
+        if (rawVessels.length > 0) setVessels(rawVessels.map(mapApiVessel));
+      }
 
-        setVessels(rawVessels.map(mapApiVessel));
-
-        const total = Number(summary.total ?? rawVessels.length);
-        const atBerth = Number(summary.at_berth ?? 0);
-        const inTransit = Number(summary.in_transit ?? total - atBerth);
-        const congestion = total > 0 ? Math.round((atBerth / 20) * 100) : 0;
-
-        setKpi({ activeVessels: total, atBerth, inTransit, congestionIndex: Math.min(congestion, 100) });
+      if (kpiRes.ok) {
+        const kd = await kpiRes.json();
+        const meta = kd.congestion_metadata ?? {};
+        setKpi({
+          activeVessels:   Number(kd.total    ?? 0),
+          atBerth:         Number(kd.at_berth ?? 0),
+          inTransit:       Number(kd.in_transit ?? 0),
+          congestionIndex: Math.round(Number(meta.index_pct ?? 0)),
+        });
         setIsLive(true);
       }
 
       if (alertsRes.ok) {
-        const rawAlerts: Record<string, unknown>[] = await alertsRes.json();
-        setAlerts(rawAlerts.slice(0, 10).map(mapApiAlert));
+        const ad = await alertsRes.json();
+        // backend returns { alerts: [...], count: N } or direct array
+        const rawAlerts: Record<string, unknown>[] =
+          Array.isArray(ad) ? ad : (ad.alerts ?? []);
+        if (rawAlerts.length > 0)
+          setAlerts(rawAlerts.slice(0, 10).map(mapApiAlert));
       }
     } catch {
       // silently keep mock data if API unreachable
