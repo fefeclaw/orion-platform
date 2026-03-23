@@ -1,82 +1,196 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { SkySpecification } from "@maplibre/maplibre-gl-style-spec";
 import type { Vessel } from "@/hooks/useMaritimeData";
+import { Layers, Satellite, Map, Route } from "lucide-react";
 
-// ─── Ports stratégiques Afrique de l'Ouest ───────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
+type MapStyle = "satellite" | "dark" | "plan";
+
+// ─── Styles MapLibre ─────────────────────────────────────────────────────────
+const SATELLITE_STYLE: maplibregl.StyleSpecification = {
+  version: 8,
+  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  sprite: "https://demotiles.maplibre.org/sprite",
+  sources: {
+    esri: {
+      type: "raster",
+      tiles: [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      ],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution: "© Esri, DigitalGlobe",
+    },
+  },
+  layers: [{ id: "satellite-bg", type: "raster", source: "esri", paint: { "raster-opacity": 1 } }],
+};
+
+const DARK_STYLE_URL   = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+const PLAN_STYLE_URL   = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+
+// ─── Sky/Atmosphère par style ─────────────────────────────────────────────────
+const SKY: Record<MapStyle, SkySpecification> = {
+  satellite: {
+    "sky-color": "#000814",
+    "horizon-color": "#001a3a",
+    "fog-color": "#001020",
+    "fog-ground-blend": 0.9,
+    "horizon-fog-blend": 0.4,
+    "sky-horizon-blend": 0.6,
+    "atmosphere-blend": 0.95,
+  },
+  dark: {
+    "sky-color": "#050a1e",
+    "horizon-color": "#0a1432",
+    "fog-color": "#050a18",
+    "fog-ground-blend": 0.9,
+    "horizon-fog-blend": 0.3,
+    "sky-horizon-blend": 0.5,
+    "atmosphere-blend": 0.85,
+  },
+  plan: {
+    "sky-color": "#c8dcf0",
+    "horizon-color": "#e8f0f8",
+    "fog-color": "#d0e4f4",
+    "fog-ground-blend": 0.8,
+    "horizon-fog-blend": 0.5,
+    "sky-horizon-blend": 0.6,
+    "atmosphere-blend": 0.6,
+  },
+};
+
+// ─── Ports ────────────────────────────────────────────────────────────────────
 const PORTS = [
   { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.32,  lng: -4.02 },
-  { id: "LOS", name: "Port de Lagos (Apapa)",   lat: 6.43,  lng:  3.42 },
+  { id: "LOS", name: "Port de Lagos",           lat: 6.43,  lng:  3.42 },
   { id: "DKR", name: "Port de Dakar",           lat: 14.69, lng: -17.44 },
   { id: "TEM", name: "Port de Tema",            lat: 5.62,  lng: -0.02  },
   { id: "CTN", name: "Port de Cotonou",         lat: 6.35,  lng:  2.42  },
 ];
 
-// ─── Couleurs par statut ──────────────────────────────────────────────────────
+// ─── Couleurs statut ──────────────────────────────────────────────────────────
 const STATUS_COLOR: Record<Vessel["status"], string> = {
   berth:   "#10B981",
   transit: "#0EA5E9",
   alert:   "#EF4444",
 };
 
-interface MaritimeMapGLProps {
-  vessels: Vessel[];
-  is3D: boolean;
-  onVesselClick?: (vessel: Vessel) => void;
+// ─── Routes commerciales ──────────────────────────────────────────────────────
+const TRADE_ROUTES: GeoJSON.FeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [3.42, 6.43]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-17.44, 14.69]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-0.02, 5.62]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.42, 6.43], [2.42, 6.35]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.44, 14.69], [-7.59, 33.59]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} },
+  ],
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function buildVesselGeoJSON(vessels: Vessel[]): GeoJSON.FeatureCollection {
+  return {
+    type: "FeatureCollection",
+    features: vessels.map((v) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [v.lng, v.lat] },
+      properties: { ...v },
+    })),
+  };
 }
 
-export function MaritimeMapGL({ vessels, is3D, onVesselClick }: MaritimeMapGLProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef       = useRef<maplibregl.Map | null>(null);
-  const popupRef     = useRef<maplibregl.Popup | null>(null);
-  const portMarkersRef = useRef<maplibregl.Marker[]>([]);
-  const frameRef     = useRef<number>(0);
+function createPortMarker(id: string, color = "#D4AF37") {
+  const el = document.createElement("div");
+  el.style.cssText = `position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;`;
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid ${color}60;animation:orion-port-pulse 2.5s ease-in-out infinite;"></div>
+    <div style="width:9px;height:9px;border-radius:50%;background:${color};box-shadow:0 0 10px ${color}cc,0 0 20px ${color}44;"></div>
+    <span style="position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:${color};letter-spacing:.1em;white-space:nowrap;text-shadow:0 0 8px #00000099;">${id}</span>
+  `;
+  return el;
+}
 
-  // ─── Créer un élément port (or pulsé) ──────────────────────────────────────
-  const createPortEl = useCallback((id: string) => {
-    const el = document.createElement("div");
-    el.className = "maritime-port-marker";
-    el.innerHTML = `
-      <div style="
-        position:relative;
-        width:32px; height:32px;
-        display:flex; align-items:center; justify-content:center;
-      ">
-        <div style="
-          position:absolute; inset:0; border-radius:50%;
-          border:1px solid #D4AF3766;
-          animation:port-pulse 2.5s ease-in-out infinite;
-        "></div>
-        <div style="
-          width:8px; height:8px; border-radius:50%;
-          background:#D4AF37;
-          box-shadow:0 0 8px #D4AF37;
-        "></div>
-      </div>
-      <span style="
-        position:absolute; top:100%; left:50%; transform:translateX(-50%);
-        margin-top:2px;
-        font-size:9px; font-weight:700;
-        color:#D4AF37; letter-spacing:0.08em;
-        text-shadow:0 0 6px #00000099;
-        pointer-events:none; white-space:nowrap;
-      ">${id}</span>
-    `;
-    return el;
+// ─── Props ────────────────────────────────────────────────────────────────────
+interface MaritimeMapGLProps {
+  vessels: Vessel[];
+  onVesselClick?: (vessel: Vessel) => void;
+  is3D?: boolean; // pitch control from parent (optional — map also has internal toggle)
+}
+
+// ─── Composant ────────────────────────────────────────────────────────────────
+export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLProps) {
+  const containerRef   = useRef<HTMLDivElement>(null);
+  const mapRef         = useRef<maplibregl.Map | null>(null);
+  const frameRef       = useRef<number>(0);
+  const portMarkersRef = useRef<maplibregl.Marker[]>([]);
+  const vesselDataRef  = useRef<Vessel[]>(vessels);
+
+  const [activeStyle,  setActiveStyle]  = useState<MapStyle>("dark");
+  const [internalIs3D, setInternalIs3D] = useState(false);
+  const [showRoutes,   setShowRoutes]   = useState(true);
+
+  // Sync external is3D prop
+  const effective3D = is3D !== undefined ? is3D : internalIs3D;
+
+  // ─── Ajouter les layers custom après chargement du style ──────────────────
+  const addCustomLayers = useCallback((map: maplibregl.Map) => {
+    // Routes
+    if (!map.getSource("orion-routes")) {
+      map.addSource("orion-routes", { type: "geojson", data: TRADE_ROUTES });
+    }
+    if (!map.getLayer("orion-routes-glow")) {
+      map.addLayer({ id: "orion-routes-glow", type: "line", source: "orion-routes",
+        paint: { "line-color": "#0EA5E9", "line-opacity": 0.15, "line-width": 8, "line-blur": 6 } });
+    }
+    if (!map.getLayer("orion-routes-line")) {
+      map.addLayer({ id: "orion-routes-line", type: "line", source: "orion-routes",
+        paint: { "line-color": "#0EA5E9", "line-opacity": 0.4, "line-width": 1.5, "line-dasharray": [3, 5] } });
+    }
+
+    // Navires
+    if (!map.getSource("orion-vessels")) {
+      map.addSource("orion-vessels", { type: "geojson", data: buildVesselGeoJSON(vesselDataRef.current) });
+    }
+    if (!map.getLayer("orion-vessels-halo")) {
+      map.addLayer({ id: "orion-vessels-halo", type: "circle", source: "orion-vessels",
+        filter: ["==", ["get", "status"], "alert"],
+        paint: { "circle-radius": 18, "circle-color": "#EF4444", "circle-opacity": 0.12 } });
+    }
+    if (!map.getLayer("orion-vessels-circle")) {
+      map.addLayer({ id: "orion-vessels-circle", type: "circle", source: "orion-vessels",
+        paint: {
+          "circle-radius": ["case", ["==", ["get", "status"], "alert"], 7, 5],
+          "circle-color": ["match", ["get", "status"], "berth", "#10B981", "alert", "#EF4444", "#0EA5E9"],
+          "circle-stroke-width": 1.5,
+          "circle-stroke-color": ["case",
+            ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.6)",
+            "rgba(255,255,255,0.5)"
+          ],
+        },
+      });
+    }
   }, []);
 
-  // ─── Init carte ─────────────────────────────────────────────────────────────
+  // ─── Appliquer fog + projection ───────────────────────────────────────────
+  const applyMapMeta = useCallback((map: maplibregl.Map, style: MapStyle) => {
+    try { map.setSky(SKY[style]); } catch { /* ignore if not supported */ }
+    try { map.setProjection({ type: "globe" }); } catch { /* ignore if not supported */ }
+  }, []);
+
+  // ─── Init map ──────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!containerRef.current) return;
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      // CARTO Dark Matter GL — dark theme, no API key needed
-      style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+      style: DARK_STYLE_URL,
       center: [-2.5, 7.5],
-      zoom: 4.8,
+      zoom: 1.8, // Start zoomed out to see globe
       pitch: 0,
       bearing: 0,
       attributionControl: false,
@@ -84,261 +198,262 @@ export function MaritimeMapGL({ vessels, is3D, onVesselClick }: MaritimeMapGLPro
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "bottom-right");
     map.addControl(new maplibregl.ScaleControl({ unit: "nautical" }), "bottom-left");
-
     mapRef.current = map;
 
+    // Hover popup
+    const popup = new maplibregl.Popup({
+      closeButton: false, closeOnClick: false,
+      className: "orion-popup", offset: 14, maxWidth: "230px",
+    });
+
     map.on("load", () => {
-      // ── Routes commerciales (lignes) ──
-      map.addSource("routes", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: [
-            // ABJ → LOS
-            { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [3.42, 6.43]] }, properties: {} },
-            // ABJ → DKR
-            { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-17.44, 14.69]] }, properties: {} },
-            // ABJ → TEM
-            { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-0.02, 5.62]] }, properties: {} },
-            // LOS → CTN
-            { type: "Feature", geometry: { type: "LineString", coordinates: [[3.42, 6.43], [2.42, 6.35]] }, properties: {} },
-            // DKR → Europe (Casablanca)
-            { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.44, 14.69], [-7.59, 33.59]] }, properties: {} },
-          ],
-        },
+      applyMapMeta(map, "dark");
+      addCustomLayers(map);
+
+      // Smooth fly-in vers West Africa
+      setTimeout(() => {
+        map.flyTo({ center: [-2.5, 7.5], zoom: 4.8, duration: 3500, essential: true,
+          easing: (t) => 1 - Math.pow(1 - t, 3) });
+      }, 600);
+
+      // Ports
+      PORTS.forEach((port) => {
+        const el = createPortMarker(port.id);
+        const m = new maplibregl.Marker({ element: el, anchor: "center" })
+          .setLngLat([port.lng, port.lat])
+          .setPopup(new maplibregl.Popup({ offset: 20, closeButton: false, className: "orion-popup" })
+            .setHTML(`<div style="font-family:monospace;font-size:11px;padding:2px">
+              <div style="font-weight:700;color:#D4AF37;letter-spacing:.06em">${port.id}</div>
+              <div style="color:#9CA3AF;margin-top:3px">${port.name}</div>
+            </div>`))
+          .addTo(map);
+        portMarkersRef.current.push(m);
       });
 
-      map.addLayer({
-        id: "routes-line",
-        type: "line",
-        source: "routes",
-        paint: {
-          "line-color": "#0EA5E9",
-          "line-opacity": 0.18,
-          "line-width": 1.5,
-          "line-dasharray": [3, 5],
-        },
-      });
+      // Curseur
+      map.on("mouseenter", "orion-vessels-circle", () => { map.getCanvas().style.cursor = "pointer"; });
+      map.on("mouseleave", "orion-vessels-circle", () => { map.getCanvas().style.cursor = ""; });
 
-      // ── Source navires (GeoJSON) ──
-      map.addSource("vessels", {
-        type: "geojson",
-        data: buildVesselGeoJSON([]),
-      });
-
-      // Halo alert (cercle large, transparent)
-      map.addLayer({
-        id: "vessels-alert-halo",
-        type: "circle",
-        source: "vessels",
-        filter: ["==", ["get", "status"], "alert"],
-        paint: {
-          "circle-radius": 18,
-          "circle-color": "#EF4444",
-          "circle-opacity": 0.15,
-          "circle-stroke-width": 0,
-        },
-      });
-
-      // Cercle principal
-      map.addLayer({
-        id: "vessels-circle",
-        type: "circle",
-        source: "vessels",
-        paint: {
-          "circle-radius": [
-            "case",
-            ["==", ["get", "status"], "alert"], 7,
-            5,
-          ],
-          "circle-color": [
-            "match", ["get", "status"],
-            "berth",   "#10B981",
-            "alert",   "#EF4444",
-            /* transit */ "#0EA5E9",
-          ],
-          "circle-stroke-width": 1.5,
-          "circle-stroke-color": "rgba(255,255,255,0.5)",
-        },
-      });
-
-      // ── Curseur pointer sur hover ──
-      map.on("mouseenter", "vessels-circle", () => { map.getCanvas().style.cursor = "pointer"; });
-      map.on("mouseleave", "vessels-circle", () => { map.getCanvas().style.cursor = ""; });
-
-      // ── Popup hover ──
-      const popup = new maplibregl.Popup({
-        closeButton: false,
-        closeOnClick: false,
-        className: "maritime-popup",
-        offset: 12,
-        maxWidth: "220px",
-      });
-      popupRef.current = popup;
-
-      map.on("mousemove", "vessels-circle", (e) => {
+      // Hover vessel
+      map.on("mousemove", "orion-vessels-circle", (e) => {
         const feat = e.features?.[0];
         if (!feat) return;
-        const props = feat.properties as Record<string, string>;
+        const p = feat.properties as Record<string, string>;
         const coords = (feat.geometry as GeoJSON.Point).coordinates as [number, number];
-        const statusLabel = props.status === "berth" ? "À quai" : props.status === "alert" ? "En alerte" : "En transit";
-        const color = STATUS_COLOR[props.status as Vessel["status"]] ?? "#0EA5E9";
-        popup
-          .setLngLat(coords)
-          .setHTML(`
-            <div style="font-family:monospace;font-size:11px;line-height:1.6;padding:4px 2px">
-              <div style="font-size:12px;font-weight:600;color:#F3F4F6;margin-bottom:4px">${props.name}</div>
-              <div style="color:#6B7280">IMO ${props.imo} · ${props.type}</div>
-              <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
-                <span style="width:6px;height:6px;border-radius:50%;background:${color};display:inline-block"></span>
-                <span style="color:${color}">${statusLabel}</span>
-              </div>
-              <div style="color:#6B7280;margin-top:2px">${props.destination} · ${props.speed} kn</div>
+        const color = STATUS_COLOR[p.status as Vessel["status"]] ?? "#0EA5E9";
+        const statusLabel = p.status === "berth" ? "À quai" : p.status === "alert" ? "En alerte" : "En transit";
+        popup.setLngLat(coords).setHTML(`
+          <div style="font-family:monospace;font-size:11px;line-height:1.6;padding:2px">
+            <div style="font-size:12px;font-weight:700;color:#F3F4F6">${p.name}</div>
+            <div style="color:#6B7280;margin-top:2px">IMO ${p.imo} · ${p.type}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+              <span style="width:7px;height:7px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color};display:inline-block"></span>
+              <span style="color:${color};font-weight:600">${statusLabel}</span>
             </div>
-          `)
-          .addTo(map);
+            <div style="color:#6B7280;margin-top:2px">${p.destination} · ${p.speed} kn</div>
+          </div>`).addTo(map);
       });
+      map.on("mouseleave", "orion-vessels-circle", () => popup.remove());
 
-      map.on("mouseleave", "vessels-circle", () => popup.remove());
-
-      // ── Click navire ──
-      map.on("click", "vessels-circle", (e) => {
+      // Click vessel
+      map.on("click", "orion-vessels-circle", (e) => {
         const feat = e.features?.[0];
         if (!feat || !onVesselClick) return;
-        const p = feat.properties as Record<string, string | number>;
+        const p = feat.properties as Record<string, unknown>;
         onVesselClick({
-          id: String(p.id),
-          name: String(p.name),
-          imo: String(p.imo),
-          type: String(p.type),
-          flag: String(p.flag ?? "—"),
-          lat: Number(p.lat),
-          lng: Number(p.lng),
-          speed: Number(p.speed),
-          heading: Number(p.heading ?? 0),
+          id: String(p.id), name: String(p.name), imo: String(p.imo ?? "—"),
+          type: String(p.type ?? "—"), flag: String(p.flag ?? "—"),
+          lat: Number(p.lat), lng: Number(p.lng),
+          speed: Number(p.speed ?? 0), heading: Number(p.heading ?? 0),
           status: p.status as Vessel["status"],
-          destination: String(p.destination),
-          eta: String(p.eta),
-          lastUpdate: String(p.lastUpdate),
+          destination: String(p.destination ?? "—"), eta: String(p.eta ?? "—"),
+          lastUpdate: String(p.lastUpdate ?? "—"),
         });
       });
 
-      // ── Ports markers ──
-      PORTS.forEach((port) => {
-        const el = createPortEl(port.id);
-        const marker = new maplibregl.Marker({ element: el, anchor: "center" })
-          .setLngLat([port.lng, port.lat])
-          .setPopup(
-            new maplibregl.Popup({ offset: 20, closeButton: false, className: "maritime-popup" }).setHTML(`
-              <div style="font-family:monospace;font-size:11px;padding:2px">
-                <div style="font-weight:600;color:#D4AF37">${port.id}</div>
-                <div style="color:#9CA3AF;margin-top:2px">${port.name}</div>
-              </div>
-            `)
-          )
-          .addTo(map);
-        portMarkersRef.current.push(marker);
-      });
-
-      // ── Pulse animation halo alert ──
+      // Pulse halo animation
       let pulse = 0;
       const animatePulse = () => {
         pulse = (pulse + 1) % 100;
-        const opacity = 0.05 + Math.sin((pulse / 100) * Math.PI * 2) * 0.10;
-        const radius  = 16 + Math.sin((pulse / 100) * Math.PI * 2) * 5;
-        if (map.getLayer("vessels-alert-halo")) {
-          map.setPaintProperty("vessels-alert-halo", "circle-opacity", opacity);
-          map.setPaintProperty("vessels-alert-halo", "circle-radius", radius);
+        const opacity = 0.06 + Math.sin((pulse / 100) * Math.PI * 2) * 0.12;
+        const radius  = 15 + Math.sin((pulse / 100) * Math.PI * 2) * 6;
+        if (map.getLayer("orion-vessels-halo")) {
+          map.setPaintProperty("orion-vessels-halo", "circle-opacity", opacity);
+          map.setPaintProperty("orion-vessels-halo", "circle-radius", radius);
         }
         frameRef.current = requestAnimationFrame(animatePulse);
       };
       frameRef.current = requestAnimationFrame(animatePulse);
     });
 
+    // Re-add layers après changement de style
+    map.on("style.load", () => {
+      applyMapMeta(map, activeStyle);
+      addCustomLayers(map);
+    });
+
     return () => {
       cancelAnimationFrame(frameRef.current);
       portMarkersRef.current.forEach(m => m.remove());
       portMarkersRef.current = [];
+      popup.remove();
       map.remove();
       mapRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ─── Mise à jour des navires ─────────────────────────────────────────────────
+  // ─── Mise à jour vessels ──────────────────────────────────────────────────
   useEffect(() => {
+    vesselDataRef.current = vessels;
     const map = mapRef.current;
     if (!map || !map.isStyleLoaded()) return;
-    const source = map.getSource("vessels") as maplibregl.GeoJSONSource | undefined;
-    source?.setData(buildVesselGeoJSON(vessels));
+    const src = map.getSource("orion-vessels") as maplibregl.GeoJSONSource | undefined;
+    src?.setData(buildVesselGeoJSON(vessels));
   }, [vessels]);
 
-  // ─── Toggle 2D / 3D ─────────────────────────────────────────────────────────
+  // ─── Changement de style ──────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.easeTo({
-      pitch:   is3D ? 55  : 0,
-      bearing: is3D ? -12 : 0,
-      duration: 1200,
-      easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t, // ease-in-out
-    });
-  }, [is3D]);
+    const newStyle = activeStyle === "satellite" ? SATELLITE_STYLE
+      : activeStyle === "plan" ? PLAN_STYLE_URL : DARK_STYLE_URL;
+    map.setStyle(newStyle as string | maplibregl.StyleSpecification);
+  }, [activeStyle]);
 
+  // ─── Visibilité routes ────────────────────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+    const vis = showRoutes ? "visible" : "none";
+    ["orion-routes-glow", "orion-routes-line"].forEach(id => {
+      if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", vis);
+    });
+  }, [showRoutes]);
+
+  // ─── Toggle 2D / 3D ──────────────────────────────────────────────────────
+  useEffect(() => {
+    mapRef.current?.easeTo({
+      pitch:   effective3D ? 55  : 0,
+      bearing: effective3D ? -12 : 0,
+      duration: 1200,
+      easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+    });
+  }, [effective3D]);
+
+  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      {/* Styles globaux injectés pour les popups et ports */}
+      {/* ── Styles globaux ── */}
       <style>{`
-        .maritime-popup .maplibregl-popup-content {
-          background: rgba(6, 14, 26, 0.96) !important;
-          border: 1px solid rgba(14, 165, 233, 0.2) !important;
-          border-radius: 10px !important;
-          padding: 10px 12px !important;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+        .orion-popup .maplibregl-popup-content {
+          background: rgba(5, 10, 22, 0.97) !important;
+          border: 1px solid rgba(14, 165, 233, 0.22) !important;
+          border-radius: 12px !important;
+          padding: 10px 14px !important;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(14,165,233,0.08) !important;
           color: #F3F4F6;
+          backdrop-filter: blur(12px);
         }
-        .maritime-popup .maplibregl-popup-tip {
-          border-top-color: rgba(14, 165, 233, 0.2) !important;
-          border-bottom-color: rgba(14, 165, 233, 0.2) !important;
+        .orion-popup .maplibregl-popup-tip { display: none; }
+        @keyframes orion-port-pulse {
+          0%, 100% { transform: scale(1); opacity: 0.55; }
+          50%       { transform: scale(2.2); opacity: 0.06; }
         }
-        @keyframes port-pulse {
-          0%, 100% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(1.8); opacity: 0.1; }
-        }
-        .maplibregl-ctrl-bottom-right { bottom: 52px !important; }
-        .maplibregl-ctrl-bottom-left  { bottom: 52px !important; }
-        .maplibregl-ctrl-attrib { display: none !important; }
+        .maplibregl-ctrl-bottom-right { bottom: 56px !important; }
+        .maplibregl-ctrl-bottom-left  { bottom: 56px !important; }
+        .maplibregl-ctrl-attrib       { display: none !important; }
+        .maplibregl-canvas             { outline: none; }
       `}</style>
+
+      {/* ── Canvas carte ── */}
       <div ref={containerRef} className="w-full h-full" />
+
+      {/* ── Style Switcher — bottom-left ── */}
+      <div
+        className="absolute bottom-14 left-4 z-20 flex flex-col gap-2"
+      >
+        {/* Style selector */}
+        <div
+          className="flex rounded-xl overflow-hidden shadow-2xl"
+          style={{
+            background: "rgba(5, 10, 22, 0.88)",
+            border: "1px solid rgba(14, 165, 233, 0.16)",
+            backdropFilter: "blur(14px)",
+          }}
+        >
+          {(
+            [
+              { key: "satellite" as MapStyle, label: "Satellite", Icon: Satellite },
+              { key: "dark"      as MapStyle, label: "Sombre",    Icon: Map },
+              { key: "plan"      as MapStyle, label: "Plan",      Icon: Map },
+            ] as { key: MapStyle; label: string; Icon: React.ComponentType<{ className?: string }> }[]
+          ).map(({ key, label, Icon }, i) => {
+            const active = activeStyle === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setActiveStyle(key)}
+                title={label}
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-all"
+                style={{
+                  background: active ? "rgba(14, 165, 233, 0.22)" : "transparent",
+                  color: active ? "#38bdf8" : "rgba(255,255,255,0.35)",
+                  borderLeft: i > 0 ? "1px solid rgba(14,165,233,0.12)" : undefined,
+                }}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Routes toggle + 2D/3D */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowRoutes(v => !v)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex-1"
+            style={{
+              background: showRoutes ? "rgba(14,165,233,0.14)" : "rgba(5,10,22,0.82)",
+              border: `1px solid ${showRoutes ? "rgba(14,165,233,0.3)" : "rgba(255,255,255,0.09)"}`,
+              color: showRoutes ? "#38bdf8" : "rgba(255,255,255,0.3)",
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            <Route className="h-3.5 w-3.5" />
+            Routes
+          </button>
+
+          {/* 2D/3D interne */}
+          {is3D === undefined && (
+            <div
+              className="flex rounded-lg overflow-hidden"
+              style={{
+                background: "rgba(5,10,22,0.88)",
+                border: "1px solid rgba(255,255,255,0.09)",
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              <Layers className="h-3.5 w-3.5 self-center ml-2 text-white/25" />
+              {(["2D", "3D"] as const).map((m) => {
+                const active = (m === "3D") === internalIs3D;
+                return (
+                  <button key={m} onClick={() => setInternalIs3D(m === "3D")}
+                    className="px-2.5 py-1.5 text-xs font-bold transition-all"
+                    style={{
+                      background: active ? "rgba(14,165,233,0.22)" : "transparent",
+                      color: active ? "#38bdf8" : "rgba(255,255,255,0.3)",
+                    }}
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
-}
-
-// ─── Helper GeoJSON ──────────────────────────────────────────────────────────
-function buildVesselGeoJSON(vessels: Vessel[]): GeoJSON.FeatureCollection {
-  return {
-    type: "FeatureCollection",
-    features: vessels.map((v) => ({
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [v.lng, v.lat],
-      },
-      properties: {
-        id: v.id,
-        name: v.name,
-        imo: v.imo,
-        type: v.type,
-        flag: v.flag,
-        lat: v.lat,
-        lng: v.lng,
-        speed: v.speed,
-        heading: v.heading,
-        status: v.status,
-        destination: v.destination,
-        eta: v.eta,
-        lastUpdate: v.lastUpdate,
-      },
-    })),
-  };
 }
