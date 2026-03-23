@@ -4,11 +4,15 @@ import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { BarChart2, Layers } from "lucide-react";
 import { useMaritimeData } from "@/hooks/useMaritimeData";
+import { useWeather } from "@/hooks/useWeather";
 import { MaritimeHeader } from "@/components/maritime/MaritimeHeader";
 import { VesselsTable } from "@/components/maritime/VesselsTable";
 import { AlertsPanel } from "@/components/maritime/AlertsPanel";
 import { AnalyticsPanel } from "@/components/maritime/AnalyticsPanel";
 import { ForecastCard } from "@/components/maritime/ForecastCard";
+import { WeatherWidget } from "@/components/maritime/WeatherWidget";
+import WeatherRadarOverlay from "@/components/ui/WeatherRadarOverlay";
+import RainParticles from "@/components/ui/RainParticles";
 import type { Vessel } from "@/hooks/useMaritimeData";
 
 // Import dynamique — MapLibre GL est browser-only (WebGL)
@@ -30,11 +34,14 @@ const MaritimeMapGL = dynamic(
 
 export default function MaritimeDashboard() {
   const { vessels, kpi, alerts, loading, isLive, refetch } = useMaritimeData(30_000);
+  const { weather } = useWeather(5.32, -4.02); // Port Autonome d'Abidjan
   const [showAlerts, setShowAlerts]     = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [tableExpanded, setTableExpanded] = useState(false);
   const [selectedVessel, setSelectedVessel] = useState<Vessel | null>(null);
   const [is3D, setIs3D]                 = useState(false);
+  const [radarActive, setRadarActive]   = useState(false);
+  const [rainActive,  setRainActive]    = useState(false);
 
   const criticalAlerts = alerts.filter(a => a.type === "critical" || a.type === "warning");
 
@@ -67,6 +74,10 @@ export default function MaritimeDashboard() {
           onVesselClick={handleVesselClick}
         />
 
+        {/* Overlays météo — sous la carte */}
+        {weather && radarActive && <WeatherRadarOverlay weather={weather} visible={radarActive} />}
+        {weather && rainActive && <RainParticles type={weather.type} intensity="heavy" />}
+
         {/* ── Toolbar top-left ── */}
         <div className="absolute left-4 top-4 z-20 flex flex-col gap-2">
           {/* Analytiques */}
@@ -83,6 +94,14 @@ export default function MaritimeDashboard() {
             <BarChart2 className="h-3.5 w-3.5" />
             Analytiques
           </button>
+
+          {/* Weather Widget */}
+          <WeatherWidget
+            radarActive={radarActive}
+            rainActive={rainActive}
+            onRadarToggle={setRadarActive}
+            onRainToggle={setRainActive}
+          />
         </div>
 
         {/* ── Toggle 2D / 3D — top-right ── */}
