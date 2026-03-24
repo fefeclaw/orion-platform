@@ -147,3 +147,53 @@ body {
   border-color: rgba(13, 27, 46, 0.15) !important;
   color: rgba(13, 27, 46, 0.5) !important;
 }
+
+/* ─── Light Mode — Auth Modal inputs ──────────────────── */
+[data-theme="light"] .glass input,
+[data-theme="light"] .glass select {
+  background: rgba(255,255,255,0.82) !important;
+  border-color: rgba(13,27,46,0.16) !important;
+  color: #0d1b2e !important;
+}
+[data-theme="light"] .glass input::placeholder {
+  color: rgba(13,27,46,0.28) !important;
+}
+[data-theme="light"] .glass label {
+  color: rgba(13,27,46,0.55) !important;
+}
+[data-theme="light"] .glass h2 {
+  color: #0d1b2e !important;
+}
+[data-theme="light"] .auth-muted {
+  color: rgba(13,27,46,0.38) !important;
+}
+[data-theme="light"] .auth-toggle-border {
+  border-color: rgba(13,27,46,0.14) !important;
+}
+[data-theme="light"] .auth-toggle-inactive {
+  color: rgba(13,27,46,0.50) !important;
+}
+[data-theme="light"] .auth-close {
+  color: rgba(13,27,46,0.30) !important;
+}
+[data-theme="light"] .auth-close:hover {
+  color: rgba(13,27,46,0.65) !important;
+}
+
+/* ─── Light Mode — Language Selector ───────────────────── */
+[data-theme="light"] .lang-selector-btn {
+  color: rgba(13,27,46,0.60) !important;
+  border-color: rgba(13,27,46,0.18) !important;
+  background: rgba(13,27,46,0.05) !important;
+}
+[data-theme="light"] .lang-selector-dropdown {
+  background: rgba(248,251,255,0.98) !important;
+  border-color: rgba(13,27,46,0.12) !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(13,27,46,0.05) !important;
+}
+[data-theme="light"] .lang-selector-item {
+  color: rgba(13,27,46,0.65) !important;
+}
+[data-theme="light"] .lang-selector-item--active {
+  color: #b8912e !important;
+}

@@ -68,20 +68,20 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
             {/* Title */}
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-white tracking-wide">{t("auth_title")}</h2>
-              <p className="text-xs text-white/30 mt-1 uppercase tracking-widest">
+              <p className="auth-muted text-xs text-white/30 mt-1 uppercase tracking-widest">
                 Accès sécurisé — Orion Logistics
               </p>
             </div>
 
             {/* Mode toggle */}
-            <div className="flex rounded-xl overflow-hidden mb-6 border border-white/8">
+            <div className="auth-toggle-border flex rounded-xl overflow-hidden mb-6 border border-white/8">
               <button
                 type="button"
                 onClick={() => setMode("professional")}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-300 ${
                   mode === "professional"
                     ? "bg-gradient-to-r from-[#D4AF37] to-[#b8912e] text-black"
-                    : "text-white/30 hover:text-white/60"
+                    : "auth-toggle-inactive text-white/30 hover:text-white/60"
                 }`}
               >
                 {t("auth_mode_pro")}
@@ -92,7 +92,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-300 ${
                   mode === "user"
                     ? "bg-gradient-to-r from-[#00c9a7] to-[#00a88a] text-black"
-                    : "text-white/30 hover:text-white/60"
+                    : "auth-toggle-inactive text-white/30 hover:text-white/60"
                 }`}
               >
                 {t("auth_mode_user")}
@@ -164,7 +164,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
               )}
 
               {/* Demo hint */}
-              <p className="text-[10px] text-white/20 text-center">
+              <p className="auth-muted text-[10px] text-white/20 text-center">
                 {mode === "professional"
                   ? "Demo: MAT-0001 · orion2024"
                   : "Demo: admin@orion.ci · orion2024"}
@@ -189,7 +189,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
 
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 text-white/20 hover:text-white/60 transition-colors text-lg leading-none"
+              className="auth-close absolute top-5 right-5 text-white/20 hover:text-white/60 transition-colors text-lg leading-none"
               aria-label={t("close")}
             >
               ×

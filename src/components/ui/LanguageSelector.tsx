@@ -41,7 +41,7 @@ export default function LanguageSelector() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 text-xs font-medium tracking-wide transition-all rounded-full px-3 py-1.5"
+        className="lang-selector-btn flex items-center gap-1.5 text-xs font-medium tracking-wide transition-all rounded-full px-3 py-1.5"
         style={{
           border: "1px solid rgba(255,255,255,0.12)",
           color: "rgba(255,255,255,0.55)",
@@ -65,7 +65,7 @@ export default function LanguageSelector() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="absolute right-0 top-full mt-2 rounded-xl overflow-hidden z-50"
+            className="lang-selector-dropdown absolute right-0 top-full mt-2 rounded-xl overflow-hidden z-50"
             style={{
               width: 156,
               background: "rgba(8,16,30,0.96)",
@@ -81,7 +81,7 @@ export default function LanguageSelector() {
                 <button
                   key={l.code}
                   onClick={() => handleSelect(l)}
-                  className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs transition-colors"
+                  className={`lang-selector-item w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs transition-colors${isActive ? " lang-selector-item--active" : ""}`}
                   style={{
                     color: isActive ? "#d4a843" : "rgba(255,255,255,0.50)",
                     background: isActive ? "rgba(212,168,67,0.06)" : "transparent",
