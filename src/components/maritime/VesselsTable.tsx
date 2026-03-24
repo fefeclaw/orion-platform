@@ -102,11 +102,11 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
                 <tr style={{ borderBottom: "1px solid rgba(14,165,233,0.10)" }}>
                   {([
                     ["name",        "Navire"],
-                    ["imo",         "IMO"],
                     ["type",        "Type"],
                     ["status",      "Statut"],
                     ["lat",         "Position"],
                     ["speed",       "Vitesse"],
+                    ["heading",     "Cap"],
                     ["destination", "Destination"],
                     ["eta",         "ETA"],
                   ] as [SortKey, string][]).map(([col, label]) => (
@@ -136,7 +136,6 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
                           <span className="text-white/85 font-medium">{vessel.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-2 text-white/30 font-mono">{vessel.imo}</td>
                       <td className="px-4 py-2 text-white/50">{vessel.type}</td>
                       <td className="px-4 py-2">
                         <span className={cn("px-1.5 py-0.5 rounded border text-[10px] font-medium", s.badge)}>
@@ -146,7 +145,8 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
                       <td className="px-4 py-2 text-white/30 font-mono">
                         {vessel.lat.toFixed(3)}°, {vessel.lng.toFixed(3)}°
                       </td>
-                      <td className="px-4 py-2 text-white/50 font-mono">{vessel.speed} kn</td>
+                      <td className="px-4 py-2 text-white/50 font-mono">{vessel.speed > 0 ? `${vessel.speed.toFixed(1)} kn` : "—"}</td>
+                      <td className="px-4 py-2 text-white/30 font-mono">{vessel.heading > 0 ? `${vessel.heading}°` : "—"}</td>
                       <td className="px-4 py-2 text-white/80">{vessel.destination}</td>
                       <td className="px-4 py-2 text-white/40 font-mono">{vessel.eta}</td>
                     </tr>

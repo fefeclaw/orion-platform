@@ -124,7 +124,7 @@ function mapApiVessel(v: Record<string, unknown>, idx: number): Vessel {
     flag: String(v.flag ?? "—"),
     lat: Number(v.lat ?? 5.3),
     lng: Number(v.lon ?? v.lng ?? -4.0),
-    speed: Number(v.speed ?? 0),
+    speed: Number(v.speed_kn ?? v.speed ?? 0),
     heading: Number(v.heading ?? 0),
     status,
     destination: String(v.destination ?? v.eta_port ?? "—"),
