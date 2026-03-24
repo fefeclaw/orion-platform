@@ -44,8 +44,13 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
     }
   };
 
-  const inputCls = (focus: string) =>
-    `w-full bg-[#060d1a] border border-white/8 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[${focus}]/50 transition-colors placeholder:text-white/20`;
+  const inputStyle: React.CSSProperties = {
+    background: "var(--input-bg)",
+    border: "1px solid var(--input-border)",
+    color: "var(--input-color)",
+  };
+
+  const inputCls = `w-full rounded-lg px-4 py-3 text-sm focus:outline-none transition-colors placeholder:opacity-30`;
 
   return (
     <AnimatePresence>
@@ -67,22 +72,34 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
           >
             {/* Title */}
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-white tracking-wide">{t("auth_title")}</h2>
-              <p className="auth-muted text-xs text-white/30 mt-1 uppercase tracking-widest">
+              <h2
+                className="text-lg font-semibold tracking-wide"
+                style={{ color: "var(--modal-title-color)" }}
+              >
+                {t("auth_title")}
+              </h2>
+              <p
+                className="text-xs mt-1 uppercase tracking-widest"
+                style={{ color: "var(--modal-muted-color)" }}
+              >
                 Accès sécurisé — Orion Logistics
               </p>
             </div>
 
             {/* Mode toggle */}
-            <div className="auth-toggle-border flex rounded-xl overflow-hidden mb-6 border border-white/8">
+            <div
+              className="flex rounded-xl overflow-hidden mb-6 border"
+              style={{ borderColor: "var(--modal-toggle-border)" }}
+            >
               <button
                 type="button"
                 onClick={() => setMode("professional")}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-300 ${
                   mode === "professional"
                     ? "bg-gradient-to-r from-[#D4AF37] to-[#b8912e] text-black"
-                    : "auth-toggle-inactive text-white/30 hover:text-white/60"
+                    : ""
                 }`}
+                style={mode === "professional" ? undefined : { color: "var(--modal-toggle-inactive)" }}
               >
                 {t("auth_mode_pro")}
               </button>
@@ -92,8 +109,9 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-300 ${
                   mode === "user"
                     ? "bg-gradient-to-r from-[#00c9a7] to-[#00a88a] text-black"
-                    : "auth-toggle-inactive text-white/30 hover:text-white/60"
+                    : ""
                 }`}
+                style={mode === "user" ? undefined : { color: "var(--modal-toggle-inactive)" }}
               >
                 {t("auth_mode_user")}
               </button>
@@ -104,23 +122,35 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 {mode === "professional" ? (
                   <motion.div key="pro" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} className="space-y-4">
                     <div>
-                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_company")}</label>
+                      <label
+                        className="block text-[10px] mb-1.5 uppercase tracking-widest"
+                        style={{ color: "var(--label-color)" }}
+                      >
+                        {t("auth_company")}
+                      </label>
                       <input
                         type="text"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        className={inputCls("#D4AF37")}
+                        className={inputCls}
+                        style={{ ...inputStyle, ["--tw-placeholder-opacity" as string]: "1" }}
                         placeholder="Nom de la compagnie"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_matricule")}</label>
+                      <label
+                        className="block text-[10px] mb-1.5 uppercase tracking-widest"
+                        style={{ color: "var(--label-color)" }}
+                      >
+                        {t("auth_matricule")}
+                      </label>
                       <input
                         type="text"
                         value={formData.matricule}
                         onChange={(e) => setFormData({ ...formData, matricule: e.target.value })}
-                        className={inputCls("#D4AF37")}
+                        className={inputCls}
+                        style={inputStyle}
                         placeholder="MAT-0001"
                         required
                       />
@@ -128,12 +158,18 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                   </motion.div>
                 ) : (
                   <motion.div key="user" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}>
-                    <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_email")}</label>
+                    <label
+                      className="block text-[10px] mb-1.5 uppercase tracking-widest"
+                      style={{ color: "var(--label-color)" }}
+                    >
+                      {t("auth_email")}
+                    </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={inputCls("#00c9a7")}
+                      className={inputCls}
+                      style={inputStyle}
                       placeholder="vous@orion.ci"
                       required
                     />
@@ -142,12 +178,18 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
               </AnimatePresence>
 
               <div>
-                <label className="block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest">{t("auth_password")}</label>
+                <label
+                  className="block text-[10px] mb-1.5 uppercase tracking-widest"
+                  style={{ color: "var(--label-color)" }}
+                >
+                  {t("auth_password")}
+                </label>
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className={inputCls("#D4AF37")}
+                  className={inputCls}
+                  style={inputStyle}
                   placeholder="••••••••"
                   required
                 />
@@ -164,7 +206,10 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
               )}
 
               {/* Demo hint */}
-              <p className="auth-muted text-[10px] text-white/20 text-center">
+              <p
+                className="text-[10px] text-center"
+                style={{ color: "var(--modal-muted-color)" }}
+              >
                 {mode === "professional"
                   ? "Demo: MAT-0001 · orion2024"
                   : "Demo: admin@orion.ci · orion2024"}
@@ -189,7 +234,10 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
 
             <button
               onClick={onClose}
-              className="auth-close absolute top-5 right-5 text-white/20 hover:text-white/60 transition-colors text-lg leading-none"
+              className="absolute top-5 right-5 transition-colors text-lg leading-none"
+              style={{ color: "var(--modal-close-color)" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--modal-close-hover)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--modal-close-color)"; }}
               aria-label={t("close")}
             >
               ×
