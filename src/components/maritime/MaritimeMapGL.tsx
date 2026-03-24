@@ -65,11 +65,11 @@ const SKY: Record<MapStyle, SkySpecification> = {
 
 // ─── Ports ────────────────────────────────────────────────────────────────────
 const PORTS = [
-  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.32,  lng: -4.02 },
-  { id: "LOS", name: "Port de Lagos",           lat: 6.43,  lng:  3.42 },
-  { id: "DKR", name: "Port de Dakar",           lat: 14.69, lng: -17.44 },
-  { id: "TEM", name: "Port de Tema",            lat: 5.62,  lng: -0.02  },
-  { id: "CTN", name: "Port de Cotonou",         lat: 6.35,  lng:  2.42  },
+  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.2861,  lng: -4.0232 },
+  { id: "LOS", name: "Port de Lagos",           lat: 6.4490,  lng:  3.3660 },
+  { id: "DKR", name: "Port de Dakar",           lat: 14.6937, lng: -17.4441 },
+  { id: "TEM", name: "Port de Tema",            lat: 5.6037,  lng:  0.0113  },
+  { id: "CTN", name: "Port de Cotonou",         lat: 6.3565,  lng:  2.4244  },
 ];
 
 // ─── Couleurs statut ──────────────────────────────────────────────────────────
@@ -83,12 +83,12 @@ const STATUS_COLOR: Record<Vessel["status"], string> = {
 const TRADE_ROUTES: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [3.42, 6.43]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-17.44, 14.69]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-0.02, 5.62]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.42, 6.43], [2.42, 6.35]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.44, 14.69], [-7.59, 33.59]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.02, 5.32], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [3.3660, 6.4490]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [-17.4441, 14.6937]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [0.0113, 5.6037]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3660, 6.4490], [2.4244, 6.3565]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4441, 14.6937], [-7.59, 33.59]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} },
   ],
 };
 
