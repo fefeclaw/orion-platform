@@ -6,6 +6,7 @@ export interface Vessel {
   id: string;
   name: string;
   imo: string;
+  mmsi?: string;
   type: string;
   flag: string;
   lat: number;
@@ -117,9 +118,10 @@ function mapApiVessel(v: Record<string, unknown>, idx: number): Vessel {
   }
 
   return {
-    id: String(v.id ?? idx),
+    id: String(v.mmsi ?? v.id ?? idx),
     name: String(v.name ?? `Navire ${idx + 1}`),
     imo: String(v.imo ?? "—"),
+    mmsi: v.mmsi ? String(v.mmsi) : undefined,
     type: String(v.vessel_type ?? v.type ?? "Inconnu"),
     flag: String(v.flag ?? "—"),
     lat: Number(v.lat ?? 5.3),

@@ -32,7 +32,7 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
   );
 
   const sorted = [...filtered].sort((a, b) => {
-    const av = a[sortBy]; const bv = b[sortBy];
+    const av = a[sortBy] ?? ""; const bv = b[sortBy] ?? "";
     if (av < bv) return sortDir === "asc" ? -1 : 1;
     if (av > bv) return sortDir === "asc" ? 1 : -1;
     return 0;
@@ -133,7 +133,14 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
                       <td className="px-4 py-2">
                         <div className="flex items-center gap-2">
                           <span className={cn("w-2 h-2 rounded-full shrink-0", s.dot)} />
-                          <span className="text-white/85 font-medium">{vessel.name}</span>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-white/85 font-medium">{vessel.name}</span>
+                            {vessel.mmsi && (
+                              <span className="text-[9px] text-white/20 font-mono tracking-wider">
+                                MMSI {vessel.mmsi}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-4 py-2 text-white/50">{vessel.type}</td>
@@ -146,7 +153,14 @@ export function VesselsTable({ vessels, isExpanded, onToggleExpand, onVesselSele
                         {vessel.lat.toFixed(3)}°, {vessel.lng.toFixed(3)}°
                       </td>
                       <td className="px-4 py-2 text-white/50 font-mono">{vessel.speed > 0 ? `${vessel.speed.toFixed(1)} kn` : "—"}</td>
-                      <td className="px-4 py-2 text-white/30 font-mono">{vessel.heading > 0 ? `${vessel.heading}°` : "—"}</td>
+                      <td className="px-4 py-2 text-white/30 font-mono">
+                        {vessel.heading > 0 ? (
+                          <span className="flex items-center gap-1">
+                            <span style={{ display: "inline-block", transform: `rotate(${vessel.heading}deg)`, fontSize: "10px" }}>↑</span>
+                            {vessel.heading}°
+                          </span>
+                        ) : "—"}
+                      </td>
                       <td className="px-4 py-2 text-white/80">{vessel.destination}</td>
                       <td className="px-4 py-2 text-white/40 font-mono">{vessel.eta}</td>
                     </tr>
