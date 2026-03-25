@@ -40,7 +40,7 @@ export default function HomePage() {
       </div>
 
       {/* ── Header ──────────────────────────────────────────── */}
-      <header className="relative z-10 flex items-center justify-between px-8 md:px-16 py-6">
+      <header className="relative z-50 flex items-center justify-between px-8 md:px-16 py-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
