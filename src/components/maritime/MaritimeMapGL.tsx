@@ -65,11 +65,11 @@ const SKY: Record<MapStyle, SkySpecification> = {
 
 // ─── Ports ────────────────────────────────────────────────────────────────────
 const PORTS = [
-  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.2861,  lng: -4.0232 },
-  { id: "LOS", name: "Port de Lagos",           lat: 6.4490,  lng:  3.3660 },
-  { id: "DKR", name: "Port de Dakar",           lat: 14.6937, lng: -17.4441 },
-  { id: "TEM", name: "Port de Tema",            lat: 5.6037,  lng:  0.0113  },
-  { id: "CTN", name: "Port de Cotonou",         lat: 6.3565,  lng:  2.4244  },
+  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.3083,  lng: -3.9780 },  // Terminal à conteneurs, rive nord
+  { id: "LOS", name: "Port de Lagos",           lat: 6.4474,  lng:  3.3553 },  // Apapa Port
+  { id: "DKR", name: "Port de Dakar",           lat: 14.6879, lng: -17.4337 }, // Quai Port de Dakar
+  { id: "TEM", name: "Port de Tema",            lat: 5.6333,  lng:  0.0167  }, // Port de Tema (corrigé : était 3,3 km au sud dans l'océan)
+  { id: "CTN", name: "Port de Cotonou",         lat: 6.3536,  lng:  2.4197  }, // Port de Cotonou
 ];
 
 // ─── Couleurs statut ──────────────────────────────────────────────────────────
@@ -83,13 +83,45 @@ const STATUS_COLOR: Record<Vessel["status"], string> = {
 const TRADE_ROUTES: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [3.3660, 6.4490]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [-17.4441, 14.6937]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [0.0113, 5.6037]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3660, 6.4490], [2.4244, 6.3565]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4441, 14.6937], [-7.59, 33.59]] }, properties: {} },
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0232, 5.2861], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} },
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [3.3553, 6.4474]] }, properties: {} },  // ABJ → LOS
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-17.4337, 14.6879]] }, properties: {} }, // ABJ → DKR
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [0.0167, 5.6333]] }, properties: {} },   // ABJ → TEM
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3553, 6.4474], [2.4197, 6.3536]] }, properties: {} },   // LOS → CTN
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4337, 14.6879], [-7.59, 33.59]] }, properties: {} },   // DKR → Europe
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} }, // ABJ → Brésil
   ],
+};
+
+// ─── Icônes type navire (emoji + label) ──────────────────────────────────────
+const CARGO_TYPE_ICON: Record<string, string> = {
+  container: "⊞",
+  tanker:    "◉",
+  bulk:      "◎",
+  roro:      "▶",
+  general:   "◈",
+};
+const CARGO_TYPE_LABEL: Record<string, string> = {
+  container: "Porte-conteneurs",
+  tanker:    "Pétrolier / Tanker",
+  bulk:      "Vraquier",
+  roro:      "Roulier (RoRo)",
+  general:   "Cargo général",
+};
+// Taille cercle (rayon) selon le type de navire
+const CARGO_TYPE_RADIUS: Record<string, number> = {
+  container: 9,
+  tanker:    8,
+  bulk:      7,
+  roro:      6,
+  general:   5,
+};
+// Couleur stroke selon le type
+const CARGO_TYPE_STROKE: Record<string, string> = {
+  container: "#22d3ee",  // cyan   — porte-conteneurs
+  tanker:    "#fb923c",  // orange — pétrolier
+  bulk:      "#facc15",  // jaune  — vraquier
+  roro:      "#a78bfa",  // violet — roulier
+  general:   "#d1d5db",  // gris   — cargo général
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -99,7 +131,7 @@ function buildVesselGeoJSON(vessels: Vessel[]): GeoJSON.FeatureCollection {
     features: vessels.map((v) => ({
       type: "Feature",
       geometry: { type: "Point", coordinates: [v.lng, v.lat] },
-      properties: { ...v },
+      properties: { ...v, cargoType: v.cargoType ?? "general" },
     })),
   };
 }
@@ -164,12 +196,32 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
     if (!map.getLayer("orion-vessels-circle")) {
       map.addLayer({ id: "orion-vessels-circle", type: "circle", source: "orion-vessels",
         paint: {
-          "circle-radius": ["case", ["==", ["get", "status"], "alert"], 7, 5],
-          "circle-color": ["match", ["get", "status"], "berth", "#10B981", "alert", "#EF4444", "#0EA5E9"],
-          "circle-stroke-width": 1.5,
+          // Rayon variable : taille selon type de navire (container > tanker > bulk > roro > general)
+          "circle-radius": ["match", ["get", "cargoType"],
+            "container", 9,
+            "tanker",    8,
+            "bulk",      7,
+            "roro",      6,
+            5  // general (défaut)
+          ],
+          // Couleur de remplissage selon le statut opérationnel
+          "circle-color": ["match", ["get", "status"],
+            "berth", "#10B981",
+            "alert", "#EF4444",
+            "#0EA5E9"  // transit (défaut)
+          ],
+          // Épaisseur du contour selon le statut
+          "circle-stroke-width": ["case", ["==", ["get", "status"], "alert"], 2.5, 1.8],
+          // Couleur du contour selon le TYPE de navire (permet différenciation visuelle)
           "circle-stroke-color": ["case",
-            ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.6)",
-            "rgba(255,255,255,0.5)"
+            ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.8)",
+            ["match", ["get", "cargoType"],
+              "container", "#22d3ee",
+              "tanker",    "#fb923c",
+              "bulk",      "#facc15",
+              "roro",      "#a78bfa",
+              "rgba(255,255,255,0.5)"  // general
+            ]
           ],
         },
       });
@@ -240,13 +292,22 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
         if (!feat) return;
         const p = feat.properties as Record<string, string>;
         const coords = (feat.geometry as GeoJSON.Point).coordinates as [number, number];
-        const color = STATUS_COLOR[p.status as Vessel["status"]] ?? "#0EA5E9";
+        const color      = STATUS_COLOR[p.status as Vessel["status"]] ?? "#0EA5E9";
         const statusLabel = p.status === "berth" ? "À quai" : p.status === "alert" ? "En alerte" : "En transit";
+        const typeIcon   = CARGO_TYPE_ICON[p.cargoType ?? "general"]  ?? "◈";
+        const typeLabel  = CARGO_TYPE_LABEL[p.cargoType ?? "general"] ?? "Cargo général";
+        const strokeClr  = CARGO_TYPE_STROKE[p.cargoType ?? "general"] ?? "#d1d5db";
         popup.setLngLat(coords).setHTML(`
           <div style="font-family:monospace;font-size:11px;line-height:1.6;padding:2px">
-            <div style="font-size:12px;font-weight:700;color:#F3F4F6">${p.name}</div>
-            <div style="color:#6B7280;margin-top:2px">IMO ${p.imo} · ${p.type}</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+              <span style="font-size:14px;color:${strokeClr};line-height:1">${typeIcon}</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#F3F4F6">${p.name}</div>
+                <div style="color:#6B7280;font-size:10px">${p.flag ?? "—"} · IMO ${p.imo}</div>
+              </div>
+            </div>
+            <div style="color:${strokeClr};font-size:10px;margin-bottom:3px">${typeLabel}</div>
+            <div style="display:flex;align-items:center;gap:6px">
               <span style="width:7px;height:7px;border-radius:50%;background:${color};box-shadow:0 0 6px ${color};display:inline-block"></span>
               <span style="color:${color};font-weight:600">${statusLabel}</span>
             </div>

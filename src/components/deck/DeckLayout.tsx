@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { BarChart2, Layers, Bell, ArrowLeft, Radio, RefreshCw } from "lucide-react";
+import { BarChart2, Layers, Bell, ArrowLeft, Radio } from "lucide-react";
 import Link from "next/link";
 import type { DeckAsset, DeckType } from "./DeckMapGL";
 
@@ -40,6 +40,16 @@ export interface DeckConfig {
 interface DeckLayoutProps {
   config: DeckConfig;
   isLoading?: boolean;
+}
+
+function SkeletonRow({ color }: { color: string }) {
+  return (
+    <div className="flex gap-3 px-4 py-3 animate-pulse">
+      <div className="h-3 rounded w-1/3" style={{ background: `${color}15` }} />
+      <div className="h-3 rounded w-1/4" style={{ background: `${color}10` }} />
+      <div className="h-3 rounded w-1/2" style={{ background: `${color}08` }} />
+    </div>
+  );
 }
 
 export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
@@ -93,21 +103,21 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
           >
             <Radio className="h-3.5 w-3.5 text-emerald-400" />
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ boxShadow: "0 0 5px #10B981" }} />
-            <span className="text-[11px] font-semibold text-emerald-400 tracking-widest">LIVE SIGNAL</span>
+            <span className="hidden sm:inline text-[11px] font-semibold text-emerald-400 tracking-widest">LIVE SIGNAL</span>
           </div>
         </div>
 
         {/* Center — KPIs */}
         <div className="flex items-center gap-3">
-          {config.kpis.map((kpi) => (
+          {config.kpis.map((kpi, index) => (
             <div
               key={kpi.label}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg"
+              className={`flex items-center gap-2.5 px-3 py-1.5 rounded-lg${index >= 2 ? " hidden md:flex" : ""}`}
               style={{ background: `${kpi.color}08`, border: `1px solid ${kpi.color}18` }}
             >
               <div>
                 <p className="text-[10px] uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.3)" }}>{kpi.label}</p>
-                <p className="text-base font-semibold text-white/90 tabular-nums leading-tight">{kpi.value}</p>
+                <p className={`text-sm md:text-base font-semibold text-white/90 tabular-nums leading-tight${isLoading ? " animate-pulse opacity-50" : ""}`}>{kpi.value}</p>
                 {kpi.sub && <p className="text-[10px] leading-none mt-0.5" style={{ color: `${kpi.color}80` }}>{kpi.sub}</p>}
               </div>
             </div>
@@ -142,6 +152,15 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
       {/* ── Map ── */}
       <div className="relative flex-1 overflow-hidden">
         <DeckMapGL deck={config.type} assets={config.assets} is3D={is3D} onAssetClick={handleAssetClick} />
+        {config.assets.length === 0 && !isLoading && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+            <div className="flex flex-col items-center gap-3 px-6 py-5 rounded-xl"
+              style={{ background: "rgba(6,14,26,0.88)", border: `1px solid ${config.color}18`, backdropFilter: "blur(10px)" }}>
+              <Layers className="h-8 w-8 text-white/20" />
+              <p className="text-sm text-white/35 font-medium">Aucun asset disponible</p>
+            </div>
+          </div>
+        )}
 
         {/* 2D/3D toggle */}
         <div
@@ -203,7 +222,7 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
 
         {/* Forecast mini-card */}
         <div
-          className="absolute bottom-14 right-4 z-20 w-52 rounded-xl overflow-hidden shadow-xl"
+          className="absolute bottom-14 right-4 z-20 w-40 sm:w-52 rounded-xl overflow-hidden shadow-xl"
           style={{ background: "rgba(6,14,26,0.93)", border: `1px solid ${config.color}18`, backdropFilter: "blur(12px)" }}
         >
           <div className="px-3 py-2.5" style={{ borderBottom: `1px solid ${config.color}10` }}>
@@ -239,7 +258,7 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
         {/* Selected asset card */}
         {selectedAsset && (
           <div
-            className="absolute left-1/2 -translate-x-1/2 top-4 z-30 px-5 py-3 rounded-xl shadow-2xl"
+            className="absolute left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 top-4 z-30 px-5 py-3 rounded-xl shadow-2xl"
             style={{ background: "rgba(6,14,26,0.96)", border: `1px solid ${config.color}30`, backdropFilter: "blur(12px)", minWidth: "240px" }}
           >
             <div className="flex items-center justify-between gap-4">
@@ -262,7 +281,7 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
 
       {/* ── Asset table ── */}
       <div
-        className={`relative shrink-0 w-full backdrop-blur-md border-t transition-all duration-300 ${tableExpanded ? "h-56" : "h-11"}`}
+        className={`relative shrink-0 w-full backdrop-blur-md border-t transition-all duration-300 ${tableExpanded ? "h-40 md:h-56" : "h-11"}`}
         style={{ background: "rgba(6,14,26,0.96)", borderColor: `${config.color}18` }}
       >
         <button
@@ -273,7 +292,7 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
             <span className="text-sm font-medium text-white/70">Assets {config.name.split(" ")[0]}</span>
             <span className="text-[11px] px-2 py-0.5 rounded text-white/30"
               style={{ background: `${config.color}08`, border: `1px solid ${config.color}14` }}>
-              {config.assets.length} unités
+              {isLoading ? "..." : `${config.assets.length} unités`}
             </span>
             {delayedCount > 0 && (
               <span className="text-[11px] text-red-400 flex items-center gap-1">
@@ -291,31 +310,39 @@ export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
               <thead className="sticky top-0" style={{ background: "rgba(6,14,26,0.99)" }}>
                 <tr style={{ borderBottom: `1px solid ${config.color}12` }}>
                   {["Asset", "Statut", "Info", "Position"].map(h => (
-                    <th key={h} className="text-left px-4 py-2 font-medium text-white/30">{h}</th>
+                    <th key={h} className={`text-left px-4 py-2 font-medium text-white/30${h === "Position" ? " hidden md:table-cell" : ""}`}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {config.assets.map(a => (
-                  <tr key={a.id}
-                    onClick={() => setSelectedAsset(a)}
-                    className="cursor-pointer hover:bg-white/[0.03] transition-colors"
-                    style={{ borderBottom: `1px solid ${config.color}08` }}>
-                    <td className="px-4 py-2 text-white/80 font-medium">{a.name}</td>
-                    <td className="px-4 py-2">
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-medium"
-                        style={{
-                          background: `${STATUS_COLOR_MAP[a.status]}12`,
-                          color: STATUS_COLOR_MAP[a.status],
-                          border: `1px solid ${STATUS_COLOR_MAP[a.status]}25`,
-                        }}>
-                        {a.status === "active" ? "Actif" : a.status === "delayed" ? "Retardé" : "Arrêté"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-white/40 font-mono">{a.info}</td>
-                    <td className="px-4 py-2 text-white/25 font-mono">{a.lat.toFixed(2)}°, {a.lng.toFixed(2)}°</td>
-                  </tr>
-                ))}
+                {isLoading ? (
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <tr key={i}><td colSpan={4}><SkeletonRow color={config.color} /></td></tr>
+                  ))
+                ) : config.assets.length === 0 ? (
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-white/25">Aucun asset à afficher</td></tr>
+                ) : (
+                  config.assets.map(a => (
+                    <tr key={a.id}
+                      onClick={() => setSelectedAsset(a)}
+                      className="cursor-pointer hover:bg-white/[0.03] transition-colors"
+                      style={{ borderBottom: `1px solid ${config.color}08` }}>
+                      <td className="px-4 py-2 text-white/80 font-medium">{a.name}</td>
+                      <td className="px-4 py-2">
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                          style={{
+                            background: `${STATUS_COLOR_MAP[a.status]}12`,
+                            color: STATUS_COLOR_MAP[a.status],
+                            border: `1px solid ${STATUS_COLOR_MAP[a.status]}25`,
+                          }}>
+                          {a.status === "active" ? "Actif" : a.status === "delayed" ? "Retardé" : "Arrêté"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-white/40 font-mono">{a.info}</td>
+                      <td className="hidden md:table-cell px-4 py-2 text-white/25 font-mono">{a.lat.toFixed(2)}°, {a.lng.toFixed(2)}°</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

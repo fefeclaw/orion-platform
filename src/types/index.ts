@@ -10,6 +10,23 @@ export interface PillarConfig {
 
 export type AuthMode = "professional" | "user";
 
+// Rôles utilisateurs Orion
+export type UserRole =
+  | "admin"
+  | "professional_maritime"
+  | "professional_rail"
+  | "professional_road"
+  | "professional_air"
+  | "public_user";
+
+export interface OrionUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  pillar: Pillar | "all";
+}
+
 export interface ProfessionalCredentials {
   company: string;
   matricule: string;
@@ -19,6 +36,20 @@ export interface ProfessionalCredentials {
 export interface UserCredentials {
   email: string;
   password: string;
+}
+
+// Extensions de types next-auth
+declare module "next-auth" {
+  interface Session {
+    user: OrionUser & { image?: string | null };
+  }
+  interface User extends OrionUser {}
+}
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: UserRole;
+    pillar: Pillar | "all";
+  }
 }
 
 export const PILLARS: PillarConfig[] = [

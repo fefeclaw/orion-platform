@@ -59,10 +59,10 @@ const EUROPE_SOUTH = [
   { lat: 37, lng: -10 }, { lat: 38, lng: -10 },
 ];
 
-const PORT_ABIDJAN = { lat: 5.32, lng: -4.02 };
-const PORT_LAGOS   = { lat: 6.43, lng: 3.42 };
-const PORT_DAKAR   = { lat: 14.69, lng: -17.44 };
-const PORT_TEMA    = { lat: 5.62, lng: -0.02 };
+const PORT_ABIDJAN = { lat: 5.3083, lng: -3.9780 };
+const PORT_LAGOS   = { lat: 6.4474, lng:  3.3553 };
+const PORT_DAKAR   = { lat: 14.6879, lng: -17.4337 };
+const PORT_TEMA    = { lat: 5.6333, lng:  0.0167 };  // corrigé : lng était négatif (-0.02) et lat trop sud
 
 export function MaritimeMap({ vessels, onVesselClick }: MaritimeMapProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
