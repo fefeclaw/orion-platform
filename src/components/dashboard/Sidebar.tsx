@@ -8,29 +8,44 @@ import { signOut } from "next-auth/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useRole } from "@/hooks/useRole";
 import MaritimeSidebar from "./MaritimeSidebar";
+import RailSidebar from "./RailSidebar";
+import RoadSidebar from "./RoadSidebar";
+import AirSidebar from "./AirSidebar";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const t = useTranslation();
-  const { isPro, pillar } = useRole();
+  const { isPro, pillar, isClient } = useRole();
 
+  // ── ARCHITECTURE SILO ─────────────────────────────────────────────────────
+  // Chaque utilisateur professionnel voit UNIQUEMENT son pilier dédié
+  // avec un menu enrichi spécifique. Pas de navigation croisée entre piliers.
+
+  // Pour les pros : sidebar spécifique au pilier
+  if (isPro && pillar) {
+    switch (pillar) {
+      case "maritime":
+        return <MaritimeSidebar />;
+      case "rail":
+        return <RailSidebar />;
+      case "road":
+        return <RoadSidebar />;
+      case "air":
+        return <AirSidebar />;
+      default:
+        // Fallback si pilier inconnu → sidebar par défaut
+        break;
+    }
+  }
+
+  // Pour les clients/admin : sidebar classique avec accès à tous les piliers
+  // (ou limité selon les permissions)
   const ALL_PILLARS = [
     { id: "maritime", label: t("nav_maritime"), icon: Anchor, color: "#38bdf8" },
     { id: "rail",     label: t("nav_rail"),     icon: Train,  color: "#f87171" },
     { id: "road",     label: t("nav_road"),     icon: Truck,  color: "#34d399" },
     { id: "air",      label: t("nav_air"),      icon: Plane,  color: "#a78bfa" },
   ];
-
-  // ── RBAC SILO ─────────────────────────────────────────────────────────────
-  // Maritime pro → dedicated deep-menu sidebar (zero other pillars in DOM)
-  if (isPro && pillar === "maritime") {
-    return <MaritimeSidebar />;
-  }
-
-  // Other pro → only their pillar shown (rail/road/air)
-  const PILLARS = isPro
-    ? ALL_PILLARS.filter((p) => p.id === pillar)
-    : ALL_PILLARS;
 
   return (
     <aside className="w-64 min-h-screen flex flex-col bg-[#060d1a] border-r border-white/5">
@@ -56,7 +71,7 @@ export default function Sidebar() {
           {isPro ? "Mon Module" : "Modules"}
         </p>
 
-        {PILLARS.map((pillarItem) => {
+        {ALL_PILLARS.map((pillarItem) => {
           const Icon = pillarItem.icon;
           const isActive = pathname === `/dashboard/${pillarItem.id}`;
           return (
