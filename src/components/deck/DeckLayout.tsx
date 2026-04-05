@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { BarChart2, Layers, Bell, ArrowLeft, Radio } from "lucide-react";
 import Link from "next/link";
@@ -38,8 +38,10 @@ export interface DeckConfig {
 }
 
 interface DeckLayoutProps {
-  config: DeckConfig;
+  config?: DeckConfig;
   isLoading?: boolean;
+  header?: ReactNode;
+  children?: ReactNode;
 }
 
 function SkeletonRow({ color }: { color: string }) {
@@ -52,11 +54,37 @@ function SkeletonRow({ color }: { color: string }) {
   );
 }
 
-export function DeckLayout({ config, isLoading = false }: DeckLayoutProps) {
+export function DeckLayout({ config, isLoading = false, header, children }: DeckLayoutProps) {
   const [is3D, setIs3D]         = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
   const [tableExpanded, setTableExpanded] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<DeckAsset | null>(null);
+
+  // Mode simple : header + children sans carte ni config
+  if (!config) {
+    return (
+      <div className="flex flex-col h-screen overflow-hidden" style={{ background: "#030712" }}>
+        {header && (
+          <header
+            className="relative flex h-14 shrink-0 items-center justify-between px-5 z-10"
+            style={{
+              background: "rgba(6, 14, 26, 0.95)",
+              backdropFilter: "blur(16px)",
+              borderBottom: "1px solid rgba(56,189,248,0.1)",
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <Link href="/" className="text-white/25 hover:text-white/60 transition-colors">
+                <ArrowLeft className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="flex-1">{header}</div>
+          </header>
+        )}
+        <main className="flex-1 overflow-auto p-6">{children}</main>
+      </div>
+    );
+  }
 
   const delayedCount = config.assets.filter(a => a.status === "delayed").length;
 
