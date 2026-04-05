@@ -36,11 +36,7 @@ const STATUS_CONFIG: Record<IntermodalShipment["status"], { color: string; label
 
 const SEG_STATUS_COLOR: Record<Segment["status"], string> = {
   completed: "#10B981",
-<<<<<<< HEAD
-  active:    "#D4AF37",
-=======
   active:    "#F59E0B",
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
   pending:   "rgba(255,255,255,0.20)",
   delayed:   "#EF4444",
 };
@@ -86,11 +82,7 @@ function ShipmentsPanel({ shipments, selected, onSelect, open, onToggle }: {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Expéditions</span>
                   <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-medium"
-<<<<<<< HEAD
-                    style={{ background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.20)", color: "#D4AF37" }}>
-=======
                     style={{ background: "rgba(212,175,55,0.10)", border: "1px solid rgba(212,175,55,0.20)", color: "#F59E0B" }}>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                     {shipments.length}
                   </span>
                 </div>
@@ -103,11 +95,7 @@ function ShipmentsPanel({ shipments, selected, onSelect, open, onToggle }: {
                       style={{
                         background: filter === f ? "rgba(212,175,55,0.15)" : "rgba(255,255,255,0.04)",
                         border: `1px solid ${filter === f ? "rgba(212,175,55,0.35)" : "rgba(255,255,255,0.08)"}`,
-<<<<<<< HEAD
-                        color: filter === f ? "#D4AF37" : "rgba(255,255,255,0.35)",
-=======
                         color: filter === f ? "#F59E0B" : "rgba(255,255,255,0.35)",
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                       }}>
                       {f === "all" ? "Tous" : f === "on_track" ? "En cours" : f === "delayed" ? "Retardé" : "Critique"}
                     </button>
@@ -246,11 +234,7 @@ function ShipmentDetail({ ship, onClose }: { ship: IntermodalShipment; onClose: 
                     </span>
                     {isActive && (
                       <span className="text-[8px] px-1 py-0.5 rounded font-bold animate-pulse"
-<<<<<<< HEAD
-                        style={{ background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)", color: "#D4AF37" }}>
-=======
                         style={{ background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)", color: "#F59E0B" }}>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                         EN COURS
                       </span>
                     )}
@@ -342,26 +326,15 @@ export default function IntermodalDeck() {
   const deckConfig: DeckConfig = useMemo((): DeckConfig => ({
     type: "road",
     name: "INTERMODAL",
-<<<<<<< HEAD
-    color: "#D4AF37",
-    forecastLabel: "Moteur jonction multi-modal · Temps réel",
-    kpis: [
-      { label: "Expéditions",   value: kpi.totalShipments, color: "#D4AF37" },
-=======
     color: "#F59E0B",
     forecastLabel: "Moteur jonction multi-modal · Temps réel",
     kpis: [
       { label: "Expéditions",   value: kpi.totalShipments, color: "#F59E0B" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
       { label: "On Track",      value: kpi.onTrack,        color: "#10B981" },
       { label: "Retardées",     value: kpi.delayed,        color: kpi.delayed > 0 ? "#F59E0B" : "#10B981" },
       { label: "Critiques",     value: kpi.critical,       color: kpi.critical > 0 ? "#EF4444" : "#10B981" },
       { label: "Délai Moyen",   value: kpi.avgDelay > 0 ? `${kpi.avgDelay} min` : "—", color: kpi.avgDelay > 60 ? "#EF4444" : "#F59E0B" },
-<<<<<<< HEAD
-      { label: "Jonctions",     value: kpi.jonctionsActives, color: "#38bdf8" },
-=======
       { label: "Jonctions",     value: kpi.jonctionsActives, color: "#22d3ee" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
     ],
     assets: shipments.map(s => ({
       id: s.id,
@@ -407,13 +380,8 @@ export default function IntermodalDeck() {
 
           {isLive && (
             <div className="absolute top-16 left-4 z-20 flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold"
-<<<<<<< HEAD
-              style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.20)", color: "#D4AF37" }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#D4AF37" }} />
-=======
               style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.20)", color: "#F59E0B" }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#F59E0B" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               MOTEUR ACTIF
             </div>
           )}
@@ -422,11 +390,7 @@ export default function IntermodalDeck() {
           <button
             onClick={handleRapportPDF}
             className="absolute top-16 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold transition-all hover:opacity-80"
-<<<<<<< HEAD
-            style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.28)", color: "#D4AF37", backdropFilter: "blur(8px)" }}
-=======
             style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.28)", color: "#F59E0B", backdropFilter: "blur(8px)" }}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             title="Générer rapport PDF intermodal"
           >
             <FileText className="h-3 w-3" />

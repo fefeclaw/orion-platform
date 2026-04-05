@@ -151,11 +151,7 @@ function PlanCard({ plan }: { plan: typeof PLANS[number] }) {
                 {f.label}
               </span>
               {"note" in f && f.note && (
-<<<<<<< HEAD
-                <span className="ml-2 text-xs text-[#D4AF37] font-medium">
-=======
                 <span className="ml-2 text-xs text-[#F59E0B] font-medium">
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                   {f.note}
                 </span>
               )}
@@ -199,11 +195,7 @@ export default function PricingPage() {
         {/* En-tête */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
-<<<<<<< HEAD
-            <span className="text-2xl font-black text-[#D4AF37]">ORION</span>
-=======
             <span className="text-2xl font-black text-[#F59E0B]">ORION</span>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             <span className="text-xs text-slate-400 font-medium tracking-widest uppercase">
               Autonomous Logistics Platform
             </span>
@@ -217,13 +209,8 @@ export default function PricingPage() {
           </p>
 
           {/* Bandeau promotion lancement */}
-<<<<<<< HEAD
-          <div className="mt-6 inline-flex items-center gap-2 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-full px-6 py-2">
-            <span className="text-[#D4AF37] text-sm font-semibold">
-=======
           <div className="mt-6 inline-flex items-center gap-2 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-full px-6 py-2">
             <span className="text-[#F59E0B] text-sm font-semibold">
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               🚀 Offre de lancement — 6 mois offerts pour les 50 premiers professionnels
             </span>
           </div>
@@ -241,33 +228,21 @@ export default function PricingPage() {
           <h3 className="text-lg font-bold text-white mb-4">À propos des intégrations</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
             <div>
-<<<<<<< HEAD
-              <p className="text-[#D4AF37] font-semibold mb-1">Ship24</p>
-=======
               <p className="text-[#F59E0B] font-semibold mb-1">Ship24</p>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               <p className="text-slate-400">
                 Tracking colis routiers (DHL, transporteurs locaux) et conteneurs par numéro B/L.
                 Couvert dès 4 abonnés Standard.
               </p>
             </div>
             <div>
-<<<<<<< HEAD
-              <p className="text-[#D4AF37] font-semibold mb-1">MarineTraffic AIS</p>
-=======
               <p className="text-[#F59E0B] font-semibold mb-1">MarineTraffic AIS</p>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               <p className="text-slate-400">
                 Positions navires en temps réel. Données différées 15 min en Standard,
                 temps réel en Business.
               </p>
             </div>
             <div>
-<<<<<<< HEAD
-              <p className="text-[#D4AF37] font-semibold mb-1">SMS Orange CI</p>
-=======
               <p className="text-[#F59E0B] font-semibold mb-1">SMS Orange CI</p>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               <p className="text-slate-400">
                 Notifications SMS mutualisées sur tous les abonnés.
                 Inclus dans tous les plans.
@@ -282,11 +257,7 @@ export default function PricingPage() {
             Questions sur les offres Enterprise ?{" "}
             <a
               href="mailto:contact@orion-logistique.ci"
-<<<<<<< HEAD
-              className="text-[#D4AF37] hover:underline font-medium"
-=======
               className="text-[#F59E0B] hover:underline font-medium"
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             >
               contact@orion-logistique.ci
             </a>

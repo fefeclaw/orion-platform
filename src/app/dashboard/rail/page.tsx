@@ -58,11 +58,7 @@ const STATION_COLORS: Record<StationStatus["status"], { bg: string; border: stri
 const ALERT_COLORS: Record<RailAlert["type"], { bg: string; border: string; text: string; icon: string }> = {
   critical: { bg: "rgba(239,68,68,0.10)",  border: "rgba(239,68,68,0.25)",  text: "#EF4444", icon: "🔴" },
   warning:  { bg: "rgba(245,158,11,0.10)", border: "rgba(245,158,11,0.25)", text: "#F59E0B", icon: "🟠" },
-<<<<<<< HEAD
-  info:     { bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.20)", text: "#38bdf8", icon: "🔵" },
-=======
   info:     { bg: "rgba(14,165,233,0.08)", border: "rgba(14,165,233,0.20)", text: "#22d3ee", icon: "🔵" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
   success:  { bg: "rgba(16,185,129,0.08)", border: "rgba(16,185,129,0.20)", text: "#10B981", icon: "🟢" },
 };
 
@@ -168,19 +164,11 @@ function generateLvPdf(train: TrainData): void {
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Helvetica Neue',Arial,sans-serif;padding:32px;color:#111}
-<<<<<<< HEAD
-    .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #D4AF37;padding-bottom:16px;margin-bottom:24px}
-    .header-left h1{font-size:22px;font-weight:800;color:#1a1a2e}
-    .header-left p{font-size:11px;color:#666;margin-top:2px}
-    .header-right{text-align:right}
-    .ref{font-size:13px;font-weight:700;color:#D4AF37}
-=======
     .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #F59E0B;padding-bottom:16px;margin-bottom:24px}
     .header-left h1{font-size:22px;font-weight:800;color:#1a1a2e}
     .header-left p{font-size:11px;color:#666;margin-top:2px}
     .header-right{text-align:right}
     .ref{font-size:13px;font-weight:700;color:#F59E0B}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
     .date{font-size:10px;color:#999}
     .badge{display:inline-block;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.05em}
     .badge-active{background:#d1fae5;color:#065f46}
@@ -230,11 +218,7 @@ function generateLvPdf(train: TrainData): void {
         <div class="field"><label>Gare d'origine</label><value>${train.origin}</value></div>
         <div class="field"><label>Gare de destination</label><value>${train.destination}</value></div>
       </div>
-<<<<<<< HEAD
-      <div style="text-align:center;color:#D4AF37;font-size:20px;font-weight:700;margin:8px 0">↓</div>
-=======
       <div style="text-align:center;color:#F59E0B;font-size:20px;font-weight:700;margin:8px 0">↓</div>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
       <div class="grid">
         <div class="field"><label>ETA prévu</label><value>${formatEta(train.eta)}</value></div>
         <div class="field"><label>Ponctualité</label><value>${delayStr}</value></div>
@@ -439,11 +423,7 @@ function CustomsPanel({ open, onToggle, declarations }: {
                 className="flex items-center gap-2 px-4 py-3 shrink-0"
                 style={{ borderBottom: "1px solid rgba(212,175,55,0.10)" }}
               >
-<<<<<<< HEAD
-                <Stamp className="h-4 w-4 shrink-0" style={{ color: "#D4AF37" }} />
-=======
                 <Stamp className="h-4 w-4 shrink-0" style={{ color: "#F59E0B" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">
                   Douanes CI / BF
                 </span>
@@ -457,11 +437,7 @@ function CustomsPanel({ open, onToggle, declarations }: {
                         style={{
                           background: r === "CI" ? "rgba(14,165,233,0.12)" : "rgba(212,175,55,0.12)",
                           border:     r === "CI" ? "1px solid rgba(14,165,233,0.25)" : "1px solid rgba(212,175,55,0.25)",
-<<<<<<< HEAD
-                          color:      r === "CI" ? "#38bdf8" : "#D4AF37",
-=======
                           color:      r === "CI" ? "#22d3ee" : "#F59E0B",
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                         }}
                       >
                         {r} ×{count}
@@ -489,11 +465,7 @@ function CustomsPanel({ open, onToggle, declarations }: {
                             style={{
                               background: decl.regime === "CI" ? "rgba(14,165,233,0.10)" : "rgba(212,175,55,0.10)",
                               border:     decl.regime === "CI" ? "1px solid rgba(14,165,233,0.22)" : "1px solid rgba(212,175,55,0.22)",
-<<<<<<< HEAD
-                              color:      decl.regime === "CI" ? "#38bdf8" : "#D4AF37",
-=======
                               color:      decl.regime === "CI" ? "#22d3ee" : "#F59E0B",
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                             }}
                           >
                             {decl.regime}
@@ -588,19 +560,11 @@ function StationsPanel({ stations, trains, open, onToggle }: {
                 className="flex items-center gap-2 px-4 py-3 shrink-0"
                 style={{ borderBottom: "1px solid rgba(248,113,113,0.10)" }}
               >
-<<<<<<< HEAD
-                <MapPin className="h-4 w-4 shrink-0" style={{ color: "#f87171" }} />
-                <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Gares</span>
-                <span
-                  className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-medium"
-                  style={{ background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.20)", color: "#f87171" }}
-=======
                 <MapPin className="h-4 w-4 shrink-0" style={{ color: "#fb923c" }} />
                 <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Gares</span>
                 <span
                   className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-medium"
                   style={{ background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.20)", color: "#fb923c" }}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 >
                   {stations.length}
                 </span>
@@ -750,19 +714,11 @@ function TrainDetail({ train, onClose }: { train: TrainData; onClose: () => void
             className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{ background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.22)" }}
           >
-<<<<<<< HEAD
-            <Train className="h-4 w-4" style={{ color: "#f87171" }} />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white/90">{train.name}</p>
-            <p className="text-[10px] font-medium uppercase tracking-wider" style={{ color: "#f87171" }}>
-=======
             <Train className="h-4 w-4" style={{ color: "#fb923c" }} />
           </div>
           <div>
             <p className="text-sm font-bold text-white/90">{train.name}</p>
             <p className="text-[10px] font-medium uppercase tracking-wider" style={{ color: "#fb923c" }}>
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               {TYPE_LABELS[train.type]}
             </p>
           </div>
@@ -775,11 +731,7 @@ function TrainDetail({ train, onClose }: { train: TrainData; onClose: () => void
             style={{
               background: "rgba(212,175,55,0.10)",
               border:     "1px solid rgba(212,175,55,0.25)",
-<<<<<<< HEAD
-              color:      "#D4AF37",
-=======
               color:      "#F59E0B",
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             }}
             title="Générer Lettre de Voiture PDF"
           >
@@ -816,11 +768,7 @@ function TrainDetail({ train, onClose }: { train: TrainData; onClose: () => void
           <div className="flex flex-col items-center gap-0.5 shrink-0">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <div className="w-px h-5 bg-white/15" />
-<<<<<<< HEAD
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#f87171" }} />
-=======
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#fb923c" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           </div>
           <div className="flex flex-col gap-1.5 min-w-0 ml-2">
             <p className="text-[10px] text-white/40">
@@ -990,22 +938,6 @@ export default function RailDeck() {
   const deckConfig: DeckConfig = useMemo(() => ({
     type:          "rail",
     name:          "RAIL DECK",
-<<<<<<< HEAD
-    color:         "#f87171",
-    forecastLabel: "Corridor ABJ-OUA · 4h",
-    kpis: trains.length > 0
-      ? [
-          { label: "Trains Actifs",  value: kpi.activeTrains, color: "#f87171" },
-          { label: "À l'heure",      value: kpi.onTime,        color: "#10B981" },
-          { label: "En Retard",      value: kpi.delayed,       color: "#EF4444" },
-          { label: "Tonnage / Jour", value: kpi.totalTonnage,  color: "#f87171" },
-        ]
-      : [
-          { label: "Wagons Actifs",  value: 126,       color: "#f87171" },
-          { label: "Tonnage / Jour", value: "1 840 T", color: "#f87171" },
-          { label: "Corridors",      value: 3,          color: "#f87171" },
-          { label: "Délai Moyen",    value: "2.4j", sub: "ABJ→OUA", color: "#f87171" },
-=======
     color:         "#fb923c",
     forecastLabel: "Corridor ABJ-OUA · 4h",
     kpis: trains.length > 0
@@ -1020,7 +952,6 @@ export default function RailDeck() {
           { label: "Tonnage / Jour", value: "1 840 T", color: "#fb923c" },
           { label: "Corridors",      value: 3,          color: "#fb923c" },
           { label: "Délai Moyen",    value: "2.4j", sub: "ABJ→OUA", color: "#fb923c" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
         ],
     assets: trains.length > 0
       ? trains.map(t => ({

@@ -66,11 +66,7 @@ function CheckpointPanel({ checkpoints, trucks, open, onToggle }: {
           >
             <div className="w-64 h-full flex flex-col">
               <div className="flex items-center gap-2 px-4 py-3 shrink-0" style={{ borderBottom: "1px solid rgba(52,211,153,0.10)" }}>
-<<<<<<< HEAD
-                <Shield className="h-4 w-4 shrink-0" style={{ color: "#34d399" }} />
-=======
                 <Shield className="h-4 w-4 shrink-0" style={{ color: "#4ade80" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Postes & Frontières</span>
               </div>
 
@@ -155,11 +151,7 @@ function TruckDetail({ truck, onClose }: { truck: TruckType; onClose: () => void
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{ background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.22)" }}>
-<<<<<<< HEAD
-            <Truck className="h-4 w-4" style={{ color: "#34d399" }} />
-=======
             <Truck className="h-4 w-4" style={{ color: "#4ade80" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           </div>
           <div>
             <p className="text-sm font-bold text-white/90">{truck.name}</p>
@@ -226,11 +218,7 @@ function TruckDetail({ truck, onClose }: { truck: TruckType; onClose: () => void
               delay: truck.delay,
             })}
             className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-semibold transition-all hover:opacity-80"
-<<<<<<< HEAD
-            style={{ border: "1px solid rgba(52,211,153,0.35)", color: "#34d399", background: "rgba(52,211,153,0.07)" }}
-=======
             style={{ border: "1px solid rgba(52,211,153,0.35)", color: "#4ade80", background: "rgba(52,211,153,0.07)" }}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           >
             <FileText className="h-3 w-3" /> CMR
           </button>
@@ -247,11 +235,7 @@ function TruckDetail({ truck, onClose }: { truck: TruckType; onClose: () => void
               dateEmission: new Date().toLocaleDateString("fr-FR"),
             })}
             className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-semibold transition-all hover:opacity-80"
-<<<<<<< HEAD
-            style={{ border: "1px solid rgba(212,175,55,0.35)", color: "#D4AF37", background: "rgba(212,175,55,0.07)" }}
-=======
             style={{ border: "1px solid rgba(212,175,55,0.35)", color: "#F59E0B", background: "rgba(212,175,55,0.07)" }}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           >
             <FileText className="h-3 w-3" /> BSC
           </button>
@@ -317,11 +301,7 @@ function PublicTrackingWidget() {
       style={{ background: "rgba(6,14,26,0.92)", border: "1px solid rgba(52,211,153,0.18)", backdropFilter: "blur(12px)", width: 230 }}
     >
       <div className="px-3 py-2 flex items-center gap-2" style={{ borderBottom: "1px solid rgba(52,211,153,0.08)" }}>
-<<<<<<< HEAD
-        <Search className="h-3.5 w-3.5 shrink-0" style={{ color: "#34d399" }} />
-=======
         <Search className="h-3.5 w-3.5 shrink-0" style={{ color: "#4ade80" }} />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
         <span className="text-[10px] font-bold tracking-widest text-white/60 uppercase">Suivi Public</span>
       </div>
       <div className="px-3 pt-2 pb-3">
@@ -338,11 +318,7 @@ function PublicTrackingWidget() {
           <button
             onClick={handleSearch}
             className="px-2 py-1 rounded text-[10px] font-semibold transition-all hover:opacity-80"
-<<<<<<< HEAD
-            style={{ background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399" }}
-=======
             style={{ background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.25)", color: "#4ade80" }}
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           >
             OK
           </button>
@@ -381,32 +357,15 @@ export default function RoadDeck() {
   const deckConfig: DeckConfig = {
     type: "road",
     name: "ROAD DECK",
-<<<<<<< HEAD
-    color: "#34d399",
-    forecastLabel: "Réseau CEDEAO · 4h",
-    kpis: trucks.length > 0
-      ? [
-          { label: "Camions Actifs",    value: kpi.activeTrucks,           color: "#34d399" },
-=======
     color: "#4ade80",
     forecastLabel: "Réseau CEDEAO · 4h",
     kpis: trucks.length > 0
       ? [
           { label: "Camions Actifs",    value: kpi.activeTrucks,           color: "#4ade80" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           { label: "À l'heure",         value: kpi.onTime,                  color: "#10B981" },
           { label: "En Retard",         value: kpi.delayed,                 color: "#EF4444" },
           { label: "Délai Moyen",       value: kpi.avgDelay,                color: "#F59E0B" },
           { label: "Attente Frontières", value: frontierWaitMin > 0 ? formatMinutes(frontierWaitMin) : "—",
-<<<<<<< HEAD
-            color: frontierWaitMin > 120 ? "#EF4444" : "#34d399" },
-        ]
-      : [
-          { label: "Camions Actifs",    value: 284,    color: "#34d399" },
-          { label: "Livraisons / mois", value: "1 247", color: "#34d399" },
-          { label: "Pays CEDEAO",       value: 5,       color: "#34d399" },
-          { label: "Ponctualité",        value: "94%",  color: "#34d399" },
-=======
             color: frontierWaitMin > 120 ? "#EF4444" : "#4ade80" },
         ]
       : [
@@ -414,7 +373,6 @@ export default function RoadDeck() {
           { label: "Livraisons / mois", value: "1 247", color: "#4ade80" },
           { label: "Pays CEDEAO",       value: 5,       color: "#4ade80" },
           { label: "Ponctualité",        value: "94%",  color: "#4ade80" },
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
         ],
     assets: trucks.length > 0
       ? trucks.map((t) => ({

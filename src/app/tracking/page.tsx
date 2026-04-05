@@ -117,11 +117,7 @@ export default function TrackingPage() {
       {/* Header */}
       <header className="border-b border-white/5 bg-[#0d1220]/80 backdrop-blur-sm px-6 py-4 flex items-center gap-4">
         <div className="flex items-center gap-3">
-<<<<<<< HEAD
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#38bdf8] flex items-center justify-center">
-=======
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#F59E0B] to-[#22d3ee] flex items-center justify-center">
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             <span className="text-[#0a0e1a] font-black text-xs">O</span>
           </div>
           <span className="font-bold text-lg tracking-tight">ORION</span>
@@ -133,11 +129,7 @@ export default function TrackingPage() {
           </a>
           <a
             href="/auth/signin"
-<<<<<<< HEAD
-            className="px-3 py-1.5 rounded-lg border border-[#D4AF37]/40 text-[#D4AF37] text-sm hover:bg-[#D4AF37]/10 transition-colors"
-=======
             className="px-3 py-1.5 rounded-lg border border-[#F59E0B]/40 text-[#F59E0B] text-sm hover:bg-[#F59E0B]/10 transition-colors"
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           >
             Espace Pro
           </a>
@@ -146,22 +138,13 @@ export default function TrackingPage() {
 
       {/* Hero */}
       <div className="max-w-2xl mx-auto px-6 pt-16 pb-8 text-center">
-<<<<<<< HEAD
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#38bdf8]/30 text-[#38bdf8] text-xs mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
-=======
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#22d3ee]/30 text-[#22d3ee] text-xs mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-[#22d3ee] animate-pulse" />
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           Suivi en temps réel
         </div>
         <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3">
           Suivez votre{" "}
-<<<<<<< HEAD
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#38bdf8]">
-=======
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F59E0B] to-[#22d3ee]">
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             expédition
           </span>
         </h1>
@@ -176,20 +159,12 @@ export default function TrackingPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="ORN-RD-2026-0042"
-<<<<<<< HEAD
-            className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:outline-none focus:border-[#38bdf8]/50 focus:bg-white/8 transition-all text-sm font-mono"
-=======
             className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/25 focus:outline-none focus:border-[#22d3ee]/50 focus:bg-white/8 transition-all text-sm font-mono"
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-<<<<<<< HEAD
-            className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#f0cc5c] text-[#0a0e1a] font-bold text-sm hover:opacity-90 disabled:opacity-40 transition-all"
-=======
             className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#F59E0B] to-[#f0cc5c] text-[#0a0e1a] font-bold text-sm hover:opacity-90 disabled:opacity-40 transition-all"
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           >
             {loading ? "…" : "Suivre"}
           </button>
@@ -273,11 +248,7 @@ export default function TrackingPage() {
                         step.completed
                           ? "bg-emerald-400 border-emerald-400"
                           : step.active
-<<<<<<< HEAD
-                          ? "bg-[#38bdf8] border-[#38bdf8] animate-pulse shadow-[0_0_8px_#38bdf8]"
-=======
                           ? "bg-[#22d3ee] border-[#22d3ee] animate-pulse shadow-[0_0_8px_#22d3ee]"
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                           : "bg-transparent border-white/20"
                       }`}
                     />
@@ -298,11 +269,7 @@ export default function TrackingPage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-6 text-center text-white/25 text-xs">
         ORION Unified Logistics · Port d'Abidjan ·{" "}
-<<<<<<< HEAD
-        <a href="/pricing" className="hover:text-[#D4AF37] transition-colors">
-=======
         <a href="/pricing" className="hover:text-[#F59E0B] transition-colors">
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           Accès professionnel
         </a>
       </footer>
