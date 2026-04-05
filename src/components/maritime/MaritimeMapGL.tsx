@@ -32,6 +32,39 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
 const DARK_STYLE_URL   = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 const PLAN_STYLE_URL   = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
+// ─── Couleurs ORION Maritime ────────────────────────────────────────────────
+const ORION_COLORS = {
+  // Accents principaux
+  maritime: {
+    primary: "#38bdf8",      // cyan-400 — accent maritime
+    secondary: "#0284c7",   // sky-600 — hover/actif
+    glow: "rgba(56,189,248,0.4)",
+  },
+  gold: {
+    primary: "#D4AF37",      // or — ports, accents premium
+    glow: "rgba(212,175,55,0.4)",
+  },
+  status: {
+    berth: "#10B981",        // émeraude — à quai
+    transit: "#38bdf8",      // cyan — en transit (aligné maritime)
+    alert: "#EF4444",        // rouge — alerte
+  },
+  cargo: {
+    container: "#22d3ee",     // cyan-400 — porte-conteneurs (maritime)
+    tanker: "#fb923c",      // orange — pétrolier
+    bulk: "#facc15",        // jaune — vraquier
+    roro: "#a78bfa",        // violet — roulier
+    general: "#94a3b8",     // slate-400 — cargo général
+  },
+  map: {
+    bg: "#030712",           // slate-950 — fond
+    panel: "rgba(6,14,26,0.95)",
+    border: "rgba(56,189,248,0.15)",
+    text: "#F3F4F6",
+    textMuted: "rgba(255,255,255,0.4)",
+  }
+};
+
 // ─── Sky/Atmosphère par style ─────────────────────────────────────────────────
 const SKY: Record<MapStyle, SkySpecification> = {
   satellite: {
@@ -65,37 +98,38 @@ const SKY: Record<MapStyle, SkySpecification> = {
 
 // ─── Ports ────────────────────────────────────────────────────────────────────
 const PORTS = [
-  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.3083,  lng: -3.9780 },  // Terminal à conteneurs, rive nord
-  { id: "LOS", name: "Port de Lagos",           lat: 6.4474,  lng:  3.3553 },  // Apapa Port
-  { id: "DKR", name: "Port de Dakar",           lat: 14.6879, lng: -17.4337 }, // Quai Port de Dakar
-  { id: "TEM", name: "Port de Tema",            lat: 5.6333,  lng:  0.0167  }, // Port de Tema (corrigé : était 3,3 km au sud dans l'océan)
-  { id: "CTN", name: "Port de Cotonou",         lat: 6.3536,  lng:  2.4197  }, // Port de Cotonou
+  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.3083,  lng: -3.9780, importance: "major" },
+  { id: "LOS", name: "Port de Lagos",           lat: 6.4474,  lng:  3.3553, importance: "major" },
+  { id: "DKR", name: "Port de Dakar",           lat: 14.6879, lng: -17.4337, importance: "major" },
+  { id: "TEM", name: "Port de Tema",            lat: 5.6333,  lng:  0.0167,  importance: "major" },
+  { id: "CTN", name: "Port de Cotonou",         lat: 6.3536,  lng:  2.4197,  importance: "medium" },
+  { id: "SYC", name: "San Pedro",               lat: 4.7500,  lng: -6.6333,  importance: "minor" },
 ];
 
 // ─── Couleurs statut ──────────────────────────────────────────────────────────
 const STATUS_COLOR: Record<Vessel["status"], string> = {
-  berth:   "#10B981",
-  transit: "#0EA5E9",
-  alert:   "#EF4444",
+  berth:   ORION_COLORS.status.berth,
+  transit: ORION_COLORS.status.transit,
+  alert:   ORION_COLORS.status.alert,
 };
 
-// ─── Routes commerciales ──────────────────────────────────────────────────────
+// ─── Routes commerciales — couleurs harmonisées ─────────────────────────────
 const TRADE_ROUTES: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [3.3553, 6.4474]] }, properties: {} },  // ABJ → LOS
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-17.4337, 14.6879]] }, properties: {} }, // ABJ → DKR
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [0.0167, 5.6333]] }, properties: {} },   // ABJ → TEM
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3553, 6.4474], [2.4197, 6.3536]] }, properties: {} },   // LOS → CTN
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4337, 14.6879], [-7.59, 33.59]] }, properties: {} },   // DKR → Europe
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} }, // ABJ → Brésil
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [3.3553, 6.4474]] }, properties: { importance: "major" } },  // ABJ → LOS
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-17.4337, 14.6879]] }, properties: { importance: "major" } }, // ABJ → DKR
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [0.0167, 5.6333]] }, properties: { importance: "major" } },   // ABJ → TEM
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3553, 6.4474], [2.4197, 6.3536]] }, properties: { importance: "medium" } },   // LOS → CTN
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4337, 14.6879], [-7.59, 33.59]] }, properties: { importance: "international" } },   // DKR → Europe
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-25.0, 22.0], [-43.18, -22.91]] }, properties: { importance: "transatlantic" } }, // ABJ → Brésil
   ],
 };
 
-// ─── Icônes type navire (emoji + label) ──────────────────────────────────────
+// ─── Couleurs type navire (harmonisées ORION) ─────────────────────────────────
 const CARGO_TYPE_ICON: Record<string, string> = {
   container: "⊞",
-  tanker:    "◉",
+  tanker:    "◉", 
   bulk:      "◎",
   roro:      "▶",
   general:   "◈",
@@ -107,21 +141,21 @@ const CARGO_TYPE_LABEL: Record<string, string> = {
   roro:      "Roulier (RoRo)",
   general:   "Cargo général",
 };
-// Taille cercle (rayon) selon le type de navire
+// Taille cercle (rayon) selon le type — ajusté pour meilleure visibilité
 const CARGO_TYPE_RADIUS: Record<string, number> = {
-  container: 9,
-  tanker:    8,
-  bulk:      7,
-  roro:      6,
-  general:   5,
+  container: 10,
+  tanker:     9,
+  bulk:       8,
+  roro:       7,
+  general:    6,
 };
-// Couleur stroke selon le type
+// Couleurs harmonisées ORION Maritime
 const CARGO_TYPE_STROKE: Record<string, string> = {
-  container: "#22d3ee",  // cyan   — porte-conteneurs
-  tanker:    "#fb923c",  // orange — pétrolier
-  bulk:      "#facc15",  // jaune  — vraquier
-  roro:      "#a78bfa",  // violet — roulier
-  general:   "#d1d5db",  // gris   — cargo général
+  container: ORION_COLORS.cargo.container,  // cyan
+  tanker:    ORION_COLORS.cargo.tanker,     // orange
+  bulk:      ORION_COLORS.cargo.bulk,       // jaune
+  roro:      ORION_COLORS.cargo.roro,       // violet
+  general:   ORION_COLORS.cargo.general,    // slate
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -136,12 +170,16 @@ function buildVesselGeoJSON(vessels: Vessel[]): GeoJSON.FeatureCollection {
   };
 }
 
-function createPortMarker(id: string, color = "#D4AF37") {
+function createPortMarker(id: string, importance: "major" | "medium" | "minor" = "medium") {
+  const color = importance === "major" ? ORION_COLORS.gold.primary : "#64748b";
+  const size = importance === "major" ? "10px" : "6px";
+  const pulseScale = importance === "major" ? "3" : "2";
   const el = document.createElement("div");
-  el.style.cssText = `position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;`;
+  el.style.cssText = `position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;`;
   el.innerHTML = `
-    <div style="position:absolute;inset:0;border-radius:50%;border:1.5px solid ${color}60;animation:orion-port-pulse 2.5s ease-in-out infinite;"></div>
-    <div style="width:9px;height:9px;border-radius:50%;background:${color};box-shadow:0 0 10px ${color}cc,0 0 20px ${color}44;"></div>
+    <div style="position:absolute;inset:0;border-radius:50%;border:2px solid ${color}${importance === "major" ? "60" : "40"};animation:orion-port-pulse 2.5s ease-in-out infinite;"></div>
+    ${importance === "major" ? `<div style="position:absolute;inset:0;border-radius:50%;border:1px solid ${color}30;animation:orion-port-pulse 2.5s ease-in-out infinite 0.5s;"></div>` : ""}
+    <div style="width:${size};height:${size};border-radius:50%;background:${color};box-shadow:0 0 12px ${color}cc,0 0 24px ${color}44;"></div>
     <span style="position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:${color};letter-spacing:.1em;white-space:nowrap;text-shadow:0 0 8px #00000099;">${id}</span>
   `;
   return el;
@@ -171,59 +209,148 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
 
   // ─── Ajouter les layers custom après chargement du style ──────────────────
   const addCustomLayers = useCallback((map: maplibregl.Map) => {
-    // Routes
+    // Routes commerciales — avec style selon importance
     if (!map.getSource("orion-routes")) {
       map.addSource("orion-routes", { type: "geojson", data: TRADE_ROUTES });
     }
+    // Glow externe pour routes majeures
+    if (!map.getLayer("orion-routes-glow-outer")) {
+      map.addLayer({ 
+        id: "orion-routes-glow-outer", 
+        type: "line", 
+        source: "orion-routes",
+        filter: ["in", ["get", "importance"], ["literal", ["major", "transatlantic"]]],
+        paint: { 
+          "line-color": ORION_COLORS.maritime.primary, 
+          "line-opacity": 0.08, 
+          "line-width": 10, 
+          "line-blur": 8 
+        } 
+      });
+    }
     if (!map.getLayer("orion-routes-glow")) {
-      map.addLayer({ id: "orion-routes-glow", type: "line", source: "orion-routes",
-        paint: { "line-color": "#0EA5E9", "line-opacity": 0.15, "line-width": 8, "line-blur": 6 } });
+      map.addLayer({ 
+        id: "orion-routes-glow", 
+        type: "line", 
+        source: "orion-routes",
+        paint: { 
+          "line-color": ORION_COLORS.maritime.primary, 
+          "line-opacity": 0.12, 
+          "line-width": 5, 
+          "line-blur": 4 
+        } 
+      });
     }
     if (!map.getLayer("orion-routes-line")) {
-      map.addLayer({ id: "orion-routes-line", type: "line", source: "orion-routes",
-        paint: { "line-color": "#0EA5E9", "line-opacity": 0.4, "line-width": 1.5, "line-dasharray": [3, 5] } });
+      map.addLayer({ 
+        id: "orion-routes-line", 
+        type: "line", 
+        source: "orion-routes",
+        paint: { 
+          "line-color": ORION_COLORS.maritime.primary, 
+          "line-opacity": 0.5, 
+          "line-width": 1.5, 
+          "line-dasharray": [3, 5] 
+        } 
+      });
     }
 
-    // Navires
+    // NAVIRES — couches améliorées pour visibilité
     if (!map.getSource("orion-vessels")) {
       map.addSource("orion-vessels", { type: "geojson", data: buildVesselGeoJSON(vesselDataRef.current) });
     }
-    if (!map.getLayer("orion-vessels-halo")) {
-      map.addLayer({ id: "orion-vessels-halo", type: "circle", source: "orion-vessels",
+
+    // Halo externe pulsé pour ALERTES (rouge)
+    if (!map.getLayer("orion-vessels-halo-outer")) {
+      map.addLayer({ 
+        id: "orion-vessels-halo-outer", 
+        type: "circle", 
+        source: "orion-vessels",
         filter: ["==", ["get", "status"], "alert"],
-        paint: { "circle-radius": 18, "circle-color": "#EF4444", "circle-opacity": 0.12 } });
+        paint: { 
+          "circle-radius": 22, 
+          "circle-color": ORION_COLORS.status.alert, 
+          "circle-opacity": 0.06,
+          "circle-blur": 3
+        } 
+      });
     }
+
+    // Halo interne alerte
+    if (!map.getLayer("orion-vessels-halo")) {
+      map.addLayer({ 
+        id: "orion-vessels-halo", 
+        type: "circle", 
+        source: "orion-vessels",
+        filter: ["==", ["get", "status"], "alert"],
+        paint: { 
+          "circle-radius": 14, 
+          "circle-color": ORION_COLORS.status.alert, 
+          "circle-opacity": 0.15,
+          "circle-blur": 1
+        } 
+      });
+    }
+
+    // Cercles principaux navires — VISIBILITÉ AMÉLIORÉE
     if (!map.getLayer("orion-vessels-circle")) {
-      map.addLayer({ id: "orion-vessels-circle", type: "circle", source: "orion-vessels",
+      map.addLayer({ 
+        id: "orion-vessels-circle", 
+        type: "circle", 
+        source: "orion-vessels",
         paint: {
-          // Rayon variable : taille selon type de navire (container > tanker > bulk > roro > general)
-          "circle-radius": ["match", ["get", "cargoType"],
-            "container", 9,
-            "tanker",    8,
-            "bulk",      7,
-            "roro",      6,
-            5  // general (défaut)
+          // Rayon variable selon type
+          "circle-radius": [
+            "match", ["get", "cargoType"],
+            "container", CARGO_TYPE_RADIUS.container,
+            "tanker",    CARGO_TYPE_RADIUS.tanker,
+            "bulk",      CARGO_TYPE_RADIUS.bulk,
+            "roro",      CARGO_TYPE_RADIUS.roro,
+            CARGO_TYPE_RADIUS.general
           ],
-          // Couleur de remplissage selon le statut opérationnel
-          "circle-color": ["match", ["get", "status"],
-            "berth", "#10B981",
-            "alert", "#EF4444",
-            "#0EA5E9"  // transit (défaut)
+          // Couleur selon statut — opacité augmentée
+          "circle-color": [
+            "match", ["get", "status"],
+            "berth",   ORION_COLORS.status.berth,
+            "alert",   ORION_COLORS.status.alert,
+            ORION_COLORS.status.transit
           ],
-          // Épaisseur du contour selon le statut
-          "circle-stroke-width": ["case", ["==", ["get", "status"], "alert"], 2.5, 1.8],
-          // Couleur du contour selon le TYPE de navire (permet différenciation visuelle)
-          "circle-stroke-color": ["case",
-            ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.8)",
-            ["match", ["get", "cargoType"],
-              "container", "#22d3ee",
-              "tanker",    "#fb923c",
-              "bulk",      "#facc15",
-              "roro",      "#a78bfa",
-              "rgba(255,255,255,0.5)"  // general
+          "circle-opacity": 0.95,
+          // Bordure épaisse et visible
+          "circle-stroke-width": [
+            "case", 
+            ["==", ["get", "status"], "alert"], 3, 
+            2.5
+          ],
+          // Couleur bordure selon TYPE avec fallback
+          "circle-stroke-color": [
+            "case",
+            ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.9)",
+            [
+              "match", ["get", "cargoType"],
+              "container", CARGO_TYPE_STROKE.container,
+              "tanker",    CARGO_TYPE_STROKE.tanker,
+              "bulk",      CARGO_TYPE_STROKE.bulk,
+              "roro",      CARGO_TYPE_STROKE.roro,
+              CARGO_TYPE_STROKE.general
             ]
           ],
+          "circle-stroke-opacity": 0.9,
         },
+      });
+    }
+
+    // Points centraux blancs pour contraste
+    if (!map.getLayer("orion-vessels-dot")) {
+      map.addLayer({ 
+        id: "orion-vessels-dot", 
+        type: "circle", 
+        source: "orion-vessels",
+        paint: { 
+          "circle-radius": 3, 
+          "circle-color": "#ffffff", 
+          "circle-opacity": 0.9 
+        } 
       });
     }
   }, []);
@@ -268,14 +395,15 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
           easing: (t) => 1 - Math.pow(1 - t, 3) });
       }, 600);
 
-      // Ports
+      // Ports — avec importance
       PORTS.forEach((port) => {
-        const el = createPortMarker(port.id);
+        const el = createPortMarker(port.id, (port.importance as "major" | "medium" | "minor") || "medium");
+        const color = port.importance === "major" ? ORION_COLORS.gold.primary : "#64748b";
         const m = new maplibregl.Marker({ element: el, anchor: "center" })
           .setLngLat([port.lng, port.lat])
           .setPopup(new maplibregl.Popup({ offset: 20, closeButton: false, className: "orion-popup" })
             .setHTML(`<div style="font-family:monospace;font-size:11px;padding:2px">
-              <div style="font-weight:700;color:#D4AF37;letter-spacing:.06em">${port.id}</div>
+              <div style="font-weight:700;color:${color};letter-spacing:.06em">${port.id}</div>
               <div style="color:#9CA3AF;margin-top:3px">${port.name}</div>
             </div>`))
           .addTo(map);
@@ -332,15 +460,22 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
         });
       });
 
-      // Pulse halo animation
+      // Pulse halo animation — améliorée pour halo double
       let pulse = 0;
       const animatePulse = () => {
         pulse = (pulse + 1) % 100;
-        const opacity = 0.06 + Math.sin((pulse / 100) * Math.PI * 2) * 0.12;
-        const radius  = 15 + Math.sin((pulse / 100) * Math.PI * 2) * 6;
+        const opacityInner = 0.08 + Math.sin((pulse / 100) * Math.PI * 2) * 0.1;
+        const radiusInner  = 14 + Math.sin((pulse / 100) * Math.PI * 2) * 5;
+        const opacityOuter = 0.04 + Math.sin(((pulse + 30) / 100) * Math.PI * 2) * 0.06;
+        const radiusOuter  = 22 + Math.sin(((pulse + 30) / 100) * Math.PI * 2) * 8;
+        
         if (map.getLayer("orion-vessels-halo")) {
-          map.setPaintProperty("orion-vessels-halo", "circle-opacity", opacity);
-          map.setPaintProperty("orion-vessels-halo", "circle-radius", radius);
+          map.setPaintProperty("orion-vessels-halo", "circle-opacity", opacityInner);
+          map.setPaintProperty("orion-vessels-halo", "circle-radius", radiusInner);
+        }
+        if (map.getLayer("orion-vessels-halo-outer")) {
+          map.setPaintProperty("orion-vessels-halo-outer", "circle-opacity", opacityOuter);
+          map.setPaintProperty("orion-vessels-halo-outer", "circle-radius", radiusOuter);
         }
         frameRef.current = requestAnimationFrame(animatePulse);
       };

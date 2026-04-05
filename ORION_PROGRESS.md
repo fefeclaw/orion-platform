@@ -51,7 +51,92 @@ Dernière mise à jour : **2026-04-01**
 
 ---
 
-## État global — Mis à jour 2026-04-01
+## 🎯 CORRECTIONS — Architecture Silo/Pilier Isolé (2026-04-02)
+
+### Problème identifié
+- Les utilisateurs professionnels connectés à un pilier (ex: Maritime) voyaient les autres piliers (Rail, Road, Air) dans la sidebar
+- Architecture non conforme au besoin : **un professionnel = un pilier dédié, pas de visibilité croisée**
+
+### Solution implémentée
+
+#### 1. Sidebar Spécifique par Pilier
+| Pilier | Composant | Couleur | Menu enrichi |
+|--------|-----------|---------|--------------|
+| Maritime | `MaritimeSidebar.tsx` | `#38bdf8` | 5 sections avec 15+ options |
+| Rail | `RailSidebar.tsx` | `#f87171` | 5 sections avec 12+ options |
+| Road | `RoadSidebar.tsx` | `#34d399` | 6 sections avec 13+ options |
+| Air | `AirSidebar.tsx` | `#a78bfa` | 6 sections avec 12+ options |
+
+#### 2. Logique d'Affichage (Sidebar.tsx)
+```typescript
+if (isPro && pillar) {
+  switch (pillar) {
+    case "maritime": return <MaritimeSidebar />;
+    case "rail": return <RailSidebar />;
+    case "road": return <RoadSidebar />;
+    case "air": return <AirSidebar />;
+  }
+}
+```
+
+#### 3. Structure des Menus par Pilier
+
+**Maritime (Fret maritime)**
+- Gestion du Fret → Inventory, Stowage
+- Douane & Conformité → BSC, Manifest, Compliance
+- Gestion de Flotte → Vessel Live, Berth Planning
+- Prédiction IA → ETA Recalc, Risk Analysis
+- Administration → Audit Logs, Team, Alertes
+
+**Rail (Ferroviaire)**
+- Traffic & Circulation → Corridor ABJ-OUA, Horaires, Alertes
+- Gestion de Flotte → Locomotives, Wagons, Maintenance
+- Tracking & Monitoring → GPS, Stations, Frontières
+- Documents & Conformité → CIM, Douanes CI/BF, Transit
+- Administration → Audit, Alertes, Team
+
+**Road (Routier)**
+- Flotte & Véhicules → Camions, Conducteurs, Inspection
+- Tracking GPS → Position temps réel, Historique, Geofencing
+- Postes & Frontières → Temps d'attente, Douanes CEDEAO
+- Documents Transport → CMR, BSC, Pesage
+- Opérations → Dispatch, Alertes
+- Administration → Audit, Team
+
+**Air (Aérien)**
+- Gestion des Vols → Arrivées, Départs, Cut-off
+- Fret & Cargo → Inventory, Dangereux, Périssables
+- Documents Aériens → AWB, Manifest, EXA/IMP
+- Tracking & ADS-B → Live, Historique, Alertes
+- Ground Handling → Entrepôt FHB, Équipements, Express
+- Administration → Audit, Team
+
+#### 4. Traductions Complètes (8 langues)
+Tous les menus enrichis sont traduits en : 🇫🇷 FR, 🇬🇧 EN, 🇵🇹 PT, 🇳🇱 NL, 🇩🇪 DE, 🇨🇳 ZH, 🇯🇵 JA, 🇰🇷 KO
+
+### Architecture Finale
+```
+Dashboard Layout
+├── Sidebar (dynamique selon rôle/pilier)
+│   ├── Si pro maritime → MaritimeSidebar (isolation complète)
+│   ├── Si pro rail → RailSidebar (isolation complète)
+│   ├── Si pro road → RoadSidebar (isolation complète)
+│   ├── Si pro air → AirSidebar (isolation complète)
+│   └── Si client/admin → Sidebar générique (tous piliers)
+└── Main Content
+    └── Page spécifique au pilier (DeckLayout avec panneaux)
+```
+
+### Points clés
+✅ **Isolation complète** : Un utilisateur pro ne voit jamais les autres piliers
+✅ **Menu enrichi** : 5-6 sections par pilier avec sous-options accordéon
+✅ **Status live** : Badges de couleur (vert/orange/rouge) sur chaque entrée
+✅ **Animations** : Framer Motion pour les menus accordéon et transitions
+✅ **Responsive** : Même structure sur desktop et mobile
+
+---
+
+## État global — Mis à jour 2026-04-02
 
 | Pilier | Avancement | Statut |
 |--------|-----------|--------|
@@ -67,9 +152,11 @@ Dernière mise à jour : **2026-04-01**
 
 ---
 
-## AGENT 1 — Maritime Enhancer ✅ COMPLET
+## AGENT 1 — Maritime Enhancer ✅ COMPLET (MÀJ 2026-04-05)
 - [x] Audit code existant (MaritimeMapGL, VesselsTable, AlertsPanel, WeatherWidget)
 - [x] Carte MapLibre GL avec navires temps réel (mock)
+- [x] **🔄 VISIBILITÉ NAVIRES AMÉLIORÉE** — couleurs harmonisées ORION, halos pulsés doubles, points centraux blancs
+- [x] **🔄 PALETTE COULEURS ORION** — cyan `#38bdf8` (maritime), or `#D4AF37` (ports majeurs), distinctions par type de cargo
 - [x] Météo marine (WeatherWidget en place)
 - [x] Widget taux de change FCFA (EUR/USD/GBP · variation toutes les 30s)
 - [x] ETA prédictif météo (×1.2 si THUNDERSTORM/HEAVY_RAIN, ×1.1 si FOG)
@@ -82,6 +169,27 @@ Dernière mise à jour : **2026-04-01**
 - [x] Manifeste cargo PDF multi-navires (paysage A4, tableau complet, récap statuts)
 - [x] Certificat phytosanitaire (MINADER/ANADER, déclaration IPPC, zones signature)
 - [x] Certificat d'origine (CCI-CI, code SH, valeur FOB, déclaration d'origine)
+
+### Détails techniques implémentation navires (2026-04-05)
+**Couleurs ORION Maritime standardisées :**
+- **Cyan** `#38bdf8` — accent principal maritime, porte-conteneurs, routes commerciales
+- **Or** `#D4AF37` — ports majeurs (Abidjan, Lagos, Dakar, Tema), accents premium
+- **Emeraude** `#10B981` — navires à quai
+- **Rouge** `#EF4444` — alertes, halos pulsés
+
+**Hiérarchie visuelle sur carte :**
+1. **Halo externe** (rayon 22px, opacité 0.04-0.1) — pulse lent pour alertes
+2. **Halo interne** (rayon 14px, opacité 0.08-0.18) — pulse rapide pour alertes  
+3. **Cercle principal** (rayon 6-10px selon type) — couleur selon statut opérationnel
+4. **Bordure épaisse** (2.5-3px) — couleur selon type de cargo
+5. **Point central blanc** (rayon 3px) — contraste final
+
+**Différenciation par type de cargo :**
+- Container : Cyan `#22d3ee` — plus gros rayon (10px), maritime principal
+- Tanker : Orange `#fb923c` — rayon 9px
+- Bulk : Jaune `#facc15` — rayon 8px  
+- RoRo : Violet `#a78bfa` — rayon 7px
+- General : Slate `#94a3b8` — rayon 6px
 
 ## AGENT 2 — Rail Builder ✅ COMPLET
 - [x] Structure DeckLayout en place
@@ -304,6 +412,49 @@ k6 run --env BASE_URL=https://staging.orion.ci k6-tests/quick-load-test.js
 ### Priorité Basse (v2.0)
 6. App mobile React Native
 7. Intelligence prédictive IA (modèle retard)
+
+---
+
+---
+
+## 🧠 ROADMAP IA — Intégration Gemma 4 (Google DeepMind)
+> *Ajouté le 2026-04-05 — Priorité: Phase 5 (v2.0)*
+
+### Pourquoi Gemma 4 pour ORION
+Architecture multimodale (texte + image + audio) avec efficience MoE (Mixture of Experts) permettant inference rapide (4B actifs) avec qualité 26B+.
+
+### Cas d'usage priorisés
+
+| Priorité | Feature | Modèle Gemma 4 | Impact ORION |
+|----------|---------|----------------|--------------|
+| P1 | **OCR Documents Douaniers** (B/L, CMR scannés) | 26B-A4B (MoE) | Extraction auto JSON depuis photos, réduction erreurs saisie 70% |
+| P1 | **Prédiction Retards Affinée** | 26B-A4B | Remplace heuristiques (×1.2 pluie) par modèle temps réel multimodal (AIS + météo radar) |
+| P2 | **Assistant Vocal Conducteurs** | E4B (4B effectifs) | Speech-to-text offline corridor Abidjan-Ouagadougou, Dictée incidents sans réseau |
+| P2 | **Traduction Temps Réel** | E2B/E4B | FR ↔ Mossi/Bambara pour opérateurs/frontaliers |
+| P3 | **Inspection Visuelle Conteneurs** | 31B | Détection dommages (rayures, rouille) depuis photos arrivée |
+
+### Architecture cible
+```
+Tier Edge (Mobile/React Native): Gemma 4-E4B (offline, PLE flash storage)
+    ↓ sync
+Tier App (Vercel/Next.js): API Routes
+    ↓
+Tier Inference (Vertex/Google Cloud): 
+    • 26B-A4B (usage principal 90% — OCR, prédiction, chatbot)
+    • 31B (usage intensif 10% — inspection, analyse juridique)
+```
+
+### Intégration technique
+- **Vision** : 2D RoPE + adaptive resizing (jusqu'à 1120 tokens) pour documents douaniers
+- **Audio** : Conformer encoder pour vocal corridor (E4B only)
+- **MoE** : 26B-A4B = performances 31B à coût inférence 4B (idéal pour Scale)
+
+### Notes implémentation
+- Per-Layer Embeddings (E2B/E4B) stockées en flash, pas RAM → offline mobile viable
+- p-RoPE (low-frequency pruned) meilleure longue séquence pour prédiction retards
+- K=V dans global attention réduit KV-cache → plus de navires trackables simultanément
+
+*Status: ⏳ En attente Phase 4 (Pre-Prod) terminée — POC OCR prioritaire pour v1.1*
 
 ---
 
