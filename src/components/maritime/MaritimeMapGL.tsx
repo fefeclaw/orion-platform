@@ -162,7 +162,7 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
   const portMarkersRef = useRef<maplibregl.Marker[]>([]);
   const vesselDataRef  = useRef<Vessel[]>(vessels);
 
-  const [activeStyle,  setActiveStyle]  = useState<MapStyle>("dark");
+  const [activeStyle,  setActiveStyle]  = useState<MapStyle>("satellite");
   const [internalIs3D, setInternalIs3D] = useState(false);
   const [showRoutes,   setShowRoutes]   = useState(true);
 
@@ -240,7 +240,9 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: DARK_STYLE_URL,
+      // Démarre avec le style satellite (spec en mémoire, ArcGIS, fiable sans dépendance externe).
+      // Si on démarre avec DARK_STYLE_URL et que Carto échoue, "load" ne se déclenche jamais → 0 navire.
+      style: SATELLITE_STYLE,
       center: [-2.5, 7.5],
       zoom: 1.8, // Start zoomed out to see globe
       pitch: 0,
@@ -258,8 +260,15 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
       className: "orion-popup", offset: 14, maxWidth: "230px",
     });
 
+    map.on("error", (e) => {
+      console.warn("[MaritimeMapGL] Erreur style/tile, fallback satellite:", e.error?.message ?? e);
+      if (mapRef.current && !mapRef.current.getSource("orion-vessels")) {
+        try { mapRef.current.setStyle(SATELLITE_STYLE); } catch { /* ignore */ }
+      }
+    });
+
     map.on("load", () => {
-      applyMapMeta(map, "dark");
+      applyMapMeta(map, "satellite");
       addCustomLayers(map);
 
       // Smooth fly-in vers West Africa
