@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Ship, Anchor, Navigation } from "lucide-react";
-import { DeckLayout } from "@/components/deck/DeckLayout";
+import { SimplePageLayout } from "@/components/deck/SimplePageLayout";
 
 const FLEET = [
   { name: "ORION-1", type: "Porte-conteneurs", status: "at-sea", cargo: "85%", next: "Abidjan", eta: "06/04/2026" },
@@ -12,7 +12,7 @@ const FLEET = [
 
 export default function MaritimeFleetPage() {
   return (
-    <DeckLayout
+    <SimplePageLayout
       header={
         <div className="flex items-center justify-between">
           <div>
@@ -21,6 +21,7 @@ export default function MaritimeFleetPage() {
           </div>
         </div>
       }
+      color="#38bdf8"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -36,8 +37,7 @@ export default function MaritimeFleetPage() {
           {FLEET.map((vessel, i) => (
             <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3"
-003e
+                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center">
                     <Anchor className="w-5 h-5 text-sky-400" />
                   </div>
@@ -47,8 +47,7 @@ export default function MaritimeFleetPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4"
-003e
+                <div className="flex items-center gap-4">
                   <div className="text-right">
                     <div className="flex items-center gap-1 justify-end">
                       <Navigation className="w-3 h-3 text-white/30" />
@@ -59,8 +58,7 @@ export default function MaritimeFleetPage() {
                   
                   <div className={`px-3 py-1 rounded-full text-xs ${
                     vessel.status === "at-sea" ? "bg-sky-500/10 text-sky-400" : "bg-green-500/10 text-green-400"
-                  }`}
-003e
+                  }`}>
                     {vessel.status === "at-sea" ? "En mer" : "À quai"}
                   </div>
                 </div>
@@ -81,6 +79,6 @@ export default function MaritimeFleetPage() {
           ))}
         </div>
       </motion.div>
-    </DeckLayout>
+    </SimplePageLayout>
   );
 }

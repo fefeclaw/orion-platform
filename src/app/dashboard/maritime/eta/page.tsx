@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, TrendingUp, AlertTriangle, Clock } from "lucide-react";
-import { DeckLayout } from "@/components/deck/DeckLayout";
+import { Brain, TrendingUp, Clock } from "lucide-react";
+import SimplePageLayout from "@/components/deck/SimplePageLayout";
 
 const PREDICTIONS = [
   { vessel: "ORION-1", currentEta: "06/04 14:00", predictedEta: "06/04 16:30", reason: "Conditions météo", confidence: "87%" },
@@ -11,7 +11,7 @@ const PREDICTIONS = [
 
 export default function MaritimeETAPage() {
   return (
-    <DeckLayout
+    <SimplePageLayout
       header={
         <div className="flex items-center justify-between">
           <div>
@@ -24,6 +24,7 @@ export default function MaritimeETAPage() {
           </div>
         </div>
       }
+      color="#38bdf8"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -39,8 +40,7 @@ export default function MaritimeETAPage() {
           {PREDICTIONS.map((pred, i) => (
             <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3"
-003e
+                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
                     <Brain className="w-5 h-5 text-violet-400" />
                   </div>
@@ -48,7 +48,8 @@ export default function MaritimeETAPage() {
                     <p className="text-sm font-medium text-white/80">{pred.vessel}</p>
                     <p className="text-xs text-white/40">Confiance: {pred.confidence}</p>
                   </div>
-                </div>              </div>
+                </div>
+              </div>
 
               <div className="grid grid-cols-3 gap-4 mt-3 pt-3 border-t border-white/5">
                 <div>
@@ -70,6 +71,6 @@ export default function MaritimeETAPage() {
           ))}
         </div>
       </motion.div>
-    </DeckLayout>
+    </SimplePageLayout>
   );
 }

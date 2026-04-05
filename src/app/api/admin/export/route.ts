@@ -70,7 +70,8 @@ export async function POST(request: NextRequest) {
     }
     
     // Réponse avec fichier Excel
-    return new NextResponse(excelBuffer, {
+    // Conversion Buffer → Uint8Array pour compatibilité NextResponse
+    return new NextResponse(new Uint8Array(excelBuffer), {
       status: 200,
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

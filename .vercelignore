@@ -1,0 +1,41 @@
+# Dépendencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+.nyc_output
+*.test.ts
+*.test.tsx
+src/__tests__
+tests/k6-results
+
+# Development
+.env.local
+.env.*.local
+.env.development
+.eslintcache
+*.tsbuildinfo
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large files (si présents)
+*.mp4
+*.mov
+*.pdf
+data/*.db-wal
+data/*.db-shm
+
+# Documentation (optionnel - garder si nécessaire)
+docs/internal

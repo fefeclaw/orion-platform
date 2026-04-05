@@ -1,3 +1,6 @@
+import type { JWT } from "next-auth/jwt";
+import type { Session, User } from "next-auth";
+
 export type Pillar = "maritime" | "rail" | "road" | "air";
 
 export interface PillarConfig {

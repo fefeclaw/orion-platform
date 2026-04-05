@@ -92,6 +92,11 @@ export function migrate(db: Database): void {
       value      TEXT NOT NULL,
       expires_at INTEGER NOT NULL DEFAULT 0
     );
+
+    -- Vérification WAL mode pour écritures concurrentes
+    PRAGMA journal_mode = WAL;
+    PRAGMA synchronous = NORMAL;
+    PRAGMA cache_size = -64000; -- ~64MB cache
   `);
 
   seedUsers(db);

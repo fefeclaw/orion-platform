@@ -13,7 +13,7 @@ const DELAYS = [
 export default function RailDelaysPage() {
   return (
     <DeckLayout
-      header={{
+      header={
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold text-white/90">Alertes Retards</h1>

@@ -36,8 +36,8 @@ export function generateExcel(
   // Création du workbook
   const wb = XLSX.utils.book_new();
   
-  // Préparation des lignes
-  const rows: unknown[] = [];
+  // Préparation des lignes (tableau 2D pour xlsx)
+  const rows: any[][] = [];
   
   // En-tête avec titre
   rows.push([title]);
