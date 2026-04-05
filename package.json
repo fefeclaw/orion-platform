@@ -40,10 +40,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.13",
-<<<<<<< HEAD
     "@types/k6": "^1.7.0",
-=======
->>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
     "autoprefixer": "^10.4.27",
     "dotenv": "^17.3.1",
     "eslint": "^10.0.3",
