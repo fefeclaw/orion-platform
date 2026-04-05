@@ -13,8 +13,9 @@ type MapStyle = "satellite" | "dark" | "plan";
 // ─── Styles MapLibre ─────────────────────────────────────────────────────────
 const SATELLITE_STYLE: maplibregl.StyleSpecification = {
   version: 8,
-  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-  sprite: "https://demotiles.maplibre.org/sprite",
+  // Pas de sprite ni glyphs : nos layers (raster + circle + line) n'en ont pas besoin.
+  // Les sprites demotiles.maplibre.org retournent 404, ce qui déclenchait une boucle
+  // error → setStyle → error → ... empêchant l'event "load" de tirer.
   sources: {
     esri: {
       type: "raster",
@@ -261,10 +262,9 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
     });
 
     map.on("error", (e) => {
-      console.warn("[MaritimeMapGL] Erreur style/tile, fallback satellite:", e.error?.message ?? e);
-      if (mapRef.current && !mapRef.current.getSource("orion-vessels")) {
-        try { mapRef.current.setStyle(SATELLITE_STYLE); } catch { /* ignore */ }
-      }
+      // Log uniquement — ne pas appeler setStyle ici.
+      // setStyle en réponse à une erreur crée une boucle infinie (ex. sprite 404).
+      console.warn("[MaritimeMapGL] MapLibre error:", e.error?.message ?? e);
     });
 
     map.on("load", () => {
@@ -356,10 +356,12 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
       frameRef.current = requestAnimationFrame(animatePulse);
     });
 
-    // Re-add layers après changement de style
-    map.on("style.load", () => {
-      applyMapMeta(map, activeStyle);
-      addCustomLayers(map);
+    // Re-add layers après changement de style (MapLibre GL v5 : "styledata" remplace "style.load")
+    map.on("styledata", () => {
+      if (map.isStyleLoaded()) {
+        applyMapMeta(map, activeStyle);
+        addCustomLayers(map);
+      }
     });
 
     return () => {
