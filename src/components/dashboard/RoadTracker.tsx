@@ -54,7 +54,7 @@ const ACTIVITY = [
 export default function RoadTracker() {
   return (
     <TrackingView
-      color="#34d399"
+      color="#4ade80"
       title="Trafic Routier — Temps réel"
       liveLabel="Live"
       icon={Truck}

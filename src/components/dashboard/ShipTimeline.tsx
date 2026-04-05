@@ -19,10 +19,10 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  loading:     "#f87171",
-  at_sea:      "#38bdf8",
-  approaching: "#D4AF37",
-  arrived:     "#34d399",
+  loading:     "#fb923c",
+  at_sea:      "#22d3ee",
+  approaching: "#F59E0B",
+  arrived:     "#4ade80",
   delayed:     "#f59e0b",  // amber — Delay Protocol
 };
 

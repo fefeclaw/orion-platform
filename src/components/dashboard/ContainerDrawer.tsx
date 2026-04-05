@@ -75,7 +75,7 @@ const CARGO_HINTS = ["ORION-4821", "ORION-1337", "ORION-9002"];
 
 // ─── Radar Map ───────────────────────────────────────────────────
 function RadarMap({ progress, status }: { progress: number; status: string }) {
-  const color = status === "delayed" ? "#f59e0b" : status === "approaching" ? "#D4AF37" : "#38bdf8";
+  const color = status === "delayed" ? "#f59e0b" : status === "approaching" ? "#F59E0B" : "#22d3ee";
   const shipX = 50 + Math.cos((progress / 100) * Math.PI) * -35;
   const shipY = 80 - Math.sin((progress / 100) * Math.PI) * 40;
 
@@ -172,7 +172,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
   };
 
   const statusColor = (s: string) =>
-    ({ at_sea: "#38bdf8", approaching: "#D4AF37", arrived: "#34d399", delayed: "#f59e0b", loading: "#f87171" }[s] ?? "#38bdf8");
+    ({ at_sea: "#22d3ee", approaching: "#F59E0B", arrived: "#4ade80", delayed: "#f59e0b", loading: "#fb923c" }[s] ?? "#22d3ee");
 
   const statusLabel = (s: string) => {
     const map: Record<string, ReturnType<typeof t>> = {
@@ -214,8 +214,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#38bdf8]/10">
-                  <Package size={15} className="text-[#38bdf8]" aria-hidden="true" />
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#22d3ee]/10">
+                  <Package size={15} className="text-[#22d3ee]" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{t("container_title")}</p>
@@ -235,7 +235,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                 {isScanning && (
                   <motion.div
                     className="absolute left-0 right-0 h-[1.5px] z-10 rounded-full"
-                    style={{ background: "linear-gradient(90deg, transparent, #38bdf8, transparent)", boxShadow: "0 0 8px #38bdf8" }}
+                    style={{ background: "linear-gradient(90deg, transparent, #22d3ee, transparent)", boxShadow: "0 0 8px #22d3ee" }}
                     initial={{ top: 0, opacity: 1 }}
                     animate={{ top: "100%", opacity: [1, 1, 0] }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
@@ -246,14 +246,14 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                   value={query}
                   onChange={(e) => setQuery(e.target.value.toUpperCase())}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full bg-[#060d1a]/80 border border-white/8 rounded-xl px-4 py-3 pr-12 text-sm text-white font-mono focus:outline-none focus:border-[#38bdf8]/50 transition-colors placeholder:text-white/20"
+                  className="w-full bg-[#060d1a]/80 border border-white/8 rounded-xl px-4 py-3 pr-12 text-sm text-white font-mono focus:outline-none focus:border-[#22d3ee]/50 transition-colors placeholder:text-white/20"
                   placeholder={t("container_placeholder")}
                   disabled={isScanning}
                 />
                 <button
                   onClick={handleSearch}
                   disabled={isScanning}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#38bdf8]/60 hover:text-[#38bdf8] transition-colors disabled:opacity-30"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#22d3ee]/60 hover:text-[#22d3ee] transition-colors disabled:opacity-30"
                 >
                   <Search size={16} aria-hidden="true" />
                 </button>
@@ -280,7 +280,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                     className="flex flex-col items-center gap-4 py-12"
                   >
-                    <div className="w-10 h-10 border-2 border-[#38bdf8]/20 border-t-[#38bdf8] rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-2 border-[#22d3ee]/20 border-t-[#22d3ee] rounded-full animate-spin" />
                     <p className="text-xs text-white/30 uppercase tracking-widest">{t("container_scanning")}</p>
                     <p className="text-[10px] text-white/15">Interrogation base de données DGD · Port Autonome d&apos;Abidjan</p>
                   </motion.div>
@@ -323,7 +323,7 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                           <motion.span
                             initial={{ scale: 0 }} animate={{ scale: 1 }}
                             className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium"
-                            style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}
+                            style={{ background: "rgba(52,211,153,0.12)", color: "#4ade80", border: "1px solid rgba(52,211,153,0.25)" }}
                           >
                             <Leaf size={9} aria-hidden="true" />
                             {t("container_nadia")}
@@ -356,12 +356,12 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                         style={{ background: "rgba(56,189,248,0.06)", borderColor: "rgba(56,189,248,0.25)" }}
                       >
                         <div className="flex items-start gap-2">
-                          <CloudRain size={14} className="text-[#38bdf8] mt-0.5 shrink-0" aria-hidden="true" />
+                          <CloudRain size={14} className="text-[#22d3ee] mt-0.5 shrink-0" aria-hidden="true" />
                           <div>
-                            <p className="text-xs font-semibold text-[#38bdf8]">
+                            <p className="text-xs font-semibold text-[#22d3ee]">
                               {routeWeather.icon} {routeWeather.description} — Route Maritime
                             </p>
-                            <pre className="text-[11px] text-[#38bdf8]/70 whitespace-pre-wrap font-mono leading-relaxed mt-1">
+                            <pre className="text-[11px] text-[#22d3ee]/70 whitespace-pre-wrap font-mono leading-relaxed mt-1">
                               {weatherImpact?.alert}
                             </pre>
                           </div>
@@ -404,8 +404,8 @@ export default function ContainerDrawer({ isOpen, onClose }: ContainerDrawerProp
                       <div className="space-y-2.5">
                         {result.events.map((ev, i) => (
                           <div key={i} className="flex items-start gap-3">
-                            <div className={`mt-0.5 w-4 h-4 rounded-full shrink-0 flex items-center justify-center ${ev.done ? "bg-[#38bdf8]/15 border border-[#38bdf8]/40" : "border border-white/10"}`}>
-                              {ev.done && <div className="w-1.5 h-1.5 rounded-full bg-[#38bdf8]" />}
+                            <div className={`mt-0.5 w-4 h-4 rounded-full shrink-0 flex items-center justify-center ${ev.done ? "bg-[#22d3ee]/15 border border-[#22d3ee]/40" : "border border-white/10"}`}>
+                              {ev.done && <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />}
                             </div>
                             <div>
                               <p className={`text-xs ${ev.done ? "text-white/55" : "text-white/20"}`}>{ev.label}</p>

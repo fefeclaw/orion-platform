@@ -112,7 +112,7 @@ function KPIPanel({
               </p>
               <span
                 className="text-[9px] font-medium flex items-center gap-0.5 shrink-0 ml-1"
-                style={{ color: kpi.trend >= 0 ? "#34d399" : "#f87171" }}
+                style={{ color: kpi.trend >= 0 ? "#4ade80" : "#fb923c" }}
               >
                 {kpi.trend >= 0 ? (
                   <TrendingUp size={8} />
@@ -402,7 +402,7 @@ export default function TrackingView({
               <MapFrame
                 src={satUrl}
                 title={`Vue satellite — ${activeZone.label}`}
-                color="#38bdf8"
+                color="#22d3ee"
                 loadingLabel="Vue satellite…"
                 keyId={`sat-${activeZone.id}`}
               />
@@ -415,8 +415,8 @@ export default function TrackingView({
                   backdropFilter: "blur(8px)",
                 }}
               >
-                <Satellite size={10} className="text-[#38bdf8]" aria-hidden="true" />
-                <span className="text-[9px] text-[#38bdf8]/80 uppercase tracking-widest font-medium">
+                <Satellite size={10} className="text-[#22d3ee]" aria-hidden="true" />
+                <span className="text-[9px] text-[#22d3ee]/80 uppercase tracking-widest font-medium">
                   Google Maps · Hybride
                 </span>
               </div>
@@ -452,7 +452,7 @@ export default function TrackingView({
                 <MapFrame
                   src={satUrl}
                   title={`Vue satellite — ${activeZone.label}`}
-                  color="#38bdf8"
+                  color="#22d3ee"
                   loadingLabel="Satellite…"
                   keyId={`split-sat-${activeZone.id}`}
                 />
@@ -464,8 +464,8 @@ export default function TrackingView({
                     backdropFilter: "blur(6px)",
                   }}
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" />
-                  <span className="text-[9px] text-[#38bdf8]/70 uppercase tracking-widest">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee] animate-pulse" />
+                  <span className="text-[9px] text-[#22d3ee]/70 uppercase tracking-widest">
                     Satellite
                   </span>
                 </div>
@@ -497,7 +497,7 @@ export default function TrackingView({
             <span
               className="text-[9px] px-2 py-0.5 rounded-full"
               style={{
-                color: "#38bdf8",
+                color: "#22d3ee",
                 background: "rgba(56,189,248,0.08)",
                 border: "1px solid rgba(56,189,248,0.2)",
               }}

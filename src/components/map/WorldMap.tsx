@@ -12,10 +12,10 @@ interface WorldMapProps {
 }
 
 const PILLAR_COLORS: Record<Pillar, string> = {
-  maritime: "#38bdf8",
-  rail:     "#f87171",
-  road:     "#34d399",
-  air:      "#a78bfa",
+  maritime: "#22d3ee",
+  rail:     "#fb923c",
+  road:     "#4ade80",
+  air:      "#818cf8",
 };
 
 function toPercent(lat: number, lng: number) {

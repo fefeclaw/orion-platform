@@ -83,10 +83,10 @@ const MOCK_SHIPMENTS: Record<string, {
 };
 
 const STATUS_CONFIG = {
-  transit:   { label: "En transit",   color: "#38bdf8", icon: "🚀" },
-  customs:   { label: "En douane",    color: "#D4AF37", icon: "📋" },
-  delivered: { label: "Livré",        color: "#34d399", icon: "✅" },
-  delayed:   { label: "Retard",       color: "#f87171", icon: "⚠️" },
+  transit:   { label: "En transit",   color: "#22d3ee", icon: "🚀" },
+  customs:   { label: "En douane",    color: "#F59E0B", icon: "📋" },
+  delivered: { label: "Livré",        color: "#4ade80", icon: "✅" },
+  delayed:   { label: "Retard",       color: "#fb923c", icon: "⚠️" },
 };
 
 const PILLAR_ICONS: Record<string, React.ElementType> = {
@@ -97,10 +97,10 @@ const PILLAR_ICONS: Record<string, React.ElementType> = {
 };
 
 const PILLAR_COLORS: Record<string, string> = {
-  maritime: "#38bdf8",
-  road:     "#34d399",
-  rail:     "#f87171",
-  air:      "#a78bfa",
+  maritime: "#22d3ee",
+  road:     "#4ade80",
+  rail:     "#fb923c",
+  air:      "#818cf8",
 };
 
 // ─── Assistance Modal ────────────────────────────────────────────────────────
@@ -142,7 +142,7 @@ function AssistanceModal({ onClose, shipmentId }: { onClose: () => void; shipmen
           style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
         >
           <div className="flex items-center gap-2.5">
-            <Phone size={15} style={{ color: "#D4AF37" }} />
+            <Phone size={15} style={{ color: "#F59E0B" }} />
             <span className="text-sm font-semibold text-white">Demander assistance</span>
           </div>
           <button onClick={onClose} className="text-white/30 hover:text-white/70 transition-colors">
@@ -157,7 +157,7 @@ function AssistanceModal({ onClose, shipmentId }: { onClose: () => void; shipmen
               style={{ background: "rgba(212,175,55,0.06)", border: "1px solid rgba(212,175,55,0.15)" }}
             >
               <span className="text-white/40">Expédition · </span>
-              <span className="text-[#D4AF37] font-mono font-medium">{shipmentId}</span>
+              <span className="text-[#F59E0B] font-mono font-medium">{shipmentId}</span>
             </div>
 
             <div>
@@ -183,7 +183,7 @@ function AssistanceModal({ onClose, shipmentId }: { onClose: () => void; shipmen
               onClick={handleSend}
               disabled={!note.trim()}
               className="w-full py-3 rounded-xl text-sm font-semibold text-black transition-all disabled:opacity-40"
-              style={{ background: "linear-gradient(135deg, #D4AF37, #b8960c)" }}
+              style={{ background: "linear-gradient(135deg, #F59E0B, #b8960c)" }}
             >
               Envoyer au support Orion
             </motion.button>
@@ -202,7 +202,7 @@ function AssistanceModal({ onClose, shipmentId }: { onClose: () => void; shipmen
               className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{ background: "rgba(52,211,153,0.12)" }}
             >
-              <CheckCircle2 size={24} style={{ color: "#34d399" }} />
+              <CheckCircle2 size={24} style={{ color: "#4ade80" }} />
             </div>
             <p className="text-white font-medium">Demande envoyée</p>
             <p className="text-xs text-white/40">Un expert Orion vous contacte dans les 2 heures.</p>
@@ -300,8 +300,8 @@ function ShipmentCard({
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs"
           style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.2)" }}
         >
-          <AlertTriangle size={12} style={{ color: "#f87171" }} />
-          <span style={{ color: "#f87171" }}>
+          <AlertTriangle size={12} style={{ color: "#fb923c" }} />
+          <span style={{ color: "#fb923c" }}>
             Ajustement prédictif en cours — solution présentée sous 30 min.
           </span>
         </div>
@@ -316,7 +316,7 @@ function ShipmentCard({
         style={{
           background: "rgba(212,175,55,0.08)",
           border: "1px solid rgba(212,175,55,0.2)",
-          color: "#D4AF37",
+          color: "#F59E0B",
         }}
       >
         <Phone size={12} />
@@ -334,7 +334,7 @@ export default function ClientDashboard({ pillarId }: { pillarId: string }) {
   const [assistShipment, setAssistShipment] = useState<string | null>(null);
 
   const PillarIcon = PILLAR_ICONS[pillarId] ?? Package;
-  const color = PILLAR_COLORS[pillarId] ?? "#38bdf8";
+  const color = PILLAR_COLORS[pillarId] ?? "#22d3ee";
   const shipments = MOCK_SHIPMENTS[pillarId] ?? [];
 
   return (
@@ -379,7 +379,7 @@ export default function ClientDashboard({ pillarId }: { pillarId: string }) {
       >
         <p className="text-sm text-white/70 leading-relaxed">
           Bienvenue sur votre espace expéditions.{" "}
-          <span style={{ color: "#D4AF37" }}>Orion surveille vos cargaisons en temps réel</span>{" "}
+          <span style={{ color: "#F59E0B" }}>Orion surveille vos cargaisons en temps réel</span>{" "}
           et vous alerte immédiatement en cas de changement.
         </p>
       </motion.div>

@@ -54,7 +54,7 @@ const ACTIVITY = [
 export default function FlightTracker() {
   return (
     <TrackingView
-      color="#a78bfa"
+      color="#818cf8"
       title="Tracking ADS-B — Temps réel"
       liveLabel="Live"
       icon={Plane}

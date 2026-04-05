@@ -20,7 +20,7 @@ type LiveStatus = "green" | "orange" | "red" | null;
 
 function StatusDot({ status }: { status: LiveStatus }) {
   if (!status) return null;
-  const color = status === "green" ? "#4ade80" : status === "orange" ? "#fb923c" : "#f87171";
+  const color = status === "green" ? "#4ade80" : status === "orange" ? "#fb923c" : "#fb923c";
   return (
     <span
       className="ml-auto shrink-0 w-1.5 h-1.5 rounded-full animate-pulse"
@@ -54,7 +54,7 @@ function SubNavItem({ item }: { item: SubItem }) {
       >
         <span
           className="text-xs transition-colors duration-200 font-light"
-          style={{ color: isActive ? "#38bdf8" : "rgba(255,255,255,0.35)" }}
+          style={{ color: isActive ? "#22d3ee" : "rgba(255,255,255,0.35)" }}
         >
           {t(item.labelKey)}
         </span>
@@ -93,12 +93,12 @@ function AccordionSection({ section }: { section: Section }) {
         <Icon
           size={14}
           className="shrink-0 transition-colors duration-200"
-          style={{ color: open ? "#38bdf8" : "rgba(255,255,255,0.3)" }}
+          style={{ color: open ? "#22d3ee" : "rgba(255,255,255,0.3)" }}
           aria-hidden="true"
         />
         <span
           className="text-xs font-medium tracking-wide flex-1 text-left transition-colors duration-200"
-          style={{ color: open ? "#38bdf8" : "rgba(255,255,255,0.45)" }}
+          style={{ color: open ? "#22d3ee" : "rgba(255,255,255,0.45)" }}
         >
           {t(section.labelKey)}
         </span>
@@ -212,10 +212,10 @@ export default function MaritimeSidebar() {
       <div className="px-6 py-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative w-7 h-7 shrink-0">
-            <div className="absolute inset-0 rounded-full border border-[#D4AF37]/40" />
-            <div className="absolute inset-[3px] rounded-full border border-[#D4AF37]/20" />
+            <div className="absolute inset-0 rounded-full border border-[#F59E0B]/40" />
+            <div className="absolute inset-[3px] rounded-full border border-[#F59E0B]/20" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
             </div>
           </div>
           <span className="text-xs tracking-[0.2em] text-white/40 uppercase group-hover:text-white/70 transition-colors">
@@ -233,8 +233,8 @@ export default function MaritimeSidebar() {
             border: "1px solid rgba(56,189,248,0.12)",
           }}
         >
-          <Anchor size={16} style={{ color: "#38bdf8" }} aria-hidden="true" />
-          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#38bdf8" }}>
+          <Anchor size={16} style={{ color: "#22d3ee" }} aria-hidden="true" />
+          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#22d3ee" }}>
             {t("maritime_module")}
           </span>
           <span className="ml-auto w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
@@ -254,12 +254,12 @@ export default function MaritimeSidebar() {
           >
             <LayoutDashboard
               size={14}
-              style={{ color: isDashboard ? "#38bdf8" : "rgba(255,255,255,0.3)" }}
+              style={{ color: isDashboard ? "#22d3ee" : "rgba(255,255,255,0.3)" }}
               aria-hidden="true"
             />
             <span
               className="text-xs font-medium"
-              style={{ color: isDashboard ? "#38bdf8" : "rgba(255,255,255,0.45)" }}
+              style={{ color: isDashboard ? "#22d3ee" : "rgba(255,255,255,0.45)" }}
             >
               {t("maritime_dash_strategic")}
             </span>
@@ -267,7 +267,7 @@ export default function MaritimeSidebar() {
               <motion.div
                 layoutId="maritime-active"
                 className="ml-auto w-1 h-4 rounded-full"
-                style={{ background: "#38bdf8" }}
+                style={{ background: "#22d3ee" }}
               />
             )}
           </motion.div>

@@ -71,7 +71,7 @@ export function MaritimeHeader({
                 style={{
                   background: "rgba(14,165,233,0.1)",
                   border: "1px solid rgba(14,165,233,0.2)",
-                  color: "#38bdf8",
+                  color: "#22d3ee",
                 }}
               >
                 MARITIME DECK
@@ -219,7 +219,7 @@ export function MaritimeHeader({
           style={{
             background: showAlerts ? "rgba(14,165,233,0.15)" : "rgba(255,255,255,0.04)",
             border: `1px solid ${showAlerts ? "rgba(14,165,233,0.3)" : "rgba(255,255,255,0.08)"}`,
-            color: showAlerts ? "#38bdf8" : "rgba(255,255,255,0.45)",
+            color: showAlerts ? "#22d3ee" : "rgba(255,255,255,0.45)",
           }}
         >
           <Bell className="h-4 w-4" />

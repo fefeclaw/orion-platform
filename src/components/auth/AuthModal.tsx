@@ -96,7 +96,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 onClick={() => setMode("professional")}
                 className={`flex-1 py-2.5 text-sm font-semibold transition-all duration-300 ${
                   mode === "professional"
-                    ? "bg-gradient-to-r from-[#D4AF37] to-[#b8912e] text-black"
+                    ? "bg-gradient-to-r from-[#F59E0B] to-[#b8912e] text-black"
                     : ""
                 }`}
                 style={mode === "professional" ? undefined : { color: "var(--modal-toggle-inactive)" }}
@@ -220,7 +220,7 @@ export default function AuthModal({ isOpen, onClose, selectedPillar }: AuthModal
                 disabled={isLoading}
                 className={`w-full py-3 rounded-lg font-semibold text-sm transition-all duration-300 ${
                   mode === "professional"
-                    ? "bg-gradient-to-r from-[#D4AF37] to-[#b8912e] text-black hover:shadow-lg hover:shadow-[#D4AF37]/20"
+                    ? "bg-gradient-to-r from-[#F59E0B] to-[#b8912e] text-black hover:shadow-lg hover:shadow-[#F59E0B]/20"
                     : "bg-gradient-to-r from-[#00c9a7] to-[#00a88a] text-black hover:shadow-lg hover:shadow-[#00c9a7]/20"
                 } disabled:opacity-50`}
               >

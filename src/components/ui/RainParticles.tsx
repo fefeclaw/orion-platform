@@ -26,7 +26,7 @@ export default function RainParticles({ type, intensity = "light" }: RainParticl
 
   if (!["RAIN", "HEAVY_RAIN", "THUNDERSTORM"].includes(type)) return null;
 
-  const dropColor = type === "THUNDERSTORM" ? "#f59e0b" : "#38bdf8";
+  const dropColor = type === "THUNDERSTORM" ? "#f59e0b" : "#22d3ee";
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl" style={{ zIndex: 1 }}>

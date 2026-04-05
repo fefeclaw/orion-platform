@@ -19,7 +19,7 @@ const CARGO_ICON: Record<string, string> = {
 };
 
 const CARGO_COLOR: Record<string, string> = {
-  container: "#38bdf8",
+  container: "#22d3ee",
   bulk:      "#a3e635",
   tanker:    "#f97316",
   roro:      "#c084fc",
@@ -76,15 +76,15 @@ export default function ArrivalsPanel({ vessels, onSelectVessel }: ArrivalsPanel
     <div style={panelStyle}>
       {/* En-tête */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Anchor size={15} color="#D4AF37" />
-        <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#D4AF37", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        <Anchor size={15} color="#F59E0B" />
+        <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#F59E0B", letterSpacing: "0.08em", textTransform: "uppercase" }}>
           Arrivées prévues
         </span>
         <span style={{
           marginLeft: "auto",
           fontSize: "0.7rem",
           background: approaching.length > 0 ? "rgba(212,175,55,0.18)" : "rgba(100,116,139,0.2)",
-          color: approaching.length > 0 ? "#D4AF37" : "#64748b",
+          color: approaching.length > 0 ? "#F59E0B" : "#64748b",
           padding: "0.1rem 0.4rem",
           borderRadius: "9999px",
           fontWeight: 700,
@@ -176,8 +176,8 @@ export default function ArrivalsPanel({ vessels, onSelectVessel }: ArrivalsPanel
                 {/* ETA badge */}
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", justifyContent: "flex-end" }}>
-                    <Clock size={10} color={urgency ? "#D4AF37" : "#38bdf8"} />
-                    <span style={{ fontSize: "0.65rem", color: urgency ? "#D4AF37" : "#38bdf8", fontWeight: 700 }}>
+                    <Clock size={10} color={urgency ? "#F59E0B" : "#22d3ee"} />
+                    <span style={{ fontSize: "0.65rem", color: urgency ? "#F59E0B" : "#22d3ee", fontWeight: 700 }}>
                       {h !== null ? `${h.toFixed(1)}h` : "—"}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ export default function ArrivalsPanel({ vessels, onSelectVessel }: ArrivalsPanel
           <span style={{ fontSize: "0.65rem", color: "#475569" }}>
             Vitesse moy. approche
           </span>
-          <span style={{ fontSize: "0.7rem", color: "#38bdf8", fontWeight: 600 }}>
+          <span style={{ fontSize: "0.7rem", color: "#22d3ee", fontWeight: 600 }}>
             {(approaching.reduce((acc, v) => acc + v.speed, 0) / approaching.length).toFixed(1)} kn
           </span>
         </div>

@@ -54,7 +54,7 @@ const ACTIVITY = [
 export default function VesselTracker() {
   return (
     <TrackingView
-      color="#38bdf8"
+      color="#22d3ee"
       title="Tracking AIS — Temps réel"
       liveLabel="Live"
       icon={Anchor}

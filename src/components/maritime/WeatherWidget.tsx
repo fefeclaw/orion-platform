@@ -164,7 +164,7 @@ export function WeatherWidget({
                   style={{
                     background: radarActive ? "rgba(14,165,233,0.2)" : "rgba(255,255,255,0.04)",
                     border: `1px solid ${radarActive ? "rgba(14,165,233,0.4)" : "rgba(255,255,255,0.07)"}`,
-                    color: radarActive ? "#38bdf8" : "rgba(255,255,255,0.3)",
+                    color: radarActive ? "#22d3ee" : "rgba(255,255,255,0.3)",
                   }}
                 >
                   Radar
@@ -176,7 +176,7 @@ export function WeatherWidget({
                     style={{
                       background: rainActive ? "rgba(56,189,248,0.18)" : "rgba(255,255,255,0.04)",
                       border: `1px solid ${rainActive ? "rgba(56,189,248,0.35)" : "rgba(255,255,255,0.07)"}`,
-                      color: rainActive ? "#38bdf8" : "rgba(255,255,255,0.3)",
+                      color: rainActive ? "#22d3ee" : "rgba(255,255,255,0.3)",
                     }}
                   >
                     Pluie

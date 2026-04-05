@@ -2,15 +2,17 @@
 
 :root {
   --orion-blue: #0a1628;
-  --orion-gold: #D4AF37;
-  --orion-teal: #00c9a7;
+  --orion-gold: #F59E0B;
+  --orion-teal: #06B6D4;
   --orion-dark: #060d1a;
   --orion-light: #e8ecf1;
-  /* Pastel-neon palette */
-  --maritime-color: #38bdf8;
-  --rail-color: #f87171;
-  --road-color: #34d399;
-  --air-color: #a78bfa;
+
+  /* ── Palette premium "Deep Ocean × African Amber" ── */
+  --maritime-color: #22d3ee;   /* cyan-400 — océan Atlantique */
+  --rail-color: #fb923c;       /* orange-400 — sunset africain */
+  --road-color: #4ade80;       /* green-400 — savane CEDEAO */
+  --air-color: #818cf8;        /* indigo-400 — ciel nocturne */
+  --intermodal-color: #F59E0B; /* amber-500 — or africain */
 
   /* ── Language Selector ── */
   --lang-btn-bg:             rgba(255,255,255,0.04);
@@ -43,35 +45,89 @@ body {
   overflow-x: hidden;
 }
 
+/* ─── Fond premium — deep space avec vignette ambrée ──────────── */
+.orion-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,158,11,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(34,211,238,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(129,140,248,0.04) 0%, transparent 55%),
+    #030712;
+}
+
 /* ─── Glassmorphism — Deep-Sea Elite ───────────────────────────── */
 .glass {
   background:
-    linear-gradient(135deg, rgba(10, 22, 40, 0.72), rgba(6, 13, 26, 0.82)) padding-box,
-    linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03)) border-box;
+    linear-gradient(135deg, rgba(14, 28, 54, 0.78), rgba(6, 12, 26, 0.88)) padding-box,
+    linear-gradient(135deg, rgba(245,158,11,0.12), rgba(255,255,255,0.04)) border-box;
   border: 1px solid transparent;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 4px 32px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-/* ─── Pillar glows — neon intensity ───────────────────────────── */
+/* ─── Glass card avec accent de couleur ────────────────────────── */
+.glass-colored {
+  position: relative;
+  overflow: hidden;
+}
+.glass-colored::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-accent, rgba(245,158,11,0.5)), transparent);
+  pointer-events: none;
+}
+.glass-colored::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--card-glow, rgba(245,158,11,0.06)) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── Pillar glows — neon intensity renforcée ──────────────────── */
 .glow-maritime {
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), 0 0 60px rgba(56, 189, 248, 0.10);
+  box-shadow:
+    0 0 24px rgba(34, 211, 238, 0.35),
+    0 0 72px rgba(34, 211, 238, 0.12),
+    inset 0 1px 0 rgba(34, 211, 238, 0.15);
 }
 .glow-rail {
-  box-shadow: 0 0 20px rgba(248, 113, 113, 0.25), 0 0 60px rgba(248, 113, 113, 0.10);
+  box-shadow:
+    0 0 24px rgba(251, 146, 60, 0.35),
+    0 0 72px rgba(251, 146, 60, 0.12),
+    inset 0 1px 0 rgba(251, 146, 60, 0.15);
 }
 .glow-road {
-  box-shadow: 0 0 20px rgba(52, 211, 153, 0.25), 0 0 60px rgba(52, 211, 153, 0.10);
+  box-shadow:
+    0 0 24px rgba(74, 222, 128, 0.35),
+    0 0 72px rgba(74, 222, 128, 0.12),
+    inset 0 1px 0 rgba(74, 222, 128, 0.15);
 }
 .glow-air {
-  box-shadow: 0 0 20px rgba(167, 139, 250, 0.25), 0 0 60px rgba(167, 139, 250, 0.10);
+  box-shadow:
+    0 0 24px rgba(129, 140, 248, 0.35),
+    0 0 72px rgba(129, 140, 248, 0.12),
+    inset 0 1px 0 rgba(129, 140, 248, 0.15);
+}
+.glow-gold {
+  box-shadow:
+    0 0 24px rgba(245, 158, 11, 0.40),
+    0 0 72px rgba(245, 158, 11, 0.15),
+    inset 0 1px 0 rgba(245, 158, 11, 0.20);
 }
 
-/* ─── Icon glow filters ────────────────────────────────────────── */
-.icon-glow-maritime { filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)); }
-.icon-glow-rail     { filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.6)); }
-.icon-glow-road     { filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.6)); }
-.icon-glow-air      { filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.6)); }
+/* ─── Icon glow filters — renforcés ───────────────────────────── */
+.icon-glow-maritime { filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.75)); }
+.icon-glow-rail     { filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.75)); }
+.icon-glow-road     { filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.75)); }
+.icon-glow-air      { filter: drop-shadow(0 0 10px rgba(129, 140, 248, 0.75)); }
+.icon-glow-gold     { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.75)); }
 
 /* ─── Shimmer keyframe ─────────────────────────────────────────── */
 @keyframes shimmer {
@@ -82,17 +138,62 @@ body {
 .text-shimmer {
   background: linear-gradient(
     90deg,
-    #c8cdd4 0%,
-    #c8cdd4 40%,
+    #d4b896 0%,
+    #d4b896 35%,
     #ffffff 50%,
-    #c8cdd4 60%,
-    #c8cdd4 100%
+    #d4b896 65%,
+    #d4b896 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 5s linear infinite;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ─── Gold shimmer pour titres premium ────────────────────────── */
+.text-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #92700a 0%,
+    #F59E0B 35%,
+    #FCD34D 50%,
+    #F59E0B 65%,
+    #92700a 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ─── Scan line premium ────────────────────────────────────────── */
+@keyframes scan {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.03; }
+  90%  { opacity: 0.03; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.scan-line::after {
+  content: '';
+  position: fixed;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent);
+  animation: scan 8s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Pulse ring premium ───────────────────────────────────────── */
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.6; }
+  100% { transform: scale(1.5);  opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
 
 /* ─── Map pulse / breathing ────────────────────────────────────── */
@@ -177,10 +278,10 @@ body {
 }
 
 /* Glows — subtle in light */
-[data-theme="light"] .glow-maritime { box-shadow: 0 6px 28px rgba(56,189,248,0.22), 0 2px 8px rgba(0,0,0,0.08); }
-[data-theme="light"] .glow-rail     { box-shadow: 0 6px 28px rgba(248,113,113,0.22), 0 2px 8px rgba(0,0,0,0.08); }
-[data-theme="light"] .glow-road     { box-shadow: 0 6px 28px rgba(52,211,153,0.22),  0 2px 8px rgba(0,0,0,0.08); }
-[data-theme="light"] .glow-air      { box-shadow: 0 6px 28px rgba(167,139,250,0.22), 0 2px 8px rgba(0,0,0,0.08); }
+[data-theme="light"] .glow-maritime { box-shadow: 0 6px 28px rgba(34,211,238,0.28), 0 2px 8px rgba(0,0,0,0.08); }
+[data-theme="light"] .glow-rail     { box-shadow: 0 6px 28px rgba(251,146,60,0.28),  0 2px 8px rgba(0,0,0,0.08); }
+[data-theme="light"] .glow-road     { box-shadow: 0 6px 28px rgba(74,222,128,0.28),  0 2px 8px rgba(0,0,0,0.08); }
+[data-theme="light"] .glow-air      { box-shadow: 0 6px 28px rgba(129,140,248,0.28), 0 2px 8px rgba(0,0,0,0.08); }
 
 /* Footer */
 [data-theme="light"] footer {

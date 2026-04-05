@@ -52,11 +52,11 @@ export interface BLData {
 
 // ─── Couleurs & constantes ────────────────────────────────────────────────────
 
-const DARK_BG  = [3, 9, 18] as [number, number, number];        // #030912
-const GOLD     = [212, 175, 55] as [number, number, number];     // #D4AF37
-const NAVY     = [6, 24, 52] as [number, number, number];        // #061834
-const LIGHT    = [220, 230, 240] as [number, number, number];    // texte clair
-const GRAY     = [100, 120, 140] as [number, number, number];    // texte secondaire
+const DARK_BG  = [3, 9, 18] as const;        // #030912
+const GOLD     = [212, 175, 55] as const;     // #F59E0B
+const NAVY     = [6, 24, 52] as const;        // #061834
+const LIGHT    = [220, 230, 240] as const;    // texte clair
+const GRAY     = [100, 120, 140] as const;    // texte secondaire
 
 // ─── Helper : cellule label + valeur ─────────────────────────────────────────
 

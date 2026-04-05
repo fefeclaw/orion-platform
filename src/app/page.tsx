@@ -28,15 +28,19 @@ export default function HomePage() {
 
   return (
     <SessionProvider>
-    <main className="min-h-screen flex flex-col relative overflow-x-hidden bg-[#05080f]">
+    <main className="min-h-screen flex flex-col relative overflow-x-hidden orion-bg">
 
       {/* ── Satellite world map — fixed full-page background ── */}
       <WorldMap selectedPillar={selectedPillar} />
 
       {/* ── Ambient color glows layered over satellite ──────── */}
       <div className="fixed inset-0 pointer-events-none z-[2]">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#d4a843]/10 blur-[140px]" />
-        <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full bg-[#38bdf8]/8 blur-[120px]" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[160px]"
+          style={{ background: "rgba(245,158,11,0.10)" }} />
+        <div className="absolute bottom-0 left-1/4 w-[350px] h-[350px] rounded-full blur-[130px]"
+          style={{ background: "rgba(34,211,238,0.06)" }} />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] rounded-full blur-[120px]"
+          style={{ background: "rgba(129,140,248,0.06)" }} />
       </div>
 
       {/* ── Header ──────────────────────────────────────────── */}
@@ -48,10 +52,10 @@ export default function HomePage() {
           className="flex items-center gap-3"
         >
           <div className="relative w-8 h-8">
-            <div className="absolute inset-0 rounded-full border border-[#d4a843]/40" />
-            <div className="absolute inset-[3px] rounded-full border border-[#d4a843]/20" />
+            <div className="absolute inset-0 rounded-full border border-[#F59E0B]/40" />
+            <div className="absolute inset-[3px] rounded-full border border-[#F59E0B]/20" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#d4a843]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
             </div>
           </div>
           <span className="text-sm font-light tracking-[0.2em] text-white/60 uppercase">
@@ -85,7 +89,7 @@ export default function HomePage() {
           initial={{ scaleY: 0, opacity: 0 }}
           animate={{ scaleY: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-px h-8 bg-gradient-to-b from-transparent via-[#d4a843]/40 to-transparent my-8"
+          className="w-px h-8 bg-gradient-to-b from-transparent via-[#F59E0B]/40 to-transparent my-8"
         />
 
         <motion.div

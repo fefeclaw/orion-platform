@@ -41,7 +41,7 @@ const PORTS = [
   "Shanghai (CN)", "Singapour (SG)", "Dubai (AE)",
 ];
 
-const inputCls = "w-full bg-[#060d1a]/80 border border-white/8 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#38bdf8]/50 transition-colors placeholder:text-white/20";
+const inputCls = "w-full bg-[#060d1a]/80 border border-white/8 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#22d3ee]/50 transition-colors placeholder:text-white/20";
 const labelCls = "block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest";
 
 export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
@@ -135,8 +135,8 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#38bdf8]/10">
-                  <FileText size={15} className="text-[#38bdf8]" aria-hidden="true" />
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#22d3ee]/10">
+                  <FileText size={15} className="text-[#22d3ee]" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{t("bsc_title")}</p>
@@ -153,7 +153,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
             {/* Dossier number */}
             <div className="px-6 py-3 border-b border-white/5 flex items-center justify-between">
               <span className="text-[10px] text-white/25 uppercase tracking-widest">N° dossier</span>
-              <span className="text-xs font-mono text-[#38bdf8]/70">{dossierNum}</span>
+              <span className="text-xs font-mono text-[#22d3ee]/70">{dossierNum}</span>
             </div>
 
             {/* Content */}
@@ -169,11 +169,11 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                       disabled={isMagicFilling}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full mb-6 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#38bdf8]/25 text-[#38bdf8] text-sm font-medium transition-all hover:bg-[#38bdf8]/8 disabled:opacity-50"
+                      className="w-full mb-6 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#22d3ee]/25 text-[#22d3ee] text-sm font-medium transition-all hover:bg-[#22d3ee]/8 disabled:opacity-50"
                     >
                       {isMagicFilling ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-[#38bdf8]/30 border-t-[#38bdf8] rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-[#22d3ee]/30 border-t-[#22d3ee] rounded-full animate-spin" />
                           <span>Récupération des données…</span>
                         </>
                       ) : (
@@ -186,7 +186,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                       {/* Section 1: Identité */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#38bdf8]/60 pb-1 border-b border-white/5">
+                      <p className="text-[10px] uppercase tracking-widest text-[#22d3ee]/60 pb-1 border-b border-white/5">
                         Informations importateur
                       </p>
                       <div className="grid grid-cols-2 gap-3">
@@ -201,7 +201,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                       </div>
 
                       {/* Section 2: Transport */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#38bdf8]/60 pb-1 border-b border-white/5 pt-2">
+                      <p className="text-[10px] uppercase tracking-widest text-[#22d3ee]/60 pb-1 border-b border-white/5 pt-2">
                         Transport maritime
                       </p>
                       <div>
@@ -227,7 +227,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                       </div>
 
                       {/* Section 3: Marchandise */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#38bdf8]/60 pb-1 border-b border-white/5 pt-2">
+                      <p className="text-[10px] uppercase tracking-widest text-[#22d3ee]/60 pb-1 border-b border-white/5 pt-2">
                         Désignation de la marchandise
                       </p>
                       <div>
@@ -255,7 +255,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                         type="submit"
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.98 }}
-                        className="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#0ea5e9] text-black font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#38bdf8]/20 transition-all"
+                        className="w-full mt-2 py-3.5 rounded-xl bg-gradient-to-r from-[#22d3ee] to-[#0ea5e9] text-black font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#22d3ee]/20 transition-all"
                       >
                         <Send size={15} aria-hidden="true" />
                         Soumettre la déclaration BSC
@@ -302,9 +302,9 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                           className="flex items-center gap-3"
                         >
                           <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                            item.done ? "bg-[#34d399]/20 border border-[#34d399]/50" : "border border-white/15"
+                            item.done ? "bg-[#4ade80]/20 border border-[#4ade80]/50" : "border border-white/15"
                           }`}>
-                            {item.done && <div className="w-1.5 h-1.5 rounded-full bg-[#34d399]" />}
+                            {item.done && <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />}
                           </div>
                           <span className={`text-xs ${item.done ? "text-white/60" : "text-white/20"}`}>
                             {item.label}
@@ -326,9 +326,9 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: "spring", delay: 0.2 }}
-                      className="w-16 h-16 rounded-full bg-[#34d399]/10 border border-[#34d399]/30 flex items-center justify-center"
+                      className="w-16 h-16 rounded-full bg-[#4ade80]/10 border border-[#4ade80]/30 flex items-center justify-center"
                     >
-                      <CheckCircle size={32} className="text-[#34d399]" aria-hidden="true" />
+                      <CheckCircle size={32} className="text-[#4ade80]" aria-hidden="true" />
                     </motion.div>
                     <div>
                       <p className="text-lg font-semibold text-white mb-1">Déclaration soumise</p>
@@ -336,7 +336,7 @@ export default function BSCDrawer({ isOpen, onClose }: BSCDrawerProps) {
                     </div>
                     <div className="glass rounded-xl px-6 py-4 w-full">
                       <p className="text-[10px] text-white/30 uppercase tracking-widest mb-1">Numéro BSC attribué</p>
-                      <p className="text-base font-mono font-semibold text-[#38bdf8]">{dossierNum}</p>
+                      <p className="text-base font-mono font-semibold text-[#22d3ee]">{dossierNum}</p>
                     </div>
                     <ShipTimeline
                       departurePort={form.portChargement || "Port départ"}

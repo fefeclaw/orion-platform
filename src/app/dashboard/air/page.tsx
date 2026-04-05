@@ -31,8 +31,13 @@ const FLIGHT_STATUS_LABELS: Record<Flight["status"], string> = {
 
 function toDeckStatus(s: Flight["status"]): "active" | "delayed" | "stopped" {
   if (s === "active" || s === "landed") return "active";
+<<<<<<< HEAD
   if (s === "delayed" || s === "ground_hold" || s === "diverted") return "delayed";
   return "stopped";
+=======
+  if (s === "stopped") return "stopped";
+  return "delayed"; // delayed, ground_hold, diverted
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
 }
 
 function minutesUntilCutoff(cutoffTime: string): number {
@@ -144,10 +149,17 @@ function FlightsPanel({ flights, open, onToggle, dismissedIds }: {
           >
             <div className="w-64 h-full flex flex-col">
               <div className="flex items-center gap-2 px-4 py-3 shrink-0" style={{ borderBottom: "1px solid rgba(167,139,250,0.10)" }}>
+<<<<<<< HEAD
                 <Plane className="h-4 w-4 shrink-0" style={{ color: "#a78bfa" }} />
                 <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Vols en cours</span>
                 <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-medium"
                   style={{ background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.20)", color: "#a78bfa" }}>
+=======
+                <Plane className="h-4 w-4 shrink-0" style={{ color: "#818cf8" }} />
+                <span className="text-[11px] font-bold tracking-widest uppercase text-white/70">Vols en cours</span>
+                <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded font-medium"
+                  style={{ background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.20)", color: "#818cf8" }}>
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                   {flights.length}
                 </span>
               </div>
@@ -218,7 +230,11 @@ function FlightDetail({ flight, onClose }: { flight: Flight; onClose: () => void
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{ background: "rgba(167,139,250,0.10)", border: "1px solid rgba(167,139,250,0.22)" }}>
+<<<<<<< HEAD
             <Plane className="h-4 w-4" style={{ color: "#a78bfa" }} />
+=======
+            <Plane className="h-4 w-4" style={{ color: "#818cf8" }} />
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
           </div>
           <div>
             <p className="text-sm font-bold text-white/90">{flight.flightNumber}</p>
@@ -320,7 +336,11 @@ function FlightDetail({ flight, onClose }: { flight: Flight; onClose: () => void
             gate: flight.gate,
           })}
           className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-semibold transition-all hover:opacity-80"
+<<<<<<< HEAD
           style={{ border: "1px solid rgba(212,175,55,0.35)", color: "#D4AF37", background: "rgba(212,175,55,0.07)" }}
+=======
+          style={{ border: "1px solid rgba(212,175,55,0.35)", color: "#F59E0B", background: "rgba(212,175,55,0.07)" }}
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
         >
           <FileText className="h-3 w-3" /> Générer AWB
         </button>
@@ -336,7 +356,11 @@ export default function AirDeck() {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
+<<<<<<< HEAD
   const handleDismiss = (id: string) => setDismissedIds((prev) => new Set(Array.from(prev).concat(id)));
+=======
+  const handleDismiss = (id: string) => setDismissedIds((prev) => new Set([...prev, id]));
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
 
   function handleGenerateLTA() {
     const activeFlights = flights.filter(f => f.status === "active" || f.status === "delayed");
@@ -370,6 +394,7 @@ export default function AirDeck() {
   const deckConfig: DeckConfig = {
     type: "air",
     name: "AIR DECK",
+<<<<<<< HEAD
     color: "#a78bfa",
     forecastLabel: "Hub FHB Abidjan · 4h",
     kpis: flights.length > 0
@@ -384,6 +409,22 @@ export default function AirDeck() {
           { label: "Fret Traité",      value: "420 T",  color: "#a78bfa" },
           { label: "Hubs Desservis",   value: 7,         color: "#a78bfa" },
           { label: "Délai Moyen",      value: "6.2h", sub: "ABJ→CDG", color: "#a78bfa" },
+=======
+    color: "#818cf8",
+    forecastLabel: "Hub FHB Abidjan · 4h",
+    kpis: flights.length > 0
+      ? [
+          { label: "Vols Actifs",    value: kpi.activeFlights,                  color: "#818cf8" },
+          { label: "Posés",          value: kpi.landed,                          color: "#6B7280" },
+          { label: "Retardés",       value: kpi.delayed,                         color: kpi.delayed > 0 ? "#EF4444" : "#818cf8" },
+          { label: "Fret Traité",    value: kpi.totalFreight,                    color: "#818cf8" },
+        ]
+      : [
+          { label: "Vols Actifs",      value: 32,       color: "#818cf8" },
+          { label: "Fret Traité",      value: "420 T",  color: "#818cf8" },
+          { label: "Hubs Desservis",   value: 7,         color: "#818cf8" },
+          { label: "Délai Moyen",      value: "6.2h", sub: "ABJ→CDG", color: "#818cf8" },
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
         ],
     assets: flights.length > 0
       ? flights.map((f) => ({
@@ -432,7 +473,11 @@ export default function AirDeck() {
           <button
             onClick={handleGenerateLTA}
             className="absolute top-16 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold transition-all hover:opacity-80"
+<<<<<<< HEAD
             style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.28)", color: "#a78bfa", backdropFilter: "blur(8px)" }}
+=======
+            style={{ background: "rgba(167,139,250,0.08)", border: "1px solid rgba(167,139,250,0.28)", color: "#818cf8", backdropFilter: "blur(8px)" }}
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
             title="Générer LTA groupée (tous les vols actifs)"
           >
             <FileText className="h-3 w-3" />

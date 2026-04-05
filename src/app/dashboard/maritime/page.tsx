@@ -259,7 +259,7 @@ export default function MaritimeDashboard() {
             style={{
               background: showAnalytics ? "rgba(14,165,233,0.18)" : "rgba(6,14,26,0.85)",
               border: `1px solid ${showAnalytics ? "rgba(14,165,233,0.4)" : "rgba(14,165,233,0.14)"}`,
-              color: showAnalytics ? "#38bdf8" : "rgba(255,255,255,0.42)",
+              color: showAnalytics ? "#22d3ee" : "rgba(255,255,255,0.42)",
               backdropFilter: "blur(10px)",
             }}
           >
@@ -302,14 +302,22 @@ export default function MaritimeDashboard() {
             style={{
               background: showArrivals ? "rgba(212,175,55,0.15)" : "rgba(6,14,26,0.88)",
               border: `1px solid ${showArrivals ? "rgba(212,175,55,0.4)" : "rgba(14,165,233,0.16)"}`,
+<<<<<<< HEAD
               color: showArrivals ? "#D4AF37" : "rgba(255,255,255,0.35)",
+=======
+              color: showArrivals ? "#F59E0B" : "rgba(255,255,255,0.35)",
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               backdropFilter: "blur(10px)",
             }}
           >
             <Ship className="h-3.5 w-3.5" />
             {vessels.filter(v => v.approachIn24h).length > 0 && (
               <span style={{
+<<<<<<< HEAD
                 background: "#D4AF37",
+=======
+                background: "#F59E0B",
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 color: "#030712",
                 fontSize: "0.6rem",
                 fontWeight: 700,
@@ -336,7 +344,11 @@ export default function MaritimeDashboard() {
               className="px-3 py-1.5 text-xs font-semibold transition-all"
               style={{
                 background: !is3D ? "rgba(14,165,233,0.22)" : "transparent",
+<<<<<<< HEAD
                 color: !is3D ? "#38bdf8" : "rgba(255,255,255,0.35)",
+=======
+                color: !is3D ? "#22d3ee" : "rgba(255,255,255,0.35)",
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 borderRight: "1px solid rgba(14,165,233,0.12)",
               }}
             >
@@ -347,7 +359,11 @@ export default function MaritimeDashboard() {
               className="px-3 py-1.5 text-xs font-semibold transition-all"
               style={{
                 background: is3D ? "rgba(14,165,233,0.22)" : "transparent",
+<<<<<<< HEAD
                 color: is3D ? "#38bdf8" : "rgba(255,255,255,0.35)",
+=======
+                color: is3D ? "#22d3ee" : "rgba(255,255,255,0.35)",
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               }}
             >
               3D
@@ -446,14 +462,22 @@ export default function MaritimeDashboard() {
               <button
                 onClick={() => handleGenerateBL(selectedVessel)}
                 className="flex items-center justify-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-semibold transition-all hover:opacity-80"
+<<<<<<< HEAD
                 style={{ border: "1px solid rgba(212,175,55,0.4)", color: "#D4AF37", background: "rgba(212,175,55,0.08)" }}
+=======
+                style={{ border: "1px solid rgba(212,175,55,0.4)", color: "#F59E0B", background: "rgba(212,175,55,0.08)" }}
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               >
                 <FileText className="h-3 w-3" /> B/L Rapide
               </button>
               <button
                 onClick={() => setShowBLForm(v => !v)}
                 className="flex items-center justify-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-semibold transition-all hover:opacity-80"
+<<<<<<< HEAD
                 style={{ border: "1px solid rgba(212,175,55,0.5)", color: "#D4AF37", background: "rgba(212,175,55,0.14)" }}
+=======
+                style={{ border: "1px solid rgba(212,175,55,0.5)", color: "#F59E0B", background: "rgba(212,175,55,0.14)" }}
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
               >
                 <FileText className="h-3 w-3" /> B/L Complet
               </button>
@@ -468,7 +492,11 @@ export default function MaritimeDashboard() {
               <button
                 onClick={() => handleGenerateOriginCert(selectedVessel)}
                 className="flex items-center justify-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-semibold transition-all hover:opacity-80"
+<<<<<<< HEAD
                 style={{ border: "1px solid rgba(185,28,28,0.4)", color: "#f87171", background: "rgba(185,28,28,0.08)" }}
+=======
+                style={{ border: "1px solid rgba(185,28,28,0.4)", color: "#fb923c", background: "rgba(185,28,28,0.08)" }}
+>>>>>>> fab4604 (design: refonte palette premium "Deep Ocean × African Amber")
                 title="Certificat d'origine (Chambre de Commerce)"
               >
                 <FileText className="h-3 w-3" /> Origine

@@ -93,7 +93,7 @@ function buildPlans(kpi: KpiSummary, alerts: MaritimeAlert[]): ContingencyPlan[]
       description: "Transfert fret urgent sur corridor ferroviaire SITARAIL → Route CEDEAO",
       eta: "+6h",
       probability: Math.max(15, 35 - congestion / 4),
-      color: "#a78bfa",
+      color: "#818cf8",
       Icon: Shuffle,
       actions: [
         "Coordonner transfert conteneurs → Gare d'Abidjan",

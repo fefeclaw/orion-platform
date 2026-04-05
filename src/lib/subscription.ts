@@ -19,14 +19,12 @@ export type Feature =
   | "multimodal_tracking"
   | "ai_prediction"
   | "geopolitics"
-  | "orion_api"
-  | "sms_notification";
+  | "orion_api";
 
 // Quotas mensuels par plan et par fonctionnalité
 const QUOTAS: Record<Feature, Partial<Record<Plan, number>>> = {
   doc_generation:     { standard: 10 },      // 10/mois pour Standard, illimité pour Business
   ship24_tracking:    { standard: 50 },       // 50/mois pour Standard, illimité pour Business
-  sms_notification:   { gratuit: 5 },         // 5/mois pour Gratuit, illimité pour Standard/Business
   ais_realtime:       {},                      // Business uniquement (pas de quota, juste accès)
   ais_delayed:        {},                      // Standard et Business (données 15min)
   multimodal_tracking: {},                     // Business uniquement
@@ -40,7 +38,6 @@ const REQUIRED_PLAN: Record<Feature, Plan> = {
   ais_delayed:        "standard",
   doc_generation:     "standard",
   ship24_tracking:    "standard",
-  sms_notification:   "gratuit",               // Tout le monde peut recevoir SMS (quotas varient)
   ais_realtime:       "business",
   multimodal_tracking:"business",
   ai_prediction:      "business",
@@ -242,11 +239,6 @@ export function incrementUsage(userId: string, feature: Feature): void {
   } else if (feature === "ship24_tracking") {
     db.prepare(
       "UPDATE subscriptions SET conteneurs_trackes_mois = conteneurs_trackes_mois + 1, updated_at = datetime('now') WHERE user_id = ?"
-    ).run(userId);
-  } else if (feature === "sms_notification") {
-    // Les SMS sont déjà incrémentés via sms-service.ts
-    db.prepare(
-      "UPDATE subscriptions SET updated_at = datetime('now') WHERE user_id = ?"
     ).run(userId);
   }
 }

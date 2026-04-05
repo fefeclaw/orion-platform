@@ -98,7 +98,7 @@ export function AnalyticsPanel({ isOpen, onClose }: AnalyticsPanelProps) {
                 className="px-2.5 py-1 text-xs transition-all"
                 style={{
                   background: days === d ? "rgba(14,165,233,0.2)" : "transparent",
-                  color: days === d ? "#38bdf8" : "rgba(255,255,255,0.3)",
+                  color: days === d ? "#22d3ee" : "rgba(255,255,255,0.3)",
                 }}
               >
                 {d}j

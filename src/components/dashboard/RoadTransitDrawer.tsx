@@ -113,7 +113,7 @@ interface TransitForm {
   departureTime: string;
 }
 
-const inputCls = "w-full bg-[#060d1a]/80 border border-white/8 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#34d399]/50 transition-colors placeholder:text-white/20";
+const inputCls = "w-full bg-[#060d1a]/80 border border-white/8 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#4ade80]/50 transition-colors placeholder:text-white/20";
 const labelCls = "block text-[10px] text-white/30 mb-1.5 uppercase tracking-widest";
 
 // ─── Corridor Map Visual ───────────────────────────────────────────
@@ -121,8 +121,8 @@ function CorridorMap({ corridorId, borderWait }: { corridorId: string; borderWai
   const corridor = CORRIDORS.find((c) => c.id === corridorId);
   if (!corridor) return null;
   const alertColor = borderWait != null
-    ? borderWait > 6 ? "#f59e0b" : borderWait > 3 ? "#34d399" : "#34d399"
-    : "#34d399";
+    ? borderWait > 6 ? "#f59e0b" : borderWait > 3 ? "#4ade80" : "#4ade80"
+    : "#4ade80";
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden" style={{ background: "#020a14", height: 110 }}>
@@ -136,16 +136,16 @@ function CorridorMap({ corridorId, borderWait }: { corridorId: string; borderWai
         ))}
 
         {/* Road path */}
-        <path d="M 30 75 Q 150 30 270 55" fill="none" stroke="#34d399" strokeWidth="1.5" strokeOpacity="0.25" strokeDasharray="4 3" />
+        <path d="M 30 75 Q 150 30 270 55" fill="none" stroke="#4ade80" strokeWidth="1.5" strokeOpacity="0.25" strokeDasharray="4 3" />
         <motion.path
           d="M 30 75 Q 150 30 270 55"
-          fill="none" stroke="#34d399" strokeWidth="2" strokeOpacity="0.7"
+          fill="none" stroke="#4ade80" strokeWidth="2" strokeOpacity="0.7"
           initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         />
 
         {/* Origin — Abidjan */}
-        <circle cx="30" cy="75" r="4" fill="#34d399" opacity="0.9" />
+        <circle cx="30" cy="75" r="4" fill="#4ade80" opacity="0.9" />
         <text x="30" y="92" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="7">ABJ</text>
 
         {/* Border post */}
@@ -171,8 +171,8 @@ function CorridorMap({ corridorId, borderWait }: { corridorId: string; borderWai
           animate={{ x: [0, 80, 160, 200] }}
           transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatDelay: 1 }}
         >
-          <circle cx="30" cy="75" r="3.5" fill="#34d399" filter="url(#tglow)" />
-          <circle cx="30" cy="75" r="3.5" fill="none" stroke="#34d399" strokeWidth="1">
+          <circle cx="30" cy="75" r="3.5" fill="#4ade80" filter="url(#tglow)" />
+          <circle cx="30" cy="75" r="3.5" fill="none" stroke="#4ade80" strokeWidth="1">
             <animate attributeName="r" values="3.5;8;3.5" dur="1.8s" repeatCount="indefinite" />
             <animate attributeName="opacity" values="1;0;1" dur="1.8s" repeatCount="indefinite" />
           </circle>
@@ -292,11 +292,11 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
       return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
     };
     const events: GeoEvent[] = [
-      { time: fmtTime(0),   label: "Départ validé — Port Bouet, Abidjan",         sub: "Geofence ABJ · Documents transmis à la douane",  color: "#34d399", done: false },
-      { time: fmtTime(90),  label: "Zone Tiébissou franchie",                       sub: `Corridor ${selectedCorridor.id} · Vitesse nominale`, color: "#34d399", done: false },
-      { time: fmtTime(280), label: `Approche frontière — ${selectedCorridor.border}`, sub: "Pré-validation documents CEDEAO en cours",        color: borderWait && borderWait > 6 ? "#f59e0b" : "#34d399", done: false },
-      { time: fmtTime(280 + (borderWait ?? 3) * 60), label: `Frontière franchie — ${selectedCorridor.border}`, sub: "Documents de transit validés par la douane", color: "#34d399", done: false },
-      { time: fmtTime(selectedCorridor.duration * 60), label: `Arrivée estimée — ${selectedCorridor.label.split("→")[1].trim()}`, sub: `ETA calculée · ${selectedCorridor.distance}`, color: "#34d399", done: false },
+      { time: fmtTime(0),   label: "Départ validé — Port Bouet, Abidjan",         sub: "Geofence ABJ · Documents transmis à la douane",  color: "#4ade80", done: false },
+      { time: fmtTime(90),  label: "Zone Tiébissou franchie",                       sub: `Corridor ${selectedCorridor.id} · Vitesse nominale`, color: "#4ade80", done: false },
+      { time: fmtTime(280), label: `Approche frontière — ${selectedCorridor.border}`, sub: "Pré-validation documents CEDEAO en cours",        color: borderWait && borderWait > 6 ? "#f59e0b" : "#4ade80", done: false },
+      { time: fmtTime(280 + (borderWait ?? 3) * 60), label: `Frontière franchie — ${selectedCorridor.border}`, sub: "Documents de transit validés par la douane", color: "#4ade80", done: false },
+      { time: fmtTime(selectedCorridor.duration * 60), label: `Arrivée estimée — ${selectedCorridor.label.split("→")[1].trim()}`, sub: `ETA calculée · ${selectedCorridor.distance}`, color: "#4ade80", done: false },
     ];
     setGeoEvents(events);
     setStep("active");
@@ -350,8 +350,8 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/6">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#34d399]/10">
-                  <Truck size={15} className="text-[#34d399]" aria-hidden="true" />
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-[#4ade80]/10">
+                  <Truck size={15} className="text-[#4ade80]" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">Déclarer un Transit CEDEAO</p>
@@ -379,7 +379,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                     Vigilance Orange
                   </motion.span>
                 )}
-                <span className="text-xs font-mono text-[#34d399]/70">{dossierNum}</span>
+                <span className="text-xs font-mono text-[#4ade80]/70">{dossierNum}</span>
               </div>
             </div>
 
@@ -405,14 +405,14 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                         }}
                       >
                         <div className="flex items-center gap-2">
-                          <Clock size={13} style={{ color: isVigOrange ? "#f59e0b" : "#34d399" }} aria-hidden="true" />
-                          <span className="text-xs" style={{ color: isVigOrange ? "#f59e0b" : "#34d399" }}>
+                          <Clock size={13} style={{ color: isVigOrange ? "#f59e0b" : "#4ade80" }} aria-hidden="true" />
+                          <span className="text-xs" style={{ color: isVigOrange ? "#f59e0b" : "#4ade80" }}>
                             Attente frontière — {selectedCorridor.border}
                           </span>
                         </div>
                         <span
                           className="text-xs font-semibold font-mono"
-                          style={{ color: isVigOrange ? "#f59e0b" : "#34d399" }}
+                          style={{ color: isVigOrange ? "#f59e0b" : "#4ade80" }}
                         >
                           ~{borderWait.toFixed(1)}h
                           {isVigOrange && " ⚠"}
@@ -453,15 +453,15 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                         style={{ background: "rgba(56,189,248,0.06)", borderColor: "rgba(56,189,248,0.25)" }}
                       >
                         <div className="flex items-start gap-2.5">
-                          <CloudRain size={13} className="text-[#38bdf8] mt-0.5 shrink-0" aria-hidden="true" />
+                          <CloudRain size={13} className="text-[#22d3ee] mt-0.5 shrink-0" aria-hidden="true" />
                           <div>
-                            <p className="text-xs font-semibold text-[#38bdf8]">
+                            <p className="text-xs font-semibold text-[#22d3ee]">
                               {corridorWeather.icon} Météo corridor — Victor notifié
                             </p>
-                            <p className="text-[11px] text-[#38bdf8]/60 mt-0.5">
+                            <p className="text-[11px] text-[#22d3ee]/60 mt-0.5">
                               {corridorWeather.description} · ETA ajusté{weatherImpact?.adjustedETA ? ` ${weatherImpact.adjustedETA}` : ""}
                             </p>
-                            <p className="text-[10px] text-[#38bdf8]/40 mt-1 italic">
+                            <p className="text-[10px] text-[#22d3ee]/40 mt-1 italic">
                               «&nbsp;Ajustement prédictif du flux dû aux conditions climatiques. Intégrité de la cargaison priorisée.&nbsp;»
                             </p>
                           </div>
@@ -492,11 +492,11 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                       disabled={isMagicFilling}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full mb-5 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#34d399]/25 text-[#34d399] text-sm font-medium transition-all hover:bg-[#34d399]/8 disabled:opacity-50"
+                      className="w-full mb-5 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-[#4ade80]/25 text-[#4ade80] text-sm font-medium transition-all hover:bg-[#4ade80]/8 disabled:opacity-50"
                     >
                       {isMagicFilling ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-[#34d399]/30 border-t-[#34d399] rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-[#4ade80]/30 border-t-[#4ade80] rounded-full animate-spin" />
                           <span>Récupération données camion…</span>
                         </>
                       ) : (
@@ -519,7 +519,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                       </div>
 
                       {/* Truck info */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#34d399]/60 pb-1 border-b border-white/5">
+                      <p className="text-[10px] uppercase tracking-widest text-[#4ade80]/60 pb-1 border-b border-white/5">
                         Identification du véhicule
                       </p>
                       <div className="grid grid-cols-2 gap-3">
@@ -538,7 +538,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                       </div>
 
                       {/* Cargo */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#34d399]/60 pb-1 border-b border-white/5 pt-1">
+                      <p className="text-[10px] uppercase tracking-widest text-[#4ade80]/60 pb-1 border-b border-white/5 pt-1">
                         Cargaison
                       </p>
                       <div className="grid grid-cols-2 gap-3">
@@ -557,7 +557,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                       </div>
 
                       {/* Document checklist */}
-                      <p className="text-[10px] uppercase tracking-widest text-[#34d399]/60 pb-1 border-b border-white/5 pt-1">
+                      <p className="text-[10px] uppercase tracking-widest text-[#4ade80]/60 pb-1 border-b border-white/5 pt-1">
                         Documents de transit
                       </p>
                       <div className="space-y-2">
@@ -581,13 +581,13 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                                 transition={{ duration: 0.35, ease: "backOut" }}
                               >
                                 {isDone ? (
-                                  <CheckCircle size={15} className="text-[#34d399]" aria-hidden="true" />
+                                  <CheckCircle size={15} className="text-[#4ade80]" aria-hidden="true" />
                                 ) : (
                                   <div className="w-[15px] h-[15px] rounded-full border border-white/15" />
                                 )}
                               </motion.div>
                               <div className="flex-1 min-w-0">
-                                <p className={`text-xs font-medium ${isDone ? "text-[#34d399]" : "text-white/40"}`}
+                                <p className={`text-xs font-medium ${isDone ? "text-[#4ade80]" : "text-white/40"}`}
                                    style={{ transition: "color 0.35s ease" }}>
                                   {doc.label}
                                 </p>
@@ -598,7 +598,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                                   initial={{ opacity: 0, scale: 0 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   className="text-[9px] px-1.5 py-0.5 rounded font-mono"
-                                  style={{ background: "rgba(52,211,153,0.15)", color: "#34d399" }}
+                                  style={{ background: "rgba(52,211,153,0.15)", color: "#4ade80" }}
                                 >
                                   OK
                                 </motion.span>
@@ -620,7 +620,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                         whileTap={{ scale: 0.98 }}
                         className="w-full mt-2 py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all"
                         style={{
-                          background: "linear-gradient(135deg, #34d399, #10b981)",
+                          background: "linear-gradient(135deg, #4ade80, #10b981)",
                           color: "#000",
                           boxShadow: "0 0 20px rgba(52,211,153,0.25)",
                         }}
@@ -640,10 +640,10 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                     className="flex flex-col items-center gap-6 py-10"
                   >
                     <div className="relative w-16 h-16">
-                      <div className="absolute inset-0 rounded-full border-2 border-[#34d399]/20 border-t-[#34d399] animate-spin" />
-                      <div className="absolute inset-[6px] rounded-full border border-[#34d399]/10 border-t-[#34d399]/40 animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
+                      <div className="absolute inset-0 rounded-full border-2 border-[#4ade80]/20 border-t-[#4ade80] animate-spin" />
+                      <div className="absolute inset-[6px] rounded-full border border-[#4ade80]/10 border-t-[#4ade80]/40 animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Navigation size={18} className="text-[#34d399]" aria-hidden="true" />
+                        <Navigation size={18} className="text-[#4ade80]" aria-hidden="true" />
                       </div>
                     </div>
                     <div className="text-center">
@@ -669,9 +669,9 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: item.delay + 0.2 }}
-                            className="w-4 h-4 rounded-full bg-[#34d399]/15 border border-[#34d399]/40 flex items-center justify-center shrink-0"
+                            className="w-4 h-4 rounded-full bg-[#4ade80]/15 border border-[#4ade80]/40 flex items-center justify-center shrink-0"
                           >
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#34d399]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
                           </motion.div>
                           <span className="text-xs text-white/55">{item.label}</span>
                         </motion.div>
@@ -691,10 +691,10 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                     <div className="flex items-center justify-between rounded-xl px-4 py-3"
                          style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)" }}>
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
-                        <span className="text-xs text-[#34d399] font-semibold">Transit Actif</span>
+                        <span className="w-2 h-2 rounded-full bg-[#4ade80] animate-pulse" />
+                        <span className="text-xs text-[#4ade80] font-semibold">Transit Actif</span>
                       </div>
-                      <span className="text-[10px] text-[#34d399]/60 font-mono">{dossierNum}</span>
+                      <span className="text-[10px] text-[#4ade80]/60 font-mono">{dossierNum}</span>
                     </div>
 
                     {/* Convoy info */}
@@ -750,7 +750,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                     {/* Geofencing timeline */}
                     <div className="glass rounded-xl p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <MapPin size={12} className="text-[#34d399]" aria-hidden="true" />
+                        <MapPin size={12} className="text-[#4ade80]" aria-hidden="true" />
                         <p className="text-[10px] uppercase tracking-widest text-white/30">
                           Geofencing — Suivi en temps réel
                         </p>
@@ -766,7 +766,7 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                           >
                             <div className={`mt-0.5 w-4 h-4 rounded-full shrink-0 flex items-center justify-center ${
                               ev.done
-                                ? "bg-[#34d399]/15 border border-[#34d399]/40"
+                                ? "bg-[#4ade80]/15 border border-[#4ade80]/40"
                                 : "border border-white/10"
                             }`}>
                               {ev.done && (
@@ -802,13 +802,13 @@ export default function RoadTransitDrawer({ isOpen, onClose }: RoadTransitDrawer
                     {/* Document checklist (final) */}
                     <div className="glass rounded-xl p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <Shield size={12} className="text-[#34d399]" aria-hidden="true" />
+                        <Shield size={12} className="text-[#4ade80]" aria-hidden="true" />
                         <p className="text-[10px] uppercase tracking-widest text-white/30">Documents validés</p>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         {DOCS.map((doc) => (
                           <div key={doc.id} className="flex items-center gap-1.5">
-                            <CheckCircle size={11} className="text-[#34d399] shrink-0" aria-hidden="true" />
+                            <CheckCircle size={11} className="text-[#4ade80] shrink-0" aria-hidden="true" />
                             <span className="text-[11px] text-white/50">{doc.label}</span>
                           </div>
                         ))}

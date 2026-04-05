@@ -45,7 +45,7 @@ const labelStyle: React.CSSProperties = {
 
 const sectionTitle: React.CSSProperties = {
   fontSize: "0.65rem",
-  color: "#D4AF37",
+  color: "#F59E0B",
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.1em",
@@ -227,8 +227,8 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
         gap: "0.5rem",
         flexShrink: 0,
       }}>
-        <FileText size={14} color="#D4AF37" />
-        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#D4AF37", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <FileText size={14} color="#F59E0B" />
+        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#F59E0B", textTransform: "uppercase", letterSpacing: "0.08em" }}>
           Connaissement B/L
         </span>
         <span style={{
@@ -260,8 +260,8 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
               fontWeight: 600,
               cursor: "pointer",
               background: section === tab ? "rgba(212,175,55,0.1)" : "transparent",
-              color: section === tab ? "#D4AF37" : "#475569",
-              borderBottom: `2px solid ${section === tab ? "#D4AF37" : "transparent"}`,
+              color: section === tab ? "#F59E0B" : "#475569",
+              borderBottom: `2px solid ${section === tab ? "#F59E0B" : "transparent"}`,
               transition: "all 0.15s",
             }}
           >
@@ -365,7 +365,7 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
                     onClick={() => setShowContainerForm(v => !v)}
                     style={{
                       fontSize: "0.6rem",
-                      color: "#D4AF37",
+                      color: "#F59E0B",
                       background: "rgba(212,175,55,0.1)",
                       border: "1px solid rgba(212,175,55,0.2)",
                       borderRadius: "0.25rem",
@@ -462,7 +462,7 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
                           background: "rgba(212,175,55,0.15)",
                           border: "1px solid rgba(212,175,55,0.3)",
                           borderRadius: "0.25rem",
-                          color: "#D4AF37",
+                          color: "#F59E0B",
                           fontSize: "0.65rem",
                           fontWeight: 700,
                           cursor: "pointer",
@@ -485,7 +485,7 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
                     padding: "0.3rem 0.5rem",
                     marginBottom: "0.25rem",
                   }}>
-                    <Package size={11} color="#38bdf8" />
+                    <Package size={11} color="#22d3ee" />
                     <span style={{ fontSize: "0.68rem", color: "#94a3b8", fontFamily: "monospace", flex: 1 }}>
                       {c.number} · {c.count}×{c.type}&apos; · {c.weight.toLocaleString()}kg
                     </span>
@@ -560,7 +560,7 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
                     padding: "0.6rem 0.75rem",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#D4AF37", fontFamily: "monospace" }}>
+                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#F59E0B", fontFamily: "monospace" }}>
                         {r.blNumber}
                       </span>
                       <span style={{ fontSize: "0.6rem", color: "#475569" }}>{r.issueDate}</span>
@@ -593,7 +593,7 @@ export default function BLFormPanel({ vessel, onClose }: BLFormPanelProps) {
               background: vessel ? "rgba(212,175,55,0.18)" : "rgba(100,116,139,0.1)",
               border: `1px solid ${vessel ? "rgba(212,175,55,0.5)" : "rgba(100,116,139,0.2)"}`,
               borderRadius: "0.5rem",
-              color: vessel ? "#D4AF37" : "#475569",
+              color: vessel ? "#F59E0B" : "#475569",
               fontSize: "0.75rem",
               fontWeight: 700,
               cursor: vessel ? "pointer" : "not-allowed",

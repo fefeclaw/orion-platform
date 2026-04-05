@@ -30,7 +30,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         matricule: {},
         mode: {},
       },
-      authorize: async (credentials, _request) => {
+      authorize: async (credentials) => {
         const { mode, email, password, matricule } = credentials as Record<string, string>;
 
         if (mode === "professional") {
@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: `${user.matricule.toLowerCase()}@orion.ci`,
               role: user.role,
               pillar: user.pillar,
-            } as any;
+            };
           }
         } else {
           // Auth DB si available, sinon fallback mock
@@ -58,7 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 const pillar = dbUser.pillars.length > 1 ? "all"
                   : dbUser.pillars.length === 1 ? dbUser.pillars[0]
                   : "maritime";
-                return { id: dbUser.id, name: dbUser.name, email: dbUser.email, role: dbUser.role as UserRole, pillar } as any;
+                return { id: dbUser.id, name: dbUser.name, email: dbUser.email, role: dbUser.role as UserRole, pillar };
               }
               if (dbUser) {
                 try { logAccess({ userId: dbUser.id, userEmail: dbUser.email, action: 'LOGIN', status: 'FAILED' }); } catch { /* silencieux */ }
@@ -72,7 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             (u) => u.email === email && u.password === password
           );
           if (user) {
-            return { id: user.id, name: user.name, email: user.email, role: user.role, pillar: user.pillar } as any;
+            return { id: user.id, name: user.name, email: user.email, role: user.role, pillar: user.pillar };
           }
         }
         return null;
@@ -90,8 +90,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role as UserRole;
-        session.user.pillar = token.pillar as "maritime" | "rail" | "road" | "air" | "all";
+        session.user.role = token.role;
+        session.user.pillar = token.pillar;
       }
       return session;
     },

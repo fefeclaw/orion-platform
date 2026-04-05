@@ -34,7 +34,7 @@ const PILLAR_CONFIG: Record<string, {
 }> = {
   maritime: {
     label: "Maritime",
-    color: "#38bdf8",
+    color: "#22d3ee",
     icon: Anchor,
     kpis: [
       { label: "Navires actifs", value: "48", sub: "Port d'Abidjan + Lagos", trend: 12, icon: Ship },
@@ -56,7 +56,7 @@ const PILLAR_CONFIG: Record<string, {
   },
   rail: {
     label: "Ferroviaire",
-    color: "#f87171",
+    color: "#fb923c",
     icon: Train,
     kpis: [
       { label: "Wagons actifs", value: "126", sub: "Corridor ABJ-OUA-BKO", trend: 5, icon: Activity },
@@ -78,7 +78,7 @@ const PILLAR_CONFIG: Record<string, {
   },
   road: {
     label: "Routier",
-    color: "#34d399",
+    color: "#4ade80",
     icon: Truck,
     kpis: [
       { label: "Camions actifs", value: "284", sub: "Réseau CI + CEDEAO", trend: 7, icon: Truck },
@@ -100,7 +100,7 @@ const PILLAR_CONFIG: Record<string, {
   },
   air: {
     label: "Aérien",
-    color: "#a78bfa",
+    color: "#818cf8",
     icon: Plane,
     kpis: [
       { label: "Vols actifs", value: "32", sub: "FHB + Lagos + Dakar", trend: 18, icon: Plane },
@@ -182,7 +182,7 @@ export default function PillarDashboard() {
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setContainerOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all"
-                style={{ background: "rgba(56,189,248,0.08)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.25)", boxShadow: "0 0 12px rgba(56,189,248,0.1)" }}
+                style={{ background: "rgba(56,189,248,0.08)", color: "#22d3ee", border: "1px solid rgba(56,189,248,0.25)", boxShadow: "0 0 12px rgba(56,189,248,0.1)" }}
               >
                 <Search size={13} aria-hidden="true" />
                 {t("dash_container")}
@@ -192,7 +192,7 @@ export default function PillarDashboard() {
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setBscOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-black transition-all"
-                style={{ background: "linear-gradient(135deg, #38bdf8, #0ea5e9)", boxShadow: "0 0 20px rgba(56,189,248,0.25)" }}
+                style={{ background: "linear-gradient(135deg, #22d3ee, #0ea5e9)", boxShadow: "0 0 20px rgba(56,189,248,0.25)" }}
               >
                 <FileText size={13} aria-hidden="true" />
                 {t("dash_bsc")}
@@ -205,7 +205,7 @@ export default function PillarDashboard() {
               whileTap={{ scale: 0.97 }}
               onClick={() => setTransitOpen(true)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-black transition-all"
-              style={{ background: "linear-gradient(135deg, #34d399, #10b981)", boxShadow: "0 0 20px rgba(52,211,153,0.25)" }}
+              style={{ background: "linear-gradient(135deg, #4ade80, #10b981)", boxShadow: "0 0 20px rgba(52,211,153,0.25)" }}
             >
               <Navigation size={13} aria-hidden="true" />
               Transit CEDEAO

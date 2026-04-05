@@ -59,7 +59,7 @@ const ACTIVITY = [
 export default function RailTracker() {
   return (
     <TrackingView
-      color="#f87171"
+      color="#fb923c"
       title="Réseau Ferroviaire — Infrastructure"
       liveLabel="OpenRailway"
       icon={Train}

@@ -129,10 +129,10 @@ export function MaritimeMap({ vessels, onVesselClick }: MaritimeMapProps) {
 
       // ── Ports ──
       const ports = [
-        { pos: PORT_ABIDJAN, label: "ABJ", accent: "#D4AF37" },
-        { pos: PORT_LAGOS,   label: "LOS", accent: "#D4AF37" },
-        { pos: PORT_DAKAR,   label: "DKR", accent: "#D4AF37" },
-        { pos: PORT_TEMA,    label: "TEM", accent: "#D4AF37" },
+        { pos: PORT_ABIDJAN, label: "ABJ", accent: "#F59E0B" },
+        { pos: PORT_LAGOS,   label: "LOS", accent: "#F59E0B" },
+        { pos: PORT_DAKAR,   label: "DKR", accent: "#F59E0B" },
+        { pos: PORT_TEMA,    label: "TEM", accent: "#F59E0B" },
       ];
       ports.forEach(({ pos, label, accent }) => {
         const p = projectToCanvas(pos.lat, pos.lng, width, height);

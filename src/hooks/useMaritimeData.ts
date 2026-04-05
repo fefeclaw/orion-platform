@@ -43,6 +43,8 @@ export interface MaritimeAlert {
 }
 
 const API_URL              = process.env.NEXT_PUBLIC_API_URL ?? "";
+const AIS_API_KEY          = process.env.NEXT_PUBLIC_MARINETRAFFIC_API_KEY ?? "";
+const VESSELTRACKER_KEY    = process.env.NEXT_PUBLIC_VESSELTRACKER_API_KEY ?? "";
 
 // Centre : Port Autonome d'Abidjan
 const ABJ_LAT = 5.35;
@@ -245,74 +247,59 @@ function mapApiAlert(a: Record<string, unknown>, idx: number): MaritimeAlert {
   };
 }
 
-// ─── AIS fetcher (Route API Orion sécurisée → fallback) ─────────────────────
+// ─── AIS fetcher (MarineTraffic → VesselFinder → null) ───────────────────────
 
-interface AISApiResponse {
-  vessels: Array<{
-    mmsi: string;
-    name: string;
-    type: string;
-    lat: number;
-    lng: number;
-    speed: number;
-    course: number;
-    status: string;
-    destination: string;
-    eta: string;
-    flag: string;
-  }>;
-  source: "marinetraffic" | "vesselfinder" | "cache" | "mock";
-  timestamp: string;
-}
-
-/** Appelle la route API Orion sécurisée /api/maritime/ais */
-async function fetchAISFromApi(prevVessels: Vessel[]): Promise<Vessel[] | null> {
+/** Tente MarineTraffic v3 (jsono) — retourne un tableau ou null */
+async function fetchMarineTraffic(prevVessels: Vessel[]): Promise<Vessel[] | null> {
+  if (!AIS_API_KEY) return null;
   try {
-    const res = await fetch("/api/maritime/ais", { cache: "no-store" });
-    if (!res.ok) {
-      // 401/403/429 = problème d'abonnement, fallback silencieux
-      if (res.status === 401 || res.status === 403 || res.status === 429) {
-        console.info("[useMaritimeData] AIS nécessite abonnement Business — fallback mock");
-      }
-      return null;
-    }
-    const data: AISApiResponse = await res.json();
-    if (!data.vessels || data.vessels.length === 0) return null;
-
-    return data.vessels.map((v, i) => {
-      const mapped: Vessel = {
-        id: v.mmsi || String(i),
-        name: v.name || `Navire ${i + 1}`,
-        imo: "—",
-        mmsi: v.mmsi,
-        type: v.type || "Inconnu",
-        flag: v.flag || "—",
-        lat: v.lat ?? ABJ_LAT,
-        lng: v.lng ?? ABJ_LON,
-        speed: v.speed ?? 0,
-        heading: v.course ?? 0,
-        status: v.status?.toLowerCase().includes("berth") || v.status?.toLowerCase().includes("moored")
-          ? "berth"
-          : v.status?.toLowerCase().includes("alert") || v.status?.toLowerCase().includes("delay")
-            ? "alert"
-            : "transit",
-        destination: v.destination || "—",
-        eta: v.eta || "—",
-        lastUpdate: new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
-        cargoType: toCargoType(v.type),
-      };
-      const prev = prevVessels.find(p => p.mmsi === mapped.mmsi);
+    const url =
+      `https://services.marinetraffic.com/api/getvessel/v:3/${AIS_API_KEY}` +
+      `/protocol:jsono/lat:${ABJ_LAT}/lon:${ABJ_LON}/radius:50/`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const raw: Record<string, unknown>[] = await res.json();
+    if (!Array.isArray(raw) || raw.length === 0) return null;
+    return raw.map((v, i) => {
+      const mapped = mapApiVessel(v, i);
+      const prev = prevVessels.find(p => p.mmsi === mapped.mmsi || p.imo === mapped.imo);
       return {
         ...mapped,
+        cargoType: toCargoType(mapped.type),
         approachIn24h: isApproachIn24h(mapped),
         etaPrevious: prev?.eta !== mapped.eta ? prev?.eta : undefined,
         etaChanged: hasEtaChanged2h(mapped.eta, prev?.eta),
       };
     });
-  } catch (err) {
-    console.warn("[useMaritimeData] Erreur API AIS:", err);
-    return null;
-  }
+  } catch { return null; }
+}
+
+/** Tente VesselFinder (AIS stream) — retourne un tableau ou null */
+async function fetchVesselFinder(prevVessels: Vessel[]): Promise<Vessel[] | null> {
+  if (!VESSELTRACKER_KEY) return null;
+  try {
+    const url =
+      `https://api.vesseltracker.com/api/v1/vessels/userpolygon` +
+      `?userkey=${VESSELTRACKER_KEY}` +
+      `&lat1=${ABJ_LAT - 0.45}&lon1=${ABJ_LON - 0.45}` +
+      `&lat2=${ABJ_LAT + 0.45}&lon2=${ABJ_LON + 0.45}`;
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const raw: Record<string, unknown>[] = data.vessels ?? data ?? [];
+    if (!Array.isArray(raw) || raw.length === 0) return null;
+    return raw.map((v, i) => {
+      const mapped = mapApiVessel(v, i);
+      const prev = prevVessels.find(p => p.mmsi === mapped.mmsi);
+      return {
+        ...mapped,
+        cargoType: toCargoType(mapped.type),
+        approachIn24h: isApproachIn24h(mapped),
+        etaPrevious: prev?.eta !== mapped.eta ? prev?.eta : undefined,
+        etaChanged: hasEtaChanged2h(mapped.eta, prev?.eta),
+      };
+    });
+  } catch { return null; }
 }
 
 /** Enrichit le mock avec les champs approachIn24h / etaChanged */
@@ -335,9 +322,11 @@ export function useMaritimeData(refreshInterval = 60_000) {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      // ── 1. Tente AIS réel via API Orion sécurisée ─────────────────────────
+      // ── 1. Tente AIS réel (MarineTraffic → VesselFinder) ──────────────────
       const currentVessels = vessels;
-      const aisVessels = await fetchAISFromApi(currentVessels);
+      const aisVessels =
+        (await fetchMarineTraffic(currentVessels)) ??
+        (await fetchVesselFinder(currentVessels));
 
       if (aisVessels && aisVessels.length > 0) {
         setVessels(aisVessels);

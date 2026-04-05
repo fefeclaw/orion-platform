@@ -35,7 +35,7 @@ export default function WelcomeText() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
-        className="text-[10px] font-light tracking-[0.3em] text-[#D4AF37]/80 uppercase"
+        className="text-[10px] font-light tracking-[0.3em] text-[#F59E0B]/80 uppercase"
       >
         Orion Logistics
       </motion.p>
@@ -82,7 +82,7 @@ export default function WelcomeText() {
             key={i}
             animate={{ width: i === index ? 20 : 4, opacity: i === index ? 1 : 0.2 }}
             transition={{ duration: 0.35 }}
-            className="h-[2px] rounded-full bg-[#D4AF37]"
+            className="h-[2px] rounded-full bg-[#F59E0B]"
           />
         ))}
       </div>

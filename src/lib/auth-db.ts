@@ -1,9 +1,7 @@
 // REQUIRES: npm install better-sqlite3 bcryptjs
 // REQUIRES: npm install --save-dev @types/better-sqlite3 @types/bcryptjs
 import crypto from "crypto";
-import { getDb, isDbAvailable } from "./db";
-
-export { isDbAvailable };
+import { getDb } from "./db";
 
 export interface DbUser {
   id: string;

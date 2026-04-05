@@ -283,11 +283,11 @@ export function radarColor(type: WeatherType): { fill: string; pulse: string } |
   switch (type) {
     case "RAIN":
     case "HEAVY_RAIN":
-      return { fill: "rgba(56,189,248,0.18)", pulse: "#38bdf8" };
+      return { fill: "rgba(56,189,248,0.18)", pulse: "#22d3ee" };
     case "THUNDERSTORM":
       return { fill: "rgba(245,158,11,0.18)", pulse: "#f59e0b" };
     case "SAND":
-      return { fill: "rgba(212,168,67,0.18)", pulse: "#D4AF37" };
+      return { fill: "rgba(212,168,67,0.18)", pulse: "#F59E0B" };
     case "FOG":
       return { fill: "rgba(255,255,255,0.08)", pulse: "rgba(255,255,255,0.4)" };
     default:
