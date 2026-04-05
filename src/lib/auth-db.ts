@@ -3,6 +3,15 @@
 import crypto from "crypto";
 import { getDb } from "./db";
 
+export function isDbAvailable(): boolean {
+  try {
+    const db = getDb();
+    return db !== null && db !== undefined;
+  } catch {
+    return false;
+  }
+}
+
 export interface DbUser {
   id: string;
   email: string;

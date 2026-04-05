@@ -45,3 +45,5 @@ export function SimplePageLayout({
     </div>
   );
 }
+
+export default SimplePageLayout;
