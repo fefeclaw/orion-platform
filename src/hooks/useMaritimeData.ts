@@ -357,6 +357,7 @@ export function useMaritimeData(refreshInterval = 60_000) {
 
       // ── 2. Fallback : API ORION backend ───────────────────────────────────
       if (API_URL) {
+        let gotVessels = false;
         const [vesselsRes, kpiRes, alertsRes] = await Promise.all([
           fetch(`${API_URL}/api/vessels`,     { cache: "no-store" }),
           fetch(`${API_URL}/api/kpis/latest`, { cache: "no-store" }),
@@ -369,6 +370,7 @@ export function useMaritimeData(refreshInterval = 60_000) {
           if (rawVessels.length > 0) {
             setVessels(rawVessels.map(mapApiVessel));
             setIsLive(true);
+            gotVessels = true;
           }
         }
 
@@ -391,7 +393,9 @@ export function useMaritimeData(refreshInterval = 60_000) {
           if (rawAlerts.length > 0)
             setAlerts(rawAlerts.slice(0, 10).map(mapApiAlert));
         }
-        return;
+
+        // Si l'API n'a retourné aucun navire, on reste sur les mocks
+        if (gotVessels) return;
       }
     } catch {
       // silently keep mock data if all APIs unreachable

@@ -185,9 +185,13 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
         paint: { "line-color": "#0EA5E9", "line-opacity": 0.4, "line-width": 1.5, "line-dasharray": [3, 5] } });
     }
 
-    // Navires
+    // Navires — toujours forcer setData même si la source existe déjà
+    // (robustesse contre les race conditions API_URL / styledata)
+    const vesselGeoJSON = buildVesselGeoJSON(vesselDataRef.current);
     if (!map.getSource("orion-vessels")) {
-      map.addSource("orion-vessels", { type: "geojson", data: buildVesselGeoJSON(vesselDataRef.current) });
+      map.addSource("orion-vessels", { type: "geojson", data: vesselGeoJSON });
+    } else {
+      (map.getSource("orion-vessels") as maplibregl.GeoJSONSource).setData(vesselGeoJSON);
     }
     if (!map.getLayer("orion-vessels-halo")) {
       map.addLayer({ id: "orion-vessels-halo", type: "circle", source: "orion-vessels",
@@ -197,23 +201,19 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
     if (!map.getLayer("orion-vessels-circle")) {
       map.addLayer({ id: "orion-vessels-circle", type: "circle", source: "orion-vessels",
         paint: {
-          // Rayon variable : taille selon type de navire (container > tanker > bulk > roro > general)
           "circle-radius": ["match", ["get", "cargoType"],
             "container", 9,
             "tanker",    8,
             "bulk",      7,
             "roro",      6,
-            5  // general (défaut)
+            5
           ],
-          // Couleur de remplissage selon le statut opérationnel
           "circle-color": ["match", ["get", "status"],
             "berth", "#10B981",
             "alert", "#EF4444",
-            "#0EA5E9"  // transit (défaut)
+            "#0EA5E9"
           ],
-          // Épaisseur du contour selon le statut
           "circle-stroke-width": ["case", ["==", ["get", "status"], "alert"], 2.5, 1.8],
-          // Couleur du contour selon le TYPE de navire (permet différenciation visuelle)
           "circle-stroke-color": ["case",
             ["==", ["get", "status"], "alert"], "rgba(255,100,100,0.8)",
             ["match", ["get", "cargoType"],
@@ -221,7 +221,7 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
               "tanker",    "#fb923c",
               "bulk",      "#facc15",
               "roro",      "#818cf8",
-              "rgba(255,255,255,0.5)"  // general
+              "rgba(255,255,255,0.5)"
             ]
           ],
         },
@@ -379,7 +379,10 @@ export function MaritimeMapGL({ vessels, onVesselClick, is3D }: MaritimeMapGLPro
   useEffect(() => {
     vesselDataRef.current = vessels;
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map) return;
+    // Pas de guard isStyleLoaded : setData fonctionne dès que la source existe.
+    // Si la source n'existe pas encore (map en cours de chargement), addCustomLayers
+    // l'ajoutera avec vesselDataRef.current à jour lors du load/styledata.
     const src = map.getSource("orion-vessels") as maplibregl.GeoJSONSource | undefined;
     src?.setData(buildVesselGeoJSON(vessels));
   }, [vessels]);
