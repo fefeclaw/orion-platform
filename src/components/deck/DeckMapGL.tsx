@@ -84,14 +84,14 @@ const DECK_CONFIG = {
     zoom: 5.2,
     color: "#fb923c",
     routes: [
-      [[-3.99, 5.35], [-3.60, 6.50], [-2.80, 7.90], [-1.62, 9.25], [-0.48, 10.44], [-0.15, 11.10], [-1.52, 12.36]],
+      [[-4.005, 5.296], [-3.60, 6.50], [-2.80, 7.90], [-1.62, 9.25], [-0.48, 10.44], [-0.15, 11.10], [-1.52, 12.36]],
       [[-1.52, 12.36], [-3.00, 12.65], [-4.00, 13.50], [-6.00, 13.25], [-8.00, 12.65]],
     ],
     hubs: [
-      { id: "ABJ-GARE", name: "Gare d'Abidjan",      lat: 5.35,  lng: -3.99 },
-      { id: "BKF-GARE", name: "Gare Bouaké",          lat: 7.69,  lng: -5.04 },
-      { id: "OUA-GARE", name: "Gare Ouagadougou",     lat: 12.36, lng: -1.52 },
-      { id: "BKO-GARE", name: "Gare Bamako",          lat: 12.65, lng: -8.00 },
+      { id: "ABJ-GARE", name: "Gare d'Abidjan",      lat: 5.296, lng: -4.005 },  // Gare de Treichville
+      { id: "BKF-GARE", name: "Gare Bouaké",          lat: 7.693, lng: -5.041 },
+      { id: "OUA-GARE", name: "Gare Ouagadougou",     lat: 12.36, lng: -1.534 },
+      { id: "BKO-GARE", name: "Gare Bamako",          lat: 12.65, lng: -8.000 },
     ],
   },
   road: {
@@ -99,16 +99,16 @@ const DECK_CONFIG = {
     zoom: 5.0,
     color: "#4ade80",
     routes: [
-      [[-3.99, 5.35], [-4.35, 6.82], [-5.04, 7.69]],
-      [[-3.99, 5.35], [-3.20, 5.10], [-0.18, 5.57], [-0.02, 5.62]],
-      [[-3.99, 5.35], [-5.35, 6.37], [-8.48, 7.90], [-10.81, 8.49], [-13.68, 9.54], [-15.55, 11.86], [-17.44, 14.69]],
-      [[-3.99, 5.35], [-4.03, 6.82], [-3.00, 8.88], [-1.52, 12.36]],
+      [[-4.016, 5.320], [-4.35, 6.82], [-5.04, 7.69]],
+      [[-4.016, 5.320], [-3.20, 5.10], [-0.18, 5.57], [-0.02, 5.62]],
+      [[-4.016, 5.320], [-5.35, 6.37], [-8.48, 7.90], [-10.81, 8.49], [-13.68, 9.54], [-15.55, 11.86], [-17.44, 14.69]],
+      [[-4.016, 5.320], [-4.03, 6.82], [-3.00, 8.88], [-1.52, 12.36]],
     ],
     hubs: [
-      { id: "ABJ", name: "Abidjan — Hub Principal", lat: 5.35,  lng: -3.99 },
-      { id: "ACC", name: "Accra — Frontière Elubo", lat: 5.57,  lng: -0.18 },
+      { id: "ABJ", name: "Abidjan — Hub Principal", lat: 5.320, lng: -4.016 },  // Zone industrielle Yopougon/Port
+      { id: "ACC", name: "Accra — Frontière Elubo", lat: 5.560, lng: -0.205 },
       { id: "DKR", name: "Dakar — Terminus Nord",   lat: 14.69, lng: -17.44 },
-      { id: "OUA", name: "Ouagadougou — Relais",    lat: 12.36, lng: -1.52  },
+      { id: "OUA", name: "Ouagadougou — Relais",    lat: 12.36, lng: -1.534 },
     ],
   },
   air: {
@@ -116,18 +116,18 @@ const DECK_CONFIG = {
     zoom: 4.2,
     color: "#818cf8",
     routes: [
-      [[-3.93, 5.36], [-5.0, 10.0], [-3.0, 18.0], [2.55, 49.01]],
-      [[-3.93, 5.36], [3.32, 6.58]],
-      [[-3.93, 5.36], [-10.0, 9.0], [-17.49, 14.74]],
-      [[-3.93, 5.36], [5.0, 0.0], [15.0, -5.0], [28.23, -26.14]],
-      [[-3.93, 5.36], [15.0, 10.0], [30.0, 15.0], [55.36, 25.25]],
+      [[-3.926, 5.261], [-5.0, 10.0], [-3.0, 18.0], [2.55, 49.01]],
+      [[-3.926, 5.261], [3.321, 6.577]],
+      [[-3.926, 5.261], [-10.0, 9.0], [-17.49, 14.74]],
+      [[-3.926, 5.261], [5.0, 0.0], [15.0, -5.0], [28.23, -26.14]],
+      [[-3.926, 5.261], [15.0, 10.0], [30.0, 15.0], [55.36, 25.25]],
     ],
     hubs: [
-      { id: "ABJ", name: "Aéroport FHB Abidjan",     lat: 5.36,  lng: -3.93  },
-      { id: "LOS", name: "Aéroport Murtala Lagos",   lat: 6.58,  lng: 3.32   },
-      { id: "DKR", name: "Aéroport LSS Dakar",       lat: 14.74, lng: -17.49 },
-      { id: "CDG", name: "Aéroport CDG Paris",       lat: 49.01, lng: 2.55   },
-      { id: "DXB", name: "Aéroport Dubai DXB",       lat: 25.25, lng: 55.36  },
+      { id: "ABJ", name: "Aéroport FHB Abidjan",   lat: 5.2612, lng: -3.9261 },  // Félix Houphouët-Boigny IATA:ABJ
+      { id: "LOS", name: "Aéroport Murtala Lagos", lat: 6.5774, lng:  3.3210 },  // Murtala Muhammed IATA:LOS
+      { id: "DKR", name: "Aéroport LSS Dakar",     lat: 14.739, lng: -17.490 },  // Léopold Sédar Senghor IATA:DKR
+      { id: "CDG", name: "Aéroport CDG Paris",     lat: 49.009, lng:  2.547  },
+      { id: "DXB", name: "Aéroport Dubai DXB",     lat: 25.252, lng: 55.364  },
     ],
   },
 };

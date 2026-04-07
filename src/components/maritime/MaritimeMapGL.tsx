@@ -66,11 +66,11 @@ const SKY: Record<MapStyle, SkySpecification> = {
 
 // ─── Ports ────────────────────────────────────────────────────────────────────
 const PORTS = [
-  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.3083,  lng: -3.9780 },  // Terminal à conteneurs, rive nord
-  { id: "LOS", name: "Port de Lagos",           lat: 6.4474,  lng:  3.3553 },  // Apapa Port
+  { id: "ABJ", name: "Port Autonome d'Abidjan", lat: 5.2710,  lng: -4.0070 },  // Bassin TCIE — terminal à conteneurs Vridi
+  { id: "LOS", name: "Port de Lagos",           lat: 6.4500,  lng:  3.3700 },  // Apapa Port — quai principal
   { id: "DKR", name: "Port de Dakar",           lat: 14.6879, lng: -17.4337 }, // Quai Port de Dakar
-  { id: "TEM", name: "Port de Tema",            lat: 5.6333,  lng:  0.0167  }, // Port de Tema (corrigé : était 3,3 km au sud dans l'océan)
-  { id: "CTN", name: "Port de Cotonou",         lat: 6.3536,  lng:  2.4197  }, // Port de Cotonou
+  { id: "TEM", name: "Port de Tema",            lat: 5.6305,  lng:  0.0144  }, // Port de Tema
+  { id: "CTN", name: "Port de Cotonou",         lat: 6.3520,  lng:  2.4170  }, // Port de Cotonou
 ];
 
 // ─── Couleurs statut ──────────────────────────────────────────────────────────
@@ -84,12 +84,12 @@ const STATUS_COLOR: Record<Vessel["status"], string> = {
 const TRADE_ROUTES: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [3.3553, 6.4474]] }, properties: {} },  // ABJ → LOS
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-17.4337, 14.6879]] }, properties: {} }, // ABJ → DKR
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [0.0167, 5.6333]] }, properties: {} },   // ABJ → TEM
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3553, 6.4474], [2.4197, 6.3536]] }, properties: {} },   // LOS → CTN
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0070, 5.2710], [3.3700, 6.4500]] }, properties: {} },  // ABJ → LOS
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0070, 5.2710], [-17.4337, 14.6879]] }, properties: {} }, // ABJ → DKR
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0070, 5.2710], [0.0144, 5.6305]] }, properties: {} },   // ABJ → TEM
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[3.3700, 6.4500], [2.4170, 6.3520]] }, properties: {} },   // LOS → CTN
     { type: "Feature", geometry: { type: "LineString", coordinates: [[-17.4337, 14.6879], [-7.59, 33.59]] }, properties: {} },   // DKR → Europe
-    { type: "Feature", geometry: { type: "LineString", coordinates: [[-3.9780, 5.3083], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} }, // ABJ → Brésil
+    { type: "Feature", geometry: { type: "LineString", coordinates: [[-4.0070, 5.2710], [-25.0, 22.0], [-43.18, -22.91]] }, properties: {} }, // ABJ → Brésil
   ],
 };
 

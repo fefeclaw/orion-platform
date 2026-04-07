@@ -8,6 +8,9 @@ import { signOut } from "next-auth/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useRole } from "@/hooks/useRole";
 import MaritimeSidebar from "./MaritimeSidebar";
+import RailSidebar from "./RailSidebar";
+import RoadSidebar from "./RoadSidebar";
+import AirSidebar from "./AirSidebar";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -22,9 +25,10 @@ export default function Sidebar() {
   ];
 
   // ── RBAC SILO ─────────────────────────────────────────────────────────────
-  if (isPro && pillar === "maritime") {
-    return <MaritimeSidebar />;
-  }
+  if (isPro && pillar === "maritime") return <MaritimeSidebar />;
+  if (isPro && pillar === "rail")     return <RailSidebar />;
+  if (isPro && pillar === "road")     return <RoadSidebar />;
+  if (isPro && pillar === "air")      return <AirSidebar />;
 
   const PILLARS = isPro
     ? ALL_PILLARS.filter((p) => p.id === pillar)
